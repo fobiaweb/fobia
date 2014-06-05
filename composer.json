@@ -25,6 +25,7 @@
 
     "autoload": {
         "psr-0": { "Fobia\\": "src/Fobia" },
-        "classmap": [ "src/Fobia/lib" ]
+        "classmap": [ "src/Fobia/lib" ],
+        "files": [ "src/Fobia/Base/common.php" ]
     }
 }
