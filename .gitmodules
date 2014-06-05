@@ -1,0 +1,11 @@
+[submodule "src/Fobia/DataBase"]
+	path = src/Fobia/DataBase
+	url = git@github.com:fobiaweb/DataBase.git
+
+[submodule "src/Fobia/Debug"]
+	path = src/Fobia/Debug
+	url = git@github.com:fobiaweb/Debug.git
+    
+[submodule "src/Fobia/lib"]
+	path = src/Fobia/lib
+	url = git@github.com:fobiaweb/php-helper-lib.git

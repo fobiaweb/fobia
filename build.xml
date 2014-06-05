@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<project name="callcentre" default="compile" basedir=".">
+    <!-- Переменые базы -->
+    <property name="database.name" value="test" />
+    <property name="database.encoding" value="utf8" />
+    <property name="database.user" value="root" />
+    <property name="database.pass" value="" />
+    <property name="database.doc.structure.file" value="${basedir}/src/Fobia/Core/database.sql" />
+
+
+    <!--
+        #
+        # targe
+        #
+    -->
+    <target name="compile" depends="less,phpab,db-structure" description="Скомпилировать файлы" />
+
+    <target name="less" description="Скомпилировать файлы less">
+        <exec executable="lessc" dir="${basedir}/public_html" output="${basedir}/public_html/css/theme.css" >
+            <arg value="--source-map-map-inline" />
+            <arg value="less/theme.less" />
+        </exec>
+        <exec executable="lessc" dir="${basedir}/public_html" output="${basedir}/public_html/css/icons.css" >
+            <arg value="--source-map-map-inline" />
+            <arg value="less/icons.less" />
+        </exec>
+    </target>
+
+    <target name="commit" description="Собрать и скомитить">
+        <exec executable="git" dir="${basedir}" >
+            <arg value="add" />
+            <arg value="${basedir}" />
+        </exec>
+        <exec executable="git" dir="${basedir}" >
+            <arg value="commit" />
+            <arg value="-am" />
+            <arg value="commit - ${datemsg}" />
+        </exec>
+    </target>
+
+    <target name="clean" description="Cleanup build artifacts">
+        <delete dir="${basedir}/vendor"/>
+        <delete file="${basedir}/composer.lock"/>
+        <delete file="${basedir}/composer.phar"/>
+    </target>
+
+    <target name="composer-install" depends="clean" description="Install dependencies with Composer">
+        <delete dir="${basedir}/vendor"/>
+        <delete file="${basedir}/composer.lock"/>
+        <delete file="${basedir}/composer.phar"/>
+
+        <exec executable="composer${os.bat}">
+            <arg value="install" />
+            <arg value="--no-dev" />
+            <arg value="--prefer-dist" />
+        </exec>
+    </target>
+
+    <!-- Дамп структуры -->
+    <target name="db-structure" description="Дамп структуры базы">
+        <echo message="Use connect databese: ${database.name} (${database.encoding})" />
+
+        <condition property="argpass" value="" else="-p${database.pass}">
+            <equals arg1="${database.pass}" arg2="" />
+        </condition>
+
+        <exec executable="${exec.mysqldump}">
+            <arg value="--user" />
+            <arg value="${database.user}" />
+            <arg line="${argpass}" />
+            <arg value="--default-character-set=${database.encoding}" />
+            <arg value="--skip-dump-date" />
+            <arg value="--skip-add-drop-table" />
+            <arg value="--no-data" />
+            <arg value="--result-file" />
+            <arg value="${database.doc.structure.file}" />
+            <arg value="${database.name}" />
+        </exec>
+
+        <exec executable="sed">
+            <arg value="-i" />
+            <arg value="s/AUTO_INCREMENT=[0-9]* //g" />
+            <arg value="${database.doc.structure.file}" />
+        </exec>
+        <exec executable="sed">
+            <arg value="-i" />
+            <arg value="s/CREATE TABLE `/CREATE TABLE IF NOT EXISTS `/g" />
+            <arg value="${database.doc.structure.file}" />
+        </exec>
+
+        <echo message="Database schema completed '${database.name}' (${database.encoding})" />
+        <echo message="   file = ${database.doc.structure.file}" />
+    </target>
+
+    <!-- Возобновления базы из дампа -->
+    <target name="db-init" description="Возобновления базы из дампа" >
+        <echo message="Use connect databese: ${database.name} (${database.encoding})" />
+        <condition property="argpass" value="" else="-p${database.pass}">
+            <equals arg1="${database.pass}" arg2="" />
+        </condition>
+        <exec executable="${exec.mysql}" input="${database.doc.structure.file}">
+            <arg value="--default-character-set=${database.encoding}" />
+            <arg value="-u" />
+            <arg value="${database.user}" />
+            <arg line="${argpass}" />
+            <arg value="--database" />
+            <arg value="${database.name}" />
+        </exec>
+    </target>
+
+    <!-- Генерация файлов автозагрузки классов -->
+    <target name="phpab">
+        <exec executable="${exec.phpab}">
+            <arg value="--output" />
+            <arg path="tests/src/__autoload.php" />
+            <arg path="tests/src" />
+        </exec>
+    </target>
+
+    <target name="system-install">
+        <exec executable="pear">
+            <arg line="config-set auto_discover 1" />
+        </exec>
+        <exec executable="pear">
+            <arg line="install pear/Console_CommandLine" />
+        </exec>
+        <exec executable="pear">
+            <arg line="install components.ez.no/Base ezc/DataBase ezc/ConsoleTools" />
+        </exec>
+        <exec executable="pear">
+            <arg line="install -a pear.netpirates.net/autoload" />
+        </exec>
+        <exec executable="pear">
+            <arg line="install pear.twig-project.org/twig" />
+        </exec>
+    </target>
+
+    <!--
+        #
+        # Системные переменые
+        #
+    -->
+    <property environment="env" />
+    <condition property="os.bat" value=".bat" else="">
+        <equals arg1="${env.OS}" arg2="Windows_NT" />
+    </condition>
+    <condition property="os.exe"  value=".exe" else="">
+        <equals arg1="${env.OS}" arg2="Windows_NT" />
+    </condition>
+    <condition property="os.root"  value="Z\:" else="/">
+        <equals arg1="${env.OS}" arg2="Windows_NT" />
+    </condition>
+    <condition property="exec.bash"  value="C:/cygwin/bin/bash.exe" else="sh">
+        <equals arg1="${env.OS}" arg2="Windows_NT" />
+    </condition>
+
+    <property name="exec.mysql" value="mysql${os.exe}" />
+    <property name="exec.mysqldump" value="mysqldump${os.exe}" />
+    <property name="exec.phpab" value="phpab${os.bat}" />
+    <property name="exec.php" value="php${os.bat}" />
+
+    <tstamp>
+        <format property="datemsg" pattern="d-MMM-yyyy hh:mm" locale="en,GB" />
+    </tstamp>
+</project>
