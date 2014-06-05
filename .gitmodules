@@ -1,3 +1,8 @@
+
+[submodule "src/Fobia/Base"]
+    path = src/Fobia/Base
+    url = git@github.com:fobiaweb/Base.git
+
 [submodule "src/Fobia/DataBase"]
 	path = src/Fobia/DataBase
 	url = git@github.com:fobiaweb/DataBase.git
