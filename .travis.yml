@@ -1,0 +1,42 @@
+language: php
+
+php:
+  - "5.4"
+  - "5.3"
+
+env:
+  - DB=test
+
+mysql:
+  database: test 
+  username: root
+  encoding: utf8
+
+
+before_install:
+  - sudo apt-get update > /dev/null
+
+install:
+  - sudo apt-get install -y --force-yes php5-cgi php5-mysql
+
+after_install:
+  - sudo echo 'date.timezone = "UTC"' >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
+
+
+
+before_script:
+  - composer install 
+  - mysql -e 'drop database if exists test'
+  - mysql -e 'create database test'
+
+# script: drush test-run 'Travis-CI Drupal Module Example' --uri=http://127.0.0.1:8080
+
+# script:
+#   - phpunit --coverage-text
+#   - wget -O - http://storage.getfobia.ru/api.php?travis_ci_test
+
+# after_script:
+
+# configure notifications (email, IRC, campfire etc)
+notifications:
+  email: "false"
