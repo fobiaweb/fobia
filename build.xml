@@ -28,6 +28,21 @@
 
     <target name="commit" description="Собрать и скомитить">
         <exec executable="git" dir="${basedir}" >
+            <arg value="submodule" />
+            <arg value="foreach" />
+            <arg value="git" />
+            <arg value="commit" />
+            <arg value="-am" />
+            <arg value="---" />
+        </exec>
+        <exec executable="git" dir="${basedir}" >
+            <arg value="submodule" />
+            <arg value="foreach" />
+            <arg value="git" />
+            <arg value="push" />
+            <arg value="origin" />
+        </exec>
+        <exec executable="git" dir="${basedir}" >
             <arg value="add" />
             <arg value="${basedir}" />
         </exec>

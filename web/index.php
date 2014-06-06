@@ -21,7 +21,7 @@ $app->get('/test', function() use($app) {
 
 
 $app->hook('slim.before', function($args) use($app) {
-    $app->get('/ccc/:dd+', '\\Fobia\\Base\\Controller::index');
+    //$app->get('/ccc/:dd+', '\\Fobia\\Base\\Controller::index');
 
     $app->get('/(:page+)', function() use ($app) {
         echo $app->request->getPath() . BR;
