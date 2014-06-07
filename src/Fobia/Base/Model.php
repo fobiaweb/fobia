@@ -173,6 +173,11 @@ abstract class Model // extends \Slim\Collection
         return $stmt->execute();
     }
 
+    public function model()
+    {
+        return new ModelAction($this);
+    }
+
     // public function model()
     // {
     //     return new \Fobia\ActiveRowModel($this, array('pkey' => 'id'));

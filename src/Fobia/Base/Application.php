@@ -9,6 +9,7 @@
 namespace Fobia\Base;
 
 use \Fobia\Base\Utils;
+use \Fobia\Debug\Log;
 
 /**
  * Application class
@@ -27,6 +28,7 @@ class Application extends \Slim\App
     // protected static $instance = null;
 
     protected static $instance = array();
+
     /**
      * @return \Fobia\Base\Application
      */
@@ -46,7 +48,7 @@ class Application extends \Slim\App
     /**
      * Set Instance Application
      *
-     * @param \Fobia\Application $app
+     * @param \Fobia\Base\Application $app
      * @param string $name
      */
     public static function setInstance(Application $app, $name = null)
@@ -63,8 +65,14 @@ class Application extends \Slim\App
     public function __construct($userSettings = null)
     {
         if ( ! is_array($userSettings)) {
-            $userSettings = (array) $userSettings;
+            $file = $userSettings;
+            $userSettings = array();
+            if (file_exists($file)) {
+                $userSettings = Utils::loadConfig($file);
+                unset($file);
+            }
         }
+
 
         $dirs = array(__DIR__ . '/../../config', __DIR__ . '/../config');
         if (defined('CONFIG_DIR')) {
@@ -159,15 +167,6 @@ class Application extends \Slim\App
         return $this[$name];
     }
 
-    /**
-     * Корневой путь приложухи (из конфига webpath)
-     * @return string
-     */
-    public function getWebPath($url = null)
-    {
-        $url = $this->request->getUrl() . $this->config('webpath') . $url;
-        return $url;
-    }
 
     protected function defaultNotFound()
     {

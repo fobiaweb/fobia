@@ -22,6 +22,11 @@ class App
     {
         return \ezcDbInstance::get();
     }
+
+    public static function Auth()
+    {
+        
+    }
 }
 
 
