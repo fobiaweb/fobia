@@ -2,17 +2,10 @@
     "name": "fobiaweb/fobia",
     "type": "library",
     "license": "MIT",
-    "repositories": [
-        {
-            "type": "composer",
-            "url": "http://faclib.github.io/packages/p/pear"
-        }
-    ],
     "require": {
         "php": ">=5.3.0",
         "fobiaweb/ezc-database": "1.*",
         "fobiaweb/slim": "3.*",
-        "slimcontroller/slimcontroller": "0.4.*",
         "monolog/monolog": "1.*",
         "symfony/config": "2.*",
         "symfony/console": "2.*",

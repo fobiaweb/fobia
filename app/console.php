@@ -8,9 +8,11 @@
  */
 
 require_once __DIR__ . '/../vendor/autoload.php';
+
+
 use Console\FobiaApplication;
 use Symfony\Component\Console\Application;
 
-$application = new Application();
-$application->add(new Console\Command\MyCommand());
+$application = new FobiaApplication();
+$application->add(new Console\Command\GetCommand());
 $application->run();

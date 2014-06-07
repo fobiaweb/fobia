@@ -25,27 +25,27 @@ class FobiaApplication  extends Application
      *
      * @return string The command name
      */
-    protected function getCommandName(InputInterface $input)
-    {
+//    protected function getCommandName(InputInterface $input)
+//    {
         // This should return the name of your command.
-        return 'help';
-    }
+//        return 'help';
+//    }
 
     /**
      * Gets the default commands that should always be available.
      *
      * @return array An array of default Command instances
      */
-    protected function getDefaultCommands()
-    {
+//    protected function getDefaultCommands()
+//    {
         // Keep the core default commands to have the HelpCommand
         // which is used when using the --help option
-        $defaultCommands = parent::getDefaultCommands();
+        // $defaultCommands = parent::getDefaultCommands();
 
-        $defaultCommands[] = new Command\MyCommand();
-
-        return $defaultCommands;
-    }
+//        $defaultCommands[] = new Command\GetCommand();
+//
+//        return $defaultCommands;
+//    }
 
     /**
      * Overridden so that the application doesn't expect the command
@@ -55,7 +55,7 @@ class FobiaApplication  extends Application
     {
         $inputDefinition = parent::getDefinition();
         // clear out the normal first argument, which is the command name
-        $inputDefinition->setArguments();
+        // $inputDefinition->setArguments();
 
         return $inputDefinition;
     }

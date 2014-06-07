@@ -21,26 +21,22 @@ use Symfony\Component\Console\Output\OutputInterface;
  *
  * @package   Console.Command
  */
-class MyCommand extends Command
+class GetCommand extends Command
 {
     protected function configure()
     {
         $this
             ->setName('get')
-            ->setDescription('Greet someone')
-            ->addArgument('name', InputArgument::OPTIONAL, 'Who do you want to greet?')
+            ->setDescription('Выполнить контролер')
+            ->addArgument('path', InputArgument::REQUIRED, 'Путь к контролеру')
             ->addOption('yell', null, InputOption::VALUE_NONE, 'If set, the task will yell in uppercase letters')
         ;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $name = $input->getArgument('name');
-        if ($name) {
-            $text = 'Hello '.$name;
-        } else {
-            $text = 'Hello';
-        }
+        $name = $input->getArgument('path');
+        $text = 'GET: '.$name;
 
         if ($input->getOption('yell')) {
             $text = strtoupper($text);
