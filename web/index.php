@@ -20,8 +20,15 @@ $app['auth'] = function() use($app) {
     return $auth;
 };
 
+$aBitOfInfo = function (\Slim\Route $route) {
+    echo "Current route is '" . $route->getName() ."'" . BR;
+};
 
+$app['random'] = $app->protect(function () { return rand(); });
 
+// $r = $app['random'];
+
+dump($aBitOfInfo, $app['random'](), $app['random']());
 
 /*
 $app->hook('slim.before', function($args) use($app) {
@@ -45,7 +52,29 @@ $app->hook('slim.before', function($args) use($app) {
 });
 
 */
+function m1() {
+    dump (func_get_args());
+    echo "This is middleware!" .BR;
+}
 
+
+
+
+$controllerRole = function ( $controller ) use ($app) {
+    list( $class, $action ) = explode('::', $controller);
+    // dump( func_get_args() );
+    return function() use ( $class, $action, $app ) {
+        $args = func_get_args();
+        // dump(func_get_args());
+        $controller = new $class($app, $args );
+        call_user_method_array($action, $controller, array() );
+    };
+};
+
+// $app->get('/action/test', 'm1', function())
+
+$app->get('/action/:section+/:args', 'm1', $aBitOfInfo,  $controllerRole('\\Controller::indexAction', 'd') )
+->name('action');
 
 
 $app->get('/auth', function() use($app) {

@@ -12,6 +12,7 @@ use \PDO;
 use \ezcDbHandlerMysql;
 use \Fobia\DataBase\Query\QueryInsert;
 use \Fobia\DataBase\Query\QueryReplace;
+use \Log;
 
 /**
  * DBConnection class

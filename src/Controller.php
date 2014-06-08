@@ -16,16 +16,12 @@
 class Controller
 {
     public $app;
-    public $params;
     public $segments  = array();
 
-    public function __construct($app)
+    public function __construct($app, $segments = array())
     {
         $this->app = $app;
-
-        echo "==================";
-        $this->params = func_get_args();
-        $_ENV['controller'] = $this;
+        $this->segments = $segments;
     }
 
     public function segment($id)
@@ -35,9 +31,10 @@ class Controller
 
     public function indexAction()
     {
-        echo "Action:: " . __METHOD__. PHP_EOL;
-        dump(func_get_args());
-        dump($this);
-//        dump($_ENV['controller']);
+        dump(array(
+            'Action' => __METHOD__,
+            'Segments' => $this->segments,
+            'Args' => func_get_args()
+        ));
     }
 }
