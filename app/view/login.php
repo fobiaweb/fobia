@@ -58,7 +58,7 @@
 
     <div class="container">
 
-        <form class="form-signin" role="form" method="post">
+        <form class="form-signin" role="form" method="post" enctype="application/x-www-form-urlencoded">
         <h2 class="form-signin-heading">Please sign in</h2>
         <input type="email" name="login" class="form-control" placeholder="Email address" required autofocus>
         <input type="password" name="pass" class="form-control" placeholder="Password" required>

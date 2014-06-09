@@ -26,10 +26,10 @@ $app->map('/login', function() use($app) {
         $login = $_POST['login'];
         $password = $_POST['pass'];
         $r = $app->auth->login($login, $password);
-        $app->redirect($app->urlFor('base'), 'auth?r=' . rand());
+//        $app->redirect($app->urlFor('base'), 'auth?r=' . rand());
     }
 //    dump($app->request);
-//    dump($app->request->params());
+    dump($app->request->params());
 //    dump($app->request->getMethod());
 //    dump($app->request->getHeaders());
 //    dump($app->request->getCookies());
