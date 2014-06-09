@@ -15,10 +15,7 @@ App::instance();
 Log::debug('boot: ' . $s);
 
 
-$app['auth'] = function() use($app) {
-    $auth = new Auth\Authentication($app);
-    return $auth;
-};
+require_once 'auth-inc.php';
 
 $aBitOfInfo = function (\Slim\Route $route) {
     echo "Current route is '" . $route->getName() ."'" . BR;
@@ -99,19 +96,6 @@ $app->get('/factory(/:s+)', $app['controller_factory']('\\Controller::indexActio
 
 $app->get('/action/:section+/:args', 'm1', $aBitOfInfo,  $controllerRole('\\Controller::indexAction', 'd') )
 ->name('action');
-
-
-$app->get('/auth', function() use($app) {
-    $app['auth']->authenticate();
-    dump($app['auth']->user);
-    dump($app['session']['auth']['password']);
-});
-
-$app->get('/auth/login', function() use($app) {
-    $app['auth']->login ('u1399934039', 2);
-    dump($app['session']);
-});
-
 
 $app->run();
 

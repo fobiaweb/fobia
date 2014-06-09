@@ -17,6 +17,7 @@ use \Fobia\Debug\Log;
  * @property \ezcDbHandler $db database
  * @property \Slim\Session $session current session
  * @property \Psr\Log\LoggerInterface $log логер
+ * @property \Fobia\Auth\Authentication $auth
  *
  */
 class Application extends \Slim\App

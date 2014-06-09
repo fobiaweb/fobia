@@ -13,6 +13,7 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Formatter\OutputFormatterStyle;
 
 
 
@@ -42,6 +43,43 @@ class GetCommand extends Command
             $text = strtoupper($text);
         }
 
+        if ($output->isDebug()) {
+            $formatter = $this->getHelperSet()->get('formatter');
+            $formattedLine = $formatter->formatSection(
+                'SomeSection',
+                'Here is some message related to that section'
+            );
+            $output->writeln($formattedLine);
+
+            $errorMessages = array('Error!', 'Something went wrong');
+            $formattedBlock = $formatter->formatBlock($errorMessages, 'error');
+            $output->writeln($formattedBlock);
+
+            // green text
+            $output->writeln('<info>foo</info>');
+
+            // yellow text
+            $output->writeln('<comment>foo</comment>');
+
+            // black text on a cyan background
+            $output->writeln('<question>foo</question>');
+
+            // white text on a red background
+            $output->writeln('<error>foo</error>');
+
+            $style = new OutputFormatterStyle('red', 'yellow', array('bold', 'blink'));
+            $output->getFormatter()->setStyle('fire', $style);
+            $output->writeln('<fire>foo</fire>');
+
+            // green text
+            $output->writeln('<fg=green>foo</fg=green>');
+
+            // black text on a cyan background
+            $output->writeln('<fg=black;bg=cyan>foo</fg=black;bg=cyan>');
+
+            // bold text on a yellow background
+            $output->writeln('<bg=yellow;options=bold>foo</bg=yellow;options=bold>');
+        }
 
         // $app = $this->getApplication()->createApp(array(
         //     // 'REQUEST_METHOD' => 'GET',
@@ -57,5 +95,6 @@ class GetCommand extends Command
         $_SERVER['REQUEST_URI'] = '/fobia' . $name ;
         $_SERVER['QUERY_STRING'] = '';// . $name ;
         require_once '/srv/fobiaweb/fobia/web/index.php';
+
     }
 }

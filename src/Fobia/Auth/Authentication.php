@@ -88,8 +88,8 @@ class Authentication
      */
     public function login($login, $password)
     {
-        $password = hash_hmac($this->app['settings']['crypt.method'], $password,
-                              $this->app['settings']['crypt.key']);
+        //$password = hash_hmac($this->app['settings']['crypt.method'], $password,
+        //                      $this->app['settings']['crypt.key']);
 
         $user = $this->checkLogin($login, $password);
         if ( ! $user) {
@@ -103,6 +103,7 @@ class Authentication
             'password' => $password,
             'login'    => $login,
         );
+        return true;
     }
 
     /**
@@ -117,20 +118,20 @@ class Authentication
     /**
      *
      * @param string $login
-     * @param string $password hex string
+     * @param string $passhex hex string
      * @return boolean
      * @api
      *
      * @return mixeed Description
      */
-    public function checkLogin($login, $password)
+    public function checkLogin($login, $passhex)
     {
         $q    = $this->app->db->createSelectQuery();
         $q->select('*')->from($this->tableName)
                 ->where($q->expr->eq($this->map['login'],
                                      $this->app->db->quote($login)))
                 ->where($q->expr->eq($this->map['password'],
-                                     $this->app->db->quote($password)))
+                                     $this->app->db->quote($passhex)))
                 ->limit(1);
         $stmt = $q->prepare();
         $stmt->execute();
@@ -163,8 +164,9 @@ class Authentication
 
         $login    = $this->app->session['auth']['login'];
         $password = $this->app->session['auth']['password'];
-
-        $this->user = $this->checkLogin($login, $password);
+        if ($login && $password) {
+            $this->user = $this->checkLogin($login, $password);
+        }
         // $this->user = $this->app->session['auth']['user'];
         // SELECT roles, (roles & 4) AS r FROM users WHERE roles & (SELECT SUM(id) FROM `roles` WHERE name IN(  'login', 'admin'))
     }

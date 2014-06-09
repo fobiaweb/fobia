@@ -11,7 +11,7 @@ namespace Fobia\Debug;
 /**
  * MemoryLogger class
  *
- * @package   Fobia\Debug
+ * @package   Fobia.Debug
  */
 class MemoryLogger extends \Psr\Log\AbstractLogger
 {

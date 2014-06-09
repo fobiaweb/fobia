@@ -13,6 +13,8 @@
  */
 class App
 {
+    protected static $_instance = array();
+
     public static function instance()
     {
         return \Fobia\Base\Application::getInstance();
@@ -23,9 +25,13 @@ class App
         return \ezcDbInstance::get();
     }
 
+    /**
+     *
+     * 
+     */
     public static function Auth()
     {
-        
+
     }
 }
 
