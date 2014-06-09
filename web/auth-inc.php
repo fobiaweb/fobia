@@ -2,7 +2,7 @@
 
 
 $app = App::instance();
-Log::debug('boot: ' . $s);
+//Log::debug('boot: ' . $s);
 
 
 $app['auth'] = function() use($app) {
@@ -20,16 +20,20 @@ $app->get('/auth', function() use($app) {
 
 $app->map('/login', function() use($app) {
     if ($app->request->isGet()) {
-        echo  'login';
-        print_r($app['session']);
+        include SRC_DIR . '/view/login.php';
     }
     if ($app->request->isPost()) {
-        $login = $app->request->params('login');
-        $password = $app->request->params('pass');
-
-        dump($app->auth->login($login, $password));
-        // print_r($_SERVER);
+        $login = $_POST['login'];
+        $password = $_POST['pass'];
+        $r = $app->auth->login($login, $password);
+        $app->redirect($app->urlFor('base'), 'auth?r=' . rand());
     }
+//    dump($app->request);
+//    dump($app->request->params());
+//    dump($app->request->getMethod());
+//    dump($app->request->getHeaders());
+//    dump($app->request->getCookies());
+//    dump($app->request->post());
 })->via('GET', 'POST');
 
 

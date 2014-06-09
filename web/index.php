@@ -81,6 +81,12 @@ $controllerRole = function ( $controller ) use ($app) {
     };
 };
 
+
+$app->get('/', function() use($app) {
+    $app->redirect($app->urlFor('base') . 'login');
+})->name('base');
+
+
 $app->get('/action/test', 'm1', function() use($app) {
     print_r($_SERVER);
     // echo "=== " . __FUNCTION__ ;
