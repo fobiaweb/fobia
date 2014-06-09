@@ -10,6 +10,7 @@ namespace Fobia\Debug;
 
 use \Psr\Log\LogLevel;
 use \Psr\Log\LoggerInterface;
+
 /**
  * Log class
  *

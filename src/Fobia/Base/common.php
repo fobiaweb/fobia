@@ -15,6 +15,8 @@ define('FOBIA_COMMON_FILE', true);
 
 // Падавление ошибок
 error_reporting(E_ALL & ~E_DEPRECATED & ~E_STRICT & ~E_NOTICE);
+//trigger_error($error_msg)
+//error_log();
 
 // Автокодировка
 mb_internal_encoding('UTF-8');

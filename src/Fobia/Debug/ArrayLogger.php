@@ -20,11 +20,13 @@ class ArrayLogger extends \Psr\Log\AbstractLogger
     public function log($level, $message, array $context = array())
     {
         $this->list[] = array(
-            'time'    => sprintf("%6s", substr(microtime(true) - TIME_START, 0, 6)),   
-            'memory'  => sprintf("%6s", round(memory_get_usage() / 1024 / 1024, 2) . 'MB'),     
-            'message' => $message,      
-            'context' => $context      
+            'time'    => sprintf("%6s", substr(microtime(true) - TIME_START, 0, 6)),
+            'memory'  => sprintf("%6s", round(memory_get_usage() / 1024 / 1024, 2) . 'MB'),
+            'message' => $message,
+            'context' => $context
         );
+
+        error_log($message, 3, LOGS_DIR . '/error.log');
     }
 
     public function getRows()
