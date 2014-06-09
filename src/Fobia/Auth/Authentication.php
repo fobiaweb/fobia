@@ -6,14 +6,14 @@
  * @author     Dmitriy Tyurin <fobia3d@gmail.com>
  * @copyright  Copyright (c) 2014 Dmitriy Tyurin
  */
-namespace Auth;
+namespace Fobia\Auth;
 
 use Fobia\Base\Application;
 
 /**
  * Auth class
  *
- * @package Auth
+ * @package Fobia.Auth
  */
 class Authentication
 {
@@ -179,15 +179,3 @@ class Authentication
         return ($this->user) ? true : false;
     }
 }
-/*
-    $authenticated = false;
-    if ( !$session->isValid( $credentials ) )
-    {
-        // create the authentication object
-        $authentication = new ezcAuthentication( $credentials );
-        $authentication->session = $session;
-
-     authenticated
- *
- */
-

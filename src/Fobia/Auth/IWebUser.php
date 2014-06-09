@@ -6,13 +6,13 @@
  * @copyright  Copyright (c) 2014 Dmitriy Tyurin
  */
 
-namespace Auth;
+namespace Fobia\Auth;
 
 /**
  * Компонент приложения пользователь предоставляет идентификационную информацию для текущего пользователя.
  *
  * @author Dmitriy Tyurin <fobia3d@gmail.com>
- * @package Auth
+ * @package Fobia.Auth
  */
 interface IWebUser
 {

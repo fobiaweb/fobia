@@ -10,7 +10,11 @@
         "symfony/console": "2.*",
         "symfony/debug": "2.*",
         "symfony/filesystem": "2.*",
-        "symfony/yaml": "2.*"
+        "symfony/yaml": "2.*",
+        "wp-cli/php-cli-tools": "~0.9.4"
+    },
+    "require-dev": {
+        "kriswallsmith/buzz": "*"
     },
     "autoload": {
         "psr-0": {

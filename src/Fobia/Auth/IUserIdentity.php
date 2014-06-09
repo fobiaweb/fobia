@@ -6,7 +6,7 @@
  * @copyright  Copyright (c) 2014 Dmitriy Tyurin
  */
 
-namespace Auth;
+namespace Fobia\Auth;
 
 /**
  * Интерфейс IUserIdentity реализуется классом идентификации пользователя.
@@ -15,7 +15,7 @@ namespace Auth;
  * Обычно он используется с {@link Application::user user application component}.
  *
  * @author Dmitriy Tyurin <fobia3d@gmail.com>
- * @package Auth
+ * @package Fobia.Auth
  */
 interface IUserIdentity
 {
