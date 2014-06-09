@@ -426,4 +426,21 @@ class Utils
         }
         return false;
     }
+
+    /**
+     * Создает новый объект экземпляр класса
+     * 
+     * @param string $class class name
+     * @param mixed ... arguments constructor
+     * 
+     * @return mixed new class
+     */
+    public static function createClass($class) {
+        $args = func_get_args();
+        array_shift($args);
+
+        $reflectionClass = new \ReflectionClass($class); 
+        $instance = $reflectionClass->newInstanceArgs($args);
+        return $instance;
+    }
 }

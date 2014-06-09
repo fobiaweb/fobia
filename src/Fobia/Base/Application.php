@@ -141,8 +141,7 @@ class Application extends \Slim\App
         unset($autoload);
 
         // Session
-        $this->extend('session',
-                      function($session, $c) {
+        $this->extend('session', function($session, $c) {
             Log::debug('Session start', array(session_id()));
             return $session;
         });
@@ -154,6 +153,17 @@ class Application extends \Slim\App
             \ezcDbInstance::set($db);
             return $db;
         };
+
+        $this['controller_factory'] = $this->protect(function($controller)  {
+            list( $class, $action ) = explode('::', $controller);
+            $app = $this;
+            return function() use ( $class, $action, $app ) {
+                $args = func_get_args();
+                $controller = new $class( $app, $args );
+                call_user_method_array($action, $controller, array() );
+            };
+        });
+
         if ( ! self::$instance[0]) {
             self::setInstance($this);
         }
@@ -183,5 +193,34 @@ class Application extends \Slim\App
     {
         defined('IS_CLI') or define('IS_CLI',  ! defined('SYSPATH'));
         return IS_CLI;
+    }
+
+    protected function dispatchRequest(\Slim\Http\Request $request, \Slim\Http\Response $response)
+    {
+        try {
+            $this->applyHook('slim.before');
+            ob_start();
+            $this->applyHook('slim.before.router');
+            $dispatched = false;
+            $matchedRoutes = $this['router']->getMatchedRoutes($request->getMethod(), $request->getPathInfo(), true);
+            foreach ($matchedRoutes as $route) {
+                try {
+                    $this->applyHook('slim.before.dispatch');
+                    $dispatched = $route->dispatch();
+                    $this->applyHook('slim.after.dispatch');
+                    if ($dispatched) {
+                        break;
+                    }
+                } catch (\Slim\Exception\Pass $e) {
+                    continue;
+                }
+            }
+            if (!$dispatched) {
+                $this->notFound();
+            }
+            $this->applyHook('slim.after.router');
+        } catch (\Slim\Exception\Stop $e) {}
+        $response->write(ob_get_clean());
+        $this->applyHook('slim.after');
     }
 }

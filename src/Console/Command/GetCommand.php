@@ -36,12 +36,26 @@ class GetCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $name = $input->getArgument('path');
-        $text = 'GET: '.$name;
+        $text = 'GET: ' . $name;
 
         if ($input->getOption('yell')) {
             $text = strtoupper($text);
         }
 
-        $output->writeln($text);
+
+        // $app = $this->getApplication()->createApp(array(
+        //     // 'REQUEST_METHOD' => 'GET',
+        //     // 'SCRIPT_NAME' => '/fobia/index.php',
+        //     'REQUEST_URI' => '/fobia' . $name , ///action/test?f=11&t=4',
+        //     'QUERY_STRING' => '' // 'f=11&t=4'
+        // ));
+        // $output->writeln($text);
+        // $app->run();
+
+        $_SERVER['REQUEST_METHOD'] = 'GET';
+        $_SERVER['SCRIPT_NAME'] = '/fobia/index.php';
+        $_SERVER['REQUEST_URI'] = '/fobia' . $name ;
+        $_SERVER['QUERY_STRING'] = '';// . $name ;
+        require_once '/srv/fobiaweb/fobia/web/index.php';
     }
 }

@@ -59,4 +59,18 @@ class FobiaApplication  extends Application
 
         return $inputDefinition;
     }
+
+
+    public function createApp(array $envSettings = array(), array $appSettings = array())
+    {
+        $envSettings = array_merge(array(
+            'REQUEST_METHOD' => 'GET',
+            'SCRIPT_NAME' => '/fobia/index.php',
+            'REQUEST_URI' => '/fobia/action/test?f=11&t=4',
+            'QUERY_STRING' => 'f=11&t=4'
+        ), $envSettings);
+        $appSettings = array_merge(array(), $appSettings);
+        $app = new \Fobia\Base\Application($appSettings);
+        return $app;
+    }
 }

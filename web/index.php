@@ -24,11 +24,22 @@ $aBitOfInfo = function (\Slim\Route $route) {
     echo "Current route is '" . $route->getName() ."'" . BR;
 };
 
-$app['random'] = $app->protect(function () { return rand(); });
+$app['factory'] = $app->factory(function ($c) {
+    $obj = new \stdClass();
+    $obj->time = microtime(true);
+    $obj->m = function() {
+        return 'func';
+    };
+
+    return $obj;
+});
+
+
+// $app['random'] = $app->protect(function () { return rand(); });
 
 // $r = $app['random'];
 
-dump($aBitOfInfo, $app['random'](), $app['random']());
+// dump($aBitOfInfo, $app['random'](), $app['random']());
 
 /*
 $app->hook('slim.before', function($args) use($app) {
@@ -53,8 +64,10 @@ $app->hook('slim.before', function($args) use($app) {
 
 */
 function m1() {
-    dump (func_get_args());
-    echo "This is middleware!" .BR;
+    echo "=== " . __FUNCTION__ ;
+    // dump (func_get_args());
+    echo "This is middleware!" . BR;
+    echo "<hr>";
 }
 
 
@@ -71,7 +84,18 @@ $controllerRole = function ( $controller ) use ($app) {
     };
 };
 
-// $app->get('/action/test', 'm1', function())
+$app->get('/action/test', 'm1', function() use($app) {
+    print_r($_SERVER);
+    // echo "=== " . __FUNCTION__ ;
+    // dump(func_get_args());
+    // dump($app->router->getCurrentRoute());
+    // dump($app['factory']);
+    // $m = $app['factory']->m;
+    // dump($m());
+    dump($app['controller_factory']);
+});
+
+$app->get('/factory(/:s+)', $app['controller_factory']('\\Controller::indexAction', 'd'));
 
 $app->get('/action/:section+/:args', 'm1', $aBitOfInfo,  $controllerRole('\\Controller::indexAction', 'd') )
 ->name('action');
