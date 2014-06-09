@@ -6,12 +6,14 @@
  * @author     Dmitriy Tyurin <fobia3d@gmail.com>
  * @copyright  Copyright (c) 2014 Dmitriy Tyurin
  */
+namespace Auth;
+
 use Fobia\Base\Application;
 
 /**
  * Auth class
  *
- * @package
+ * @package Auth
  */
 class Authentication
 {
@@ -39,11 +41,11 @@ class Authentication
 
     protected $tableName = 'users';
 
-    function __construct(Application $app)
+    function __construct(Application $app, $map = array())
     {
         $this->app = $app;
-
-        $a = $this->app->session['auth'];
+        $this->map = array_merge($this->map, $map);
+//        $a = $this->app->session['auth'];
     }
 
     public function isRole($role)
@@ -51,21 +53,39 @@ class Authentication
         return $this->getRoles() & (int) $role;
     }
 
+    /**
+     * @return string
+     */
     public function getLogin()
     {
         return $this->user->{$this->map['login']};
     }
 
+    /**
+     * Get user password hex
+     * @return string
+     */
     public function getPassword()
     {
         return $this->user->{$this->map['password']};
     }
 
+    /**
+     * Get user mask roles
+     * @return int
+     */
     public function getRoles()
     {
         return $this->user->{$this->map['role']};
     }
 
+    /**
+     *
+     * @param string $login
+     * @param string $password
+     * @return boolean
+     * @api
+     */
     public function login($login, $password)
     {
         $password = hash_hmac($this->app['settings']['crypt.method'], $password,
@@ -85,12 +105,24 @@ class Authentication
         );
     }
 
+    /**
+     * @api
+     */
     public function logout()
     {
         $this->app['session']['auth'] = array();
-        $this->user                   = null;
-    }
 
+        $this->user = null;
+    }
+    /**
+     *
+     * @param string $login
+     * @param string $password hex string
+     * @return boolean
+     * @api
+     *
+     * @return mixeed Description
+     */
     public function checkLogin($login, $password)
     {
         $q    = $this->app->db->createSelectQuery();
@@ -105,22 +137,30 @@ class Authentication
         return $stmt->fetchObject();
     }
 
+    /**
+     * Устанавливает флаг в jnline
+     * @return void
+     */
     public function setOnline()
     {
+        if (!@$this->map['online']) {
+            return;
+        }
         $id = $this->user->{$this->map['id']};
+
         $q  = $this->app->db->createUpdateQuery();
-        $q->update($this->tableName)->set('online', $this->app->db->quote($id));
+        $q->update($this->tableName)
+                ->set($this->map['online'], 'NOW()')
+                ->where($q->expr->eq($this->map['online'], $this->app->db->quote($id)));
         $q->prepare()->execute();
     }
 
     public function authenticate()
     {
-        // if (!$this->app->session['auth']) {
-        //     $this->app->session['auth'] = array(
-        //         'user' => ''
-        //     );
-        // }
-        // $auth = $this->app->session['auth'];
+        if (!  is_array($this->app->session['auth'])) {
+            $this->app->session['auth'] = array();
+        }
+
         $login    = $this->app->session['auth']['login'];
         $password = $this->app->session['auth']['password'];
 
@@ -150,3 +190,4 @@ class Authentication
      authenticated
  *
  */
+

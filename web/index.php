@@ -16,7 +16,7 @@ Log::debug('boot: ' . $s);
 
 
 $app['auth'] = function() use($app) {
-    $auth = new Authentication($app);
+    $auth = new Auth\Authentication($app);
     return $auth;
 };
 
