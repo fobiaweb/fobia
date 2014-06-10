@@ -13,34 +13,48 @@ $app['auth'] = function() use($app) {
 
 $app->get('/auth', function() use($app) {
     $app['auth']->authenticate();
-    dump($app['auth']->user);
-    dump($app['session']['auth']['password']);
+    
+    if ($app['auth']->hasIdentity()) {
+        $auth = $app['session']['auth'];
+        $auth['page'] += 1;
+        $app['session']['auth'] = $auth;
+
+        dump($app['session']);
+    } else {
+        echo 'NO AYTH';
+    }
+
 });
 
 
 $app->map('/login', function() use($app) {
+    $app['auth']->authenticate();
+
     if ($app->request->isGet()) {
-        $app['auth']->authenticate();
+
+        if ( $app['auth']->hasIdentity() ) {
+            $app->redirect($app->urlFor('base') . 'auth?r=' . rand());
+        }
+
+        // Log::dump($app['auth']->hasIdentity());
         include SRC_DIR . '/view/login.php';
-        dump($app['auth']);
     }
+
     if ($app->request->isPost()) {
-        $login = $_POST['login'];
-        $password = $_POST['pass'];
+        $login = $app->request->post('login');
+        $password = $app->request->post('pass');
         $r = $app->auth->login($login, $password);
-//        $app->redirect($app->urlFor('base'), 'auth?r=' . rand());
+        $app->redirect($app->urlFor('base') . 'login?r=' . rand());
     }
-//    dump($app->request);
-    // dump($app->request->params());
-//    dump($app->request->getMethod());
-//    dump($app->request->getHeaders());
-//    dump($app->request->getCookies());
-//    dump($app->request->post());
+
+    Log::dump($app['auth']->getLogin());
 })->via('GET', 'POST');
 
 
+
+
 $app->any('/logout', function() use($app) {
-    $app['auth']->login ('u1399934039', 2);
+    $app['auth']->logout();
     dump($app['session']);
 });
 

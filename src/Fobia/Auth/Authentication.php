@@ -9,7 +9,7 @@
 namespace Fobia\Auth;
 
 use Fobia\Base\Application;
-
+use Log;
 /**
  * Auth class
  *
@@ -38,10 +38,21 @@ class Authentication
         'role'     => 'role',
         'online'   => 'online'
     );
-    protected $cacheAuth = false;
-
+    /**
+     * @var bool  хранить сесию
+     */
+    protected $cacheAuth = true;
+/**
+ * @var string table
+ */
     protected $tableName = 'users';
 
+    /**
+     *
+     * @param \Fobia\Base\Application $app
+     * @param type $map
+     * @internal
+     */
     function __construct(Application $app, $map = array())
     {
         $this->app = $app;
@@ -89,12 +100,12 @@ class Authentication
     public function login($login, $password, $hash = true)
     {
         if ($hash) {
-        $password = hash_hmac($this->app['settings']['crypt.method'], $password,
+            $password = hash_hmac($this->app['settings']['crypt.method'], $password,
                               $this->app['settings']['crypt.key']);
         }
 
         $user = $this->checkLogin($login, $password);
-        if ( ! $user) {
+        if ( ! $user ) {
             return false;
         }
 
@@ -104,7 +115,10 @@ class Authentication
             'user'     => $user,
             'password' => $password,
             'login'    => $login,
+            'online'   => time()
         );
+        $this->setOnline();
+
         return true;
     }
 
@@ -125,7 +139,7 @@ class Authentication
      * @return boolean
      * @api
      *
-     * @return mixeed Description
+     * @return mixeed
      */
     public function checkLogin($login, $passhex)
     {
@@ -147,7 +161,7 @@ class Authentication
      */
     public function setOnline()
     {
-        if (!@$this->map['online']) {
+        if (!@$this->map['online'] || !@$this->user) {
             return;
         }
         $id = $this->user->{$this->map['id']};
@@ -157,25 +171,38 @@ class Authentication
                 ->set($this->map['online'], 'NOW()')
                 ->where($q->expr->eq($this->map['online'], $this->app->db->quote($id)));
         $q->prepare()->execute();
+        Log::debug('authenticate:: set online');
     }
 
+    /**
+     * Механизм индетификации
+     */
     public function authenticate()
     {
+        
         if (!  is_array($this->app->session['auth'])) {
             $this->app->session['auth'] = array();
         }
 
         $login    = $this->app->session['auth']['login'];
         $password = $this->app->session['auth']['password'];
+        $online   = $this->app->session['auth']['online'];
+
         if ($this->cacheAuth) {
-            $this->user = $this->app->session['auth']['user'];
+            $d_time = time() - $online;
+            if ($d_time < 300) {
+                $this->user = $this->app->session['auth']['user'];
+            }
         }
+        
+        Log::debug('authenticate:: start', $this->app->session['auth']);
 
-        if ($login && $password) {
-            $this->user = $this->checkLogin($login, $password);
+        if (!$this->user && $login && $password) {
+            Log::debug("authenticate:: checkLogin; online: $online ($this->cacheAuth)");
+            $this->login($login, $password, false);
+            // $this->user 
         }
-
-
+        Log::debug('authenticate:: init');
         // $this->user = $this->app->session['auth']['user'];
         // SELECT roles, (roles & 4) AS r FROM users WHERE roles & (SELECT SUM(id) FROM `roles` WHERE name IN(  'login', 'admin'))
     }

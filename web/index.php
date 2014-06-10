@@ -6,6 +6,7 @@
  * @copyright  Copyright (c) 2014 Dmitriy Tyurin
  */
 
+define('REMOTE_SERVER', false);
 
 require_once __DIR__ . '/../app/bootstrap.php';
 $s = microtime(true) - TIME_START;
@@ -60,6 +61,13 @@ $app->hook('slim.before', function($args) use($app) {
 });
 
 */
+
+$app->hook('slim.before.dispatch', function() use($app) {
+    // dump(func_get_args());
+    // Log::dump($args, 'slim.after.dispatch');
+});
+
+
 function m1() {
     echo "=== " . __FUNCTION__ ;
     // dump (func_get_args());
@@ -106,4 +114,4 @@ $app->get('/action/:section+/:args', 'm1', $aBitOfInfo,  $controllerRole('\\Cont
 $app->run();
 
 // Log::alert('test');
-// echo '<pre>' . Log::getLogger()->readMemory() . '</pre>';
+echo '<pre>' . Log::getLogger()->readMemory() . '</pre>';
