@@ -105,5 +105,5 @@ $app->get('/action/:section+/:args', 'm1', $aBitOfInfo,  $controllerRole('\\Cont
 
 $app->run();
 
-Log::alert('test');
-echo '<pre>' . Log::getLogger()->readMemory() . '</pre>';
+// Log::alert('test');
+// echo '<pre>' . Log::getLogger()->readMemory() . '</pre>';

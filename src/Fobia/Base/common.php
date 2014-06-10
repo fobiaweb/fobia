@@ -54,7 +54,7 @@ defined('REMOTE_SERVER') or define('REMOTE_SERVER', !IS_CLI && $_SERVER['REMOTE_
 // Функция вызываемая при вызове dump()
 if (!isset($_ENV['dump.callback'])) {
     $_ENV['dump.callback'] = function($var) {
-        if (@constant(REMOTE_SERVER) && REMOTE_SERVER) {
+        if (@constant('REMOTE_SERVER') && REMOTE_SERVER) {
             \CVarDumper::dump($var, 10, true);
         } else {
             var_dump($var);

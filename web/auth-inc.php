@@ -20,7 +20,9 @@ $app->get('/auth', function() use($app) {
 
 $app->map('/login', function() use($app) {
     if ($app->request->isGet()) {
+        $app['auth']->authenticate();
         include SRC_DIR . '/view/login.php';
+        dump($app['auth']);
     }
     if ($app->request->isPost()) {
         $login = $_POST['login'];
@@ -29,7 +31,7 @@ $app->map('/login', function() use($app) {
 //        $app->redirect($app->urlFor('base'), 'auth?r=' . rand());
     }
 //    dump($app->request);
-    dump($app->request->params());
+    // dump($app->request->params());
 //    dump($app->request->getMethod());
 //    dump($app->request->getHeaders());
 //    dump($app->request->getCookies());

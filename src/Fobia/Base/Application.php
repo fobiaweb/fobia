@@ -70,44 +70,26 @@ class Application extends \Slim\App
             $userSettings = array();
             if (file_exists($file)) {
                 $userSettings = Utils::loadConfig($file);
+                Log::debug("Configuration load", array(realpath($file)));
                 unset($file);
             }
         }
 
 
-        $dirs = array(__DIR__ . '/../../config', __DIR__ . '/../config');
-        if (defined('CONFIG_DIR')) {
-            array_unshift($dirs, CONFIG_DIR);
-        }
-        foreach ($dirs as $dir) {
-            $f = $dir . "/config.yml";
-            if (file_exists($f)) {
-                $defaultSettings = Utils::loadConfigCache($f);
-                Log::debug("Configuration read from", array(realpath($f)));
-                break;
-            }
-        }
-        if (!is_array($defaultSettings)) {
-            $defaultSettings = array();
-        }
+        // if (is_array($userSettings['import'])) {
+        //     $import = $userSettings['import'];
+        //     foreach ($import as $file) {
+        //         $file     = $configDir . '/' . $file;
+        //         $settings = Utils::loadConfig($file);
+        //         if ($settings) {
+        //             $defaultSettings = array_merge($defaultSettings, $settings);
+        //             Log::debug("Configuration import",
+        //                               array(realpath($file)));
+        //         }
+        //     }
+        // }
 
-        if (is_array($userSettings)) {
-            $defaultSettings = array_replace($defaultSettings, $userSettings);
-        }
-
-        if (is_array($defaultSettings['import'])) {
-            foreach ($defaultSettings['import'] as $file) {
-                $file     = $configDir . '/' . $file;
-                $settings = Utils::loadConfig($file);
-                if ($settings) {
-                    $defaultSettings = array_merge($defaultSettings, $settings);
-                    Log::debug("Configuration import",
-                                      array(realpath($file)));
-                }
-            }
-        }
-
-        parent::__construct($defaultSettings);
+        parent::__construct((array) $userSettings);
 
         // Если Internet Explorer, то шлем на хуй
         /*
