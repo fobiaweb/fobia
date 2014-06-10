@@ -38,6 +38,7 @@ class Authentication
         'role'     => 'role',
         'online'   => 'online'
     );
+    protected $cacheAuth = false;
 
     protected $tableName = 'users';
 
@@ -45,7 +46,6 @@ class Authentication
     {
         $this->app = $app;
         $this->map = array_merge($this->map, $map);
-//        $a = $this->app->session['auth'];
     }
 
     public function isRole($role)
@@ -86,10 +86,12 @@ class Authentication
      * @return boolean
      * @api
      */
-    public function login($login, $password)
+    public function login($login, $password, $hash = true)
     {
-        //$password = hash_hmac($this->app['settings']['crypt.method'], $password,
-        //                      $this->app['settings']['crypt.key']);
+        if ($hash) {
+        $password = hash_hmac($this->app['settings']['crypt.method'], $password,
+                              $this->app['settings']['crypt.key']);
+        }
 
         $user = $this->checkLogin($login, $password);
         if ( ! $user) {
@@ -115,8 +117,9 @@ class Authentication
 
         $this->user = null;
     }
+
     /**
-     *
+     * Тупо проверка верного логиа и пароля
      * @param string $login
      * @param string $passhex hex string
      * @return boolean
@@ -164,9 +167,15 @@ class Authentication
 
         $login    = $this->app->session['auth']['login'];
         $password = $this->app->session['auth']['password'];
+        if ($this->cacheAuth) {
+            $this->user = $this->app->session['auth']['user'];
+        }
+
         if ($login && $password) {
             $this->user = $this->checkLogin($login, $password);
         }
+
+
         // $this->user = $this->app->session['auth']['user'];
         // SELECT roles, (roles & 4) AS r FROM users WHERE roles & (SELECT SUM(id) FROM `roles` WHERE name IN(  'login', 'admin'))
     }
