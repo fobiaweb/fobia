@@ -52,8 +52,10 @@ abstract class ApiMethod
 
     /**
      * Установка/получение параметра
+     * 
      * @param array|string $name
      * @param array|string $value
+     * 
      * @return array|string
      */
     public function params($name = null, $value = null)
@@ -103,6 +105,7 @@ abstract class ApiMethod
     /**
      *
      * @param array $args
+     * 
      * @return array
      */
     protected function prepare($args = null)
