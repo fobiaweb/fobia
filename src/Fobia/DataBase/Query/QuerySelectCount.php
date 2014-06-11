@@ -1,19 +1,19 @@
 <?php
 /**
- * DbSelectCount class  - DbSelectCount.php file
+ * QuerySelectCount class  - QuerySelectCount.php file
  *
  * @author     Dmitriy Tyurin <fobia3d@gmail.com>
  * @copyright  Copyright (c) 2014 Dmitriy Tyurin
  */
 
-namespace Congress\Service;
+namespace Fobia\DataBase\Query;
 
 /**
- * DbSelectCount class
+ * QuerySelectCount class
  *
- * @package   Congress.Service
+ * @package   Fobia.DataBase.Query
  */
-class DbSelectCount
+class QuerySelectCount
 {
     /**
      * @var \ezcQuerySelect
@@ -37,7 +37,7 @@ class DbSelectCount
     }
 
     /**
-     * @return \ezcQuerySelect
+     * @return self
      */
     public function select()
     {
@@ -45,6 +45,9 @@ class DbSelectCount
         return $this;
     }
 
+    /**
+     * @return self 
+     */ 
     public function limit( $limit, $offset = '' )
     {
         $limit = (int) $limit;
@@ -58,14 +61,22 @@ class DbSelectCount
         return $this;
     }
 
+    /**
+     * @return self 
+     */ 
     public function needAll()
     {
         $this->needAll = true;
+        return $this;
     }
 
+    /**
+     * @return self 
+     */ 
     public function count($column = '*')
     {
         $this->countColumn = $column;
+        return $this;
     }
 
     public function execute()

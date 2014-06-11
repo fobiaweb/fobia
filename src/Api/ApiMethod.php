@@ -6,12 +6,12 @@
  * @copyright  Copyright (c) 2014 Dmitriy Tyurin
  */
 
-namespace Congress\Service;
+namespace Api;
 
 /**
  * ApiMethod class
  *
- * @package   Congress\Service
+ * @package   Api
  */
 abstract class ApiMethod
 {
