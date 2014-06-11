@@ -18,7 +18,7 @@ $app->get('/auth', function() use($app) {
         $auth = $app['session']['auth'];
         $auth['page'] += 1;
         $app['session']['auth'] = $auth;
-
+        $app['auth']->setOnline();
         dump($app['session']);
     } else {
         echo 'NO AYTH';

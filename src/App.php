@@ -15,23 +15,29 @@ class App
 {
     protected static $_instance = array();
 
+    /**
+     * @return Fobia\Base\Application
+     */ 
     public static function instance()
     {
         return \Fobia\Base\Application::getInstance();
     }
 
+    /**
+    * @return Fobia\DataBase\Handler\DbConnectionMysql     
+    */ 
     public static function Db()
     {
         return \ezcDbInstance::get();
     }
 
     /**
-     *
-     * 
+     * @return Fobia\Auth\Authentication 
      */
     public static function Auth()
     {
-
+        $app = \Fobia\Base\Application::getInstance();
+        return $app['auth'];
     }
 }
 

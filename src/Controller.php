@@ -33,7 +33,7 @@ class Controller
     {
         dump(array(
             'Action' => __METHOD__,
-            'Segments' => $this->segments,
+            'Segments' => '',//$this->segments,
             'Args' => func_get_args()
         ));
     }

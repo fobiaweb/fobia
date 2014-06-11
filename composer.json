@@ -14,7 +14,8 @@
         "wp-cli/php-cli-tools": "~0.9.4"
     },
     "require-dev": {
-        "kriswallsmith/buzz": "*"
+        "kriswallsmith/buzz": "*",
+        "dropbox/dropbox-sdk": "1.1.*"
     },
     "autoload": {
         "psr-0": {

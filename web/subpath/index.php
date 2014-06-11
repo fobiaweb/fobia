@@ -15,7 +15,7 @@ $app = App::instance();
 $app->get('/../', function() {})->name('nb');
 
 
-$app->get('/test', function() use($app) {
+$app->get('/test1', function() use($app) {
     echo "urlFor: ";
     echo $app->urlFor('nb', array('page'=> '11', '22')) . BR;
 });

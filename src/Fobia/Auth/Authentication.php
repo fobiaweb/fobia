@@ -38,13 +38,15 @@ class Authentication
         'role'     => 'role',
         'online'   => 'online'
     );
+    
     /**
      * @var bool  хранить сесию
      */
     protected $cacheAuth = true;
-/**
- * @var string table
- */
+    
+    /**
+     * @var string table
+     */
     protected $tableName = 'users';
 
     /**
@@ -169,7 +171,7 @@ class Authentication
         $q  = $this->app->db->createUpdateQuery();
         $q->update($this->tableName)
                 ->set($this->map['online'], 'NOW()')
-                ->where($q->expr->eq($this->map['online'], $this->app->db->quote($id)));
+                ->where($q->expr->eq($this->map['id'], $this->app->db->quote($id)));
         $q->prepare()->execute();
         Log::debug('authenticate:: set online');
     }

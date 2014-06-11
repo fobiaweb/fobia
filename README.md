@@ -10,3 +10,4 @@ fobia/fobia
 
 
 [slim-auth](https://github.com/jeremykendall/slim-auth)
+
