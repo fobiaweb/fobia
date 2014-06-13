@@ -52,7 +52,7 @@ $app->hook('slim.before', function() use($app) {
 });
 
 $app->hook('slim.after.router', function() use($app) {
-    Log::info($app['router']->getCurrentRoute()->getName()  );
+    Log::info('router: ' . $app['router']->getCurrentRoute()->getName()  );
     // dump($app['router']->getCurrentRoute());
 });
 
@@ -62,9 +62,12 @@ $app->hook('slim.after.router', function() use($app) {
 // ==============================================================
 $controllerRole = function ( $controller ) use ($app) {
     list( $class, $method ) = explode('::', $controller);
-    return function() use ( $class, $method, $app ) {
+    $params = func_get_args();
+    array_shift($params);
+
+    return function() use ( $class, $method, $params, $app ) {
         $args = func_get_args();
-        $controller = new $class($app, $args );
+        $controller = new $class( $app, $args );
         call_user_method_array($method, $controller, array() );
     };
 };

@@ -8,9 +8,16 @@
 
 require_once __DIR__ . '/boot.php';
 
+require_once __DIR__ . '/auth-inc.php';
+
+/* @var $app \Fobia\Base\Application */
 
 $app->get('/', function() {
     echo 'login';
+});
+
+$app->any('/api/:method', function($method) use($app) {
+    dump($method);
 });
 
 
