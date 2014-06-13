@@ -59,7 +59,8 @@ class Utils
     }
 
     /**
-     * Загрузка из кешаы
+     * Загрузка из кеша
+     *
      * @param string $file
      * @param string $dir
      * @return mixed
@@ -143,20 +144,14 @@ class Utils
      */
     public static function getExecutionTime($end = null, $start = null)
     {
+        // Канстанта устанавливаеться в этой библиотеке
         if ($start === null) {
-            $start = TIME_START;
+            $start = TIME_START; // $_SERVER["REQUEST_TIME_FLOAT"] ;
         }
         if ($end === null) {
             $end = microtime(true);
         }
         return $end - $start;
-        // Канстанта устанавливаеться в этой библиотеке
-        // if (defined('TIME_START')) {
-        //     return microtime(true) - TIME_START;
-        // } else {
-        //     return microtime(true) - $_SERVER["REQUEST_TIME"];
-        // }
-        // return microtime(true) - TIME_START;
     }
 
     /**
@@ -217,6 +212,7 @@ class Utils
 
     /**
      * IP клиента
+     *
      * @return string
      */
     public static function GetIp()
@@ -233,7 +229,7 @@ class Utils
 
     /**
      * Уникальный индетификатор пользователя
-     * 
+     *
      * @return string
      */
     public static function GetPPID()
@@ -294,6 +290,7 @@ class Utils
 
     /**
      * Парсирует строку URL
+     * 
      * @param string $url
      * @param array $options
      * @return type
@@ -429,17 +426,17 @@ class Utils
 
     /**
      * Создает новый объект экземпляр класса
-     * 
+     *
      * @param string $class class name
      * @param mixed ... arguments constructor
-     * 
+     *
      * @return mixed new class
      */
     public static function createClass($class) {
         $args = func_get_args();
         array_shift($args);
 
-        $reflectionClass = new \ReflectionClass($class); 
+        $reflectionClass = new \ReflectionClass($class);
         $instance = $reflectionClass->newInstanceArgs($args);
         return $instance;
     }

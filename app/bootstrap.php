@@ -5,6 +5,11 @@
  * @author     Dmitriy Tyurin <fobia3d@gmail.com>
  * @copyright  Copyright (c) 2014 Dmitriy Tyurin
  */
+if (defined('BOOTSTRAP_FILE')) {
+    return;
+} else {
+   define('BOOTSTRAP_FILE', true);
+}
 
 
 require_once __DIR__ . '/../vendor/autoload.php';

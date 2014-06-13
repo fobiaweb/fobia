@@ -38,16 +38,21 @@ class Authentication
         'role'     => 'role',
         'online'   => 'online'
     );
-    
+
     /**
      * @var bool  хранить сесию
      */
     protected $cacheAuth = true;
-    
+
     /**
-     * @var string table
+     * @var string название таблиццы
      */
     protected $tableName = 'users';
+
+    /**
+     * @var int интервал онлайна
+     */
+    protected $dTime = 300;
 
     /**
      *
@@ -60,6 +65,11 @@ class Authentication
         $this->app = $app;
         $this->map = array_merge($this->map, $map);
     }
+
+
+    /********************************************************************************
+    * USER Methods
+    *******************************************************************************/
 
     public function isRole($role)
     {
@@ -91,6 +101,11 @@ class Authentication
     {
         return $this->user->{$this->map['role']};
     }
+
+
+    /********************************************************************************
+    * Auth Methods
+    *******************************************************************************/
 
     /**
      *
@@ -125,23 +140,22 @@ class Authentication
     }
 
     /**
+     * @return void
      * @api
      */
     public function logout()
     {
         $this->app['session']['auth'] = array();
-
         $this->user = null;
     }
 
     /**
      * Тупо проверка верного логиа и пароля
+     *
      * @param string $login
      * @param string $passhex hex string
-     * @return boolean
+     * @return mixed
      * @api
-     *
-     * @return mixeed
      */
     public function checkLogin($login, $passhex)
     {
@@ -158,7 +172,8 @@ class Authentication
     }
 
     /**
-     * Устанавливает флаг в jnline
+     * Устанавливает флаг в online
+     *
      * @return void
      */
     public function setOnline()
@@ -181,7 +196,7 @@ class Authentication
      */
     public function authenticate()
     {
-        
+
         if (!  is_array($this->app->session['auth'])) {
             $this->app->session['auth'] = array();
         }
@@ -192,17 +207,17 @@ class Authentication
 
         if ($this->cacheAuth) {
             $d_time = time() - $online;
-            if ($d_time < 300) {
+            if ($d_time < $this->dTime) {
                 $this->user = $this->app->session['auth']['user'];
             }
         }
-        
+
         Log::debug('authenticate:: start', $this->app->session['auth']);
 
         if (!$this->user && $login && $password) {
             Log::debug("authenticate:: checkLogin; online: $online ($this->cacheAuth)");
             $this->login($login, $password, false);
-            // $this->user 
+            // $this->user
         }
         Log::debug('authenticate:: init');
         // $this->user = $this->app->session['auth']['user'];
