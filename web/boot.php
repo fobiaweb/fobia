@@ -25,9 +25,8 @@ App::instance();
 //
 // Обработка страниц по умолчанию, если нет соответствуещего пути
 // ==============================================================
-$app->hook('slim.before', function($args) use($app) {
+$app->hook('slim.before', function() use($app) {
     $app->get('/(:page+)', function($pages = array()) use ($app) {
-        dump('==============================');
         foreach ($pages as $k => $v) {
             if (!$v || $v == '/') {
                 unset($pages[$k]);
@@ -54,7 +53,7 @@ $app->hook('slim.before', function($args) use($app) {
 
 $app->hook('slim.after.router', function() use($app) {
     Log::info($app['router']->getCurrentRoute()->getName()  );
-    dump($app['router']->getCurrentRoute());
+    // dump($app['router']->getCurrentRoute());
 });
 
 
@@ -73,7 +72,6 @@ $controllerRole = function ( $controller ) use ($app) {
 // Index страница (переопределяеться)
 // ===============================================================
 $app->get('/', function() use($app) {
-    // $app->redirect($app->urlFor('base') . 'login');
     $app->pass();
 })->name('base');
 
