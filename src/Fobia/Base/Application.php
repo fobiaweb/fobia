@@ -160,6 +160,27 @@ class Application extends \Slim\App
         return $this[$name];
     }
 
+    /**
+     * Возвращает функцию автозоздания контролера
+     *
+     * @param string $controller
+     * @return callable
+     */
+    public function createController($controller)
+    {
+        list( $class, $method ) = explode('::', $controller);
+        $params = func_get_args();
+        array_shift($params);
+
+        $app = $this;
+
+        return function() use ( $class, $method, $params, $app ) {
+            $args = func_get_args();
+            $controller = new $class( $app, $args, $params );
+            call_user_method_array($method, $controller, array() );
+        };
+    }
+
 
     protected function defaultNotFound()
     {

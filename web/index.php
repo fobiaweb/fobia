@@ -20,7 +20,7 @@ $app->any('/api/:method', function($method) use($app) {
     dump($method);
 });
 
-
+$app->any('/test(/:h+)', $app->createController('\\Controller::indexAction'));
 
 
 $app->run();

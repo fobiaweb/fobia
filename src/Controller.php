@@ -33,8 +33,23 @@ class Controller
     {
         dump(array(
             'Action' => __METHOD__,
-            'Segments' => '',//$this->segments,
+            'Segments' => $this->segments,
             'Args' => func_get_args()
         ));
+        dump($this->app['router']->getCurrentRoute()->getParams());
+
+        dump($this->app['request']->getPathInfo());
+
+        $api = new \Api\ApiMethod();
+        $api->method = 'default';
+        if($api->execute()) {
+        dump($api->getResponse());
+        }
+        else {
+            dump($api->errorInfo());
+        }
     }
+
+
+
 }

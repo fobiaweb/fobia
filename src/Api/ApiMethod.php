@@ -12,50 +12,55 @@ namespace Api;
  * ApiMethod class
  *
  * @package   Api
+ *
+ * @property \Fobia\Base\Application $app
+ *
  */
-abstract class ApiMethod
+class ApiMethod
 {
-
-    protected $params = array();
-    protected $errors = array();
+    public $method;
+    protected $params  = array();
+    public $options = array();
+    //
+    protected $response;
+    protected $errors  = array();
 
     public function __construct(array $params = array())
     {
         $this->params = $params;
     }
 
-    /**
-     * Метод
-     * --------------------------------------------
-     *
-     * PARAMS:
-     * ------
-     * fields   (*) parametrs
-     *
-     * --------------------------------------------
-     *
-     * RESULT
-     * ------
-     * Result
-     * --------------------------------------------
-     *
-     * @param  array $params
-     * @return mixed
-     * @api
-     */
-    public function _method()
-    {
-        $params = $this->prepare(func_get_args());
-        extract($params);
 
+    public function __get($name)
+    {
+        if ($name == 'app') {
+            return \Fobia\Base\Application::getInstance();
+        }
+        return $this->$name;
+    }
+
+        /**
+     *
+     * @return boolean
+     */
+    public function execute()
+    {
+        $params = array_merge($this->params, func_get_args());
+        try {
+            include __DIR__ . "/methods/{$this->method}.php";
+        } catch (\Exception $ex) {
+            $this->errors = $ex;
+           return false;
+        }
+        return true;
     }
 
     /**
      * Установка/получение параметра
-     * 
+     *
      * @param array|string $name
      * @param array|string $value
-     * 
+     *
      * @return array|string
      */
     public function params($name = null, $value = null)
@@ -78,22 +83,10 @@ abstract class ApiMethod
         }
     }
 
-    /**
-     * @return \Congress\Application
-     */
-    protected function getApp()
+    public function getResponse()
     {
-        return \Congress\Application::getInstance();
+        return $this->response;
     }
-
-    /**
-     * @return \ezcDbHandler
-     */
-    protected function getDb()
-    {
-        return $this->getApp()->db;
-    }
-
     /**
      * @return array
      */
@@ -102,76 +95,12 @@ abstract class ApiMethod
         return $this->errors;
     }
 
-    /**
-     *
-     * @param array $args
-     * 
-     * @return array
-     */
-    protected function prepare($args = null)
+
+    protected function error($msg)
     {
-        $this->errors = array();
-        if ($args) {
-            $params = $args[0];
-        } else {
-            $params = array();
-        }
-
-        return array_merge($this->params, $params);
-    }
-
-    /**
-     *
-     * @param \ezcQuerySelect|\ezcQueryUpdate|\ezcQueryDelete $q
-     */
-    protected function qPrepare($q)
-    {
-        $qArr = $q->qArr;
-        if (isset($qArr['from'])) {
-            foreach ($qArr['from'] as $from) {
-                if ( ! $from) {
-                    continue;
-                }
-                $q->from($from);
-            }
-        }
-
-        if (isset($qArr['select'])) {
-            foreach ($qArr['select'] as $select) {
-                if ( ! $select) {
-                    continue;
-                }
-                $q->select($select);
-            }
-        }
-
-        $stmt = $q->prepare();
-        return $stmt;
-    }
-
-    /**
-     *
-     * @param \ezcQuerySelect|\ezcQueryUpdate|\ezcQueryDelete $q
-     * @param type $where
-     * @param type $from
-     */
-    protected function qWhereFrom($q, $where, $from)
-    {
-        $q->where($where);
-        $q->qArr['from'][] = $from;
-    }
-
-    /**
-     *
-     * @param \ezcQueryInsert|\ezcQueryUpdate $q
-     * @param string $name
-     * @param array  $params
-     */
-    protected function qSet($q, $name, $params)
-    {
-        if (array_key_exists($name, $params)) {
-            $q->set($name, $this->getDb()->quote($params[$name]));
-        }
-        $q->where($where);
+        $ex = new ApiException('error', 0);
+        $ex->method = $this->method;
+        $ex->params = $this->params;
+        throw $ex;
     }
 }
