@@ -98,7 +98,7 @@ HTML;
                 . '<td class="number">' . sprintf("%'02d", ++$i) . '</td>'
                 . '<td class="time">' .  sprintf("%-9s", $row['time']) . '</td>'
                 . '<td class="level">' .  htmlspecialchars(sprintf("%-9s", '[' . $row['level'] . ']')) . '</td>'
-                . '<td class="message">' .  $row['msg'] . '</td>'
+                . '<td class="message">' .  $row['message'] . '</td>'
                 . '</tr>';
         }
 

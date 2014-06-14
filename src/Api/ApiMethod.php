@@ -41,7 +41,7 @@ class ApiMethod
 
     /**
      * Выполнить подготовленый метод
-     * 
+     *
      * @return boolean флаг об успехе выполнения метода
      */
     public function execute()
@@ -97,12 +97,20 @@ class ApiMethod
      */
     public function errorInfo()
     {
-        return $this->errors;
+//        return $this->errors;
+        if ($this->errors instanceof ApiException) {
+            return array(
+                    'err_msg' => $this->errors->getMessage(),
+                    'err_code' => $this->errors->getCode()
+            );
+        } else {
+            return $this->errors;
+        }
     }
 
-    protected function error($msg)
+    protected function error($msg = 'error')
     {
-        $ex         = new ApiException('error', 0);
+        $ex         = new ApiException($msg, 0);
         $ex->method = $this->method;
         $ex->params = $this->params;
         throw $ex;
