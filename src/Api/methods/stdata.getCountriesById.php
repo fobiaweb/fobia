@@ -21,8 +21,6 @@
  * @api
  */
 
-$params = $this->prepare(func_get_args());
-
 $ids  = parseNumbers($params['country_ids']);
 $q    = $this->getDb()->createSelectQuery();
 $q->from('st_countries')
@@ -31,4 +29,4 @@ $q->from('st_countries')
         ->where($q->expr->in('id', $ids));
 $stmt = $q->prepare();
 $stmt->execute();
-return $stmt->fetchAll();
+$this->response =  $stmt->fetchAll();

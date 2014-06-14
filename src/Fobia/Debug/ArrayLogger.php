@@ -103,6 +103,8 @@ HTML;
         }
 
         $html .= '</tbody> </table> </div> </div>';
+        $html .= '<script src="https://raw.github.com/fobiaweb/debug/develop/debug.js" ></script>';
+        $html .= '<link href="https://raw.github.com/fobiaweb/debug/develop/debug.css" media="all" rel="stylesheet" type="text/css" />';
 
         return $html;
     }

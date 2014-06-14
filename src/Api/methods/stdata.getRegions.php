@@ -19,7 +19,6 @@
  * @copyright  Copyright (c) 2014 Dmitriy Tyurin
  * @api
  */
-$params = $this->prepare(func_get_args());
 extract($params);
 $db     = $this->getDb();
 
@@ -52,7 +51,7 @@ $stmt = $query->prepare();
 $stmt->execute();
 $row  = $stmt->fetch();
 
-return array(
+$this->response =  array(
     'count' => (int) $row['count'],
     'items' => $items
 );

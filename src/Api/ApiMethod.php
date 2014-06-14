@@ -22,6 +22,8 @@ class ApiMethod
     public $method;
     protected $params = array();
     public $options   = array();
+
+    public $methodsDirectory = __DIR__ . '/methods';
     //
     protected $response;
     protected $errors = array();
@@ -29,6 +31,7 @@ class ApiMethod
     public function __construct(array $params = array())
     {
         $this->params = $params;
+
     }
 
     public function __get($name)
@@ -50,8 +53,8 @@ class ApiMethod
         $params = array_merge($this->params, (array) $args[0]);
 
         try {
-            include __DIR__ . "/methods/{$this->method}.php";
-        } catch (\Exception $ex) {
+            include $this->methodsDirectory . '/' . $this->method . '.php';
+        } catch (AipException $ex) {
             $this->errors = $ex;
             return false;
         }
@@ -92,12 +95,13 @@ class ApiMethod
         return $this->response;
     }
 
+
+
     /**
      * @return array
      */
     public function errorInfo()
     {
-//        return $this->errors;
         if ($this->errors instanceof ApiException) {
             return array(
                     'err_msg' => $this->errors->getMessage(),

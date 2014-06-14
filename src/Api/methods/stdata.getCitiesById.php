@@ -36,4 +36,4 @@ $stmt = $q->prepare();
 $stmt->execute();
 
 
-return $stmt->fetchAll();
+$thiss->response = $stmt->fetchAll();

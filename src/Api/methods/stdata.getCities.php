@@ -55,9 +55,11 @@ $qs = clone $query;
 $qs->select('id')->select('city_name_ru AS title');
 
 if (!$params['need_all']) {
+    $count = $params['count'];
     if (!$count) {
         $count = 100;
     }
+    $count = $params['offset'];
     if (!$offset) {
         $offset = 0;
     }
@@ -77,5 +79,5 @@ $stmt = $query->prepare();
 $stmt->execute();
 $row = $stmt->fetch();
 
-return array('count' => (int)$row['count'], 'items' => $items);
+$this->response = array('count' => (int)$row['count'], 'items' => $items);
 

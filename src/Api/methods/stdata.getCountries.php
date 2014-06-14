@@ -18,7 +18,6 @@
  * @api
  */
 
-$params = $this->prepare(func_get_args());
 extract($params);
 
 $q = $this->getDb()->createSelectQuery();
@@ -40,4 +39,4 @@ $items = $stmt->fetchAll();
 $stmt = $this->getDb()->query('SELECT COUNT(*) AS `count` FROM st_countries');
 $row = $stmt->fetch();
 
-return array('count' => (int)$row['count'], 'items' => $items);
+$this->response = array('count' => (int)$row['count'], 'items' => $items);
