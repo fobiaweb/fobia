@@ -26,6 +26,10 @@
 /* @var $this   \Api\ApiMethod */
 /* @var $params array */
 
+if (! $this instanceof \Api\ApiMethod) {
+    throw new \Exception('Нельзя прос так выполнить этот файл');
+}
+
 
 $db = $this->app->db;
 

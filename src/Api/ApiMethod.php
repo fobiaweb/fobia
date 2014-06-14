@@ -18,18 +18,18 @@ namespace Api;
  */
 class ApiMethod
 {
+
     public $method;
-    protected $params  = array();
-    public $options = array();
+    protected $params = array();
+    public $options   = array();
     //
     protected $response;
-    protected $errors  = array();
+    protected $errors = array();
 
     public function __construct(array $params = array())
     {
         $this->params = $params;
     }
-
 
     public function __get($name)
     {
@@ -39,19 +39,23 @@ class ApiMethod
         return $this->$name;
     }
 
-        /**
-     *
-     * @return boolean
+    /**
+     * Выполнить подготовленый метод
+     * 
+     * @return boolean флаг об успехе выполнения метода
      */
     public function execute()
     {
-        $params = array_merge($this->params, func_get_args());
+        $args   = func_get_args();
+        $params = array_merge($this->params, (array) $args[0]);
+
         try {
             include __DIR__ . "/methods/{$this->method}.php";
         } catch (\Exception $ex) {
             $this->errors = $ex;
-           return false;
+            return false;
         }
+
         return true;
     }
 
@@ -87,6 +91,7 @@ class ApiMethod
     {
         return $this->response;
     }
+
     /**
      * @return array
      */
@@ -95,10 +100,9 @@ class ApiMethod
         return $this->errors;
     }
 
-
     protected function error($msg)
     {
-        $ex = new ApiException('error', 0);
+        $ex         = new ApiException('error', 0);
         $ex->method = $this->method;
         $ex->params = $this->params;
         throw $ex;

@@ -172,15 +172,17 @@ class Application extends \Slim\App
         $params = func_get_args();
         array_shift($params);
 
-        $app = $this;
+        $app = & $this;
 
-        return function() use ( $class, $method, $params, $app ) {
-            $args = func_get_args();
+        $callable = function() use ($app, $class, $method, $params ) {
+            $args       = func_get_args();
             $controller = new $class( $app, $args, $params );
-            call_user_method_array($method, $controller, array() );
-        };
-    }
 
+            return call_user_method_array($method, $controller, array() );
+        };
+
+        return $callable;
+    }
 
     protected function defaultNotFound()
     {
