@@ -15,4 +15,5 @@ use Symfony\Component\Console\Application;
 
 $application = new FobiaApplication();
 $application->add(new Console\Command\GetCommand());
+$application->add(new Console\Command\ApiCreateCommand());
 $application->run();
