@@ -53,7 +53,14 @@ class ApiMethod
         $params = array_merge($this->params, (array) $args[0]);
 
         try {
-            include $this->methodsDirectory . '/' . $this->method . '.php';
+            $file = $this->methodsDirectory . '/' . $this->method . '.php';
+            if (!file_exists($file)) {
+                $this->error('Не известный метом');
+            }
+            $r = include $file ;
+            if ($r !== null) {
+                $this->response = $r;
+            }
         } catch (AipException $ex) {
             $this->errors = $ex;
             return false;

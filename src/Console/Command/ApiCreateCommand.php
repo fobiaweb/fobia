@@ -29,8 +29,7 @@ class ApiCreateCommand extends Command
                 ->setName('api:create')
                 ->setDescription('Создать метод API')
                 ->addArgument('name', InputArgument::REQUIRED, 'Название метода')
-                ->addOption('yell', null, InputOption::VALUE_NONE,
-                            'If set, the task will yell in uppercase letters')
+                ->addArgument('name2', InputArgument::REQUIRED, 'Название метода');
         ;
     }
 
@@ -58,7 +57,7 @@ class ApiCreateCommand extends Command
  *
  * --------------------------------------------
  *
- * RESULT
+ * RESULT:
  * ------
  * Возвращаемый результат
  * --------------------------------------------
@@ -81,9 +80,8 @@ if (! \$this instanceof \Api\ApiMethod) {
 
 
 \$this->response = 1;
-
- 
 return;
+
 HTML;
     }
 }

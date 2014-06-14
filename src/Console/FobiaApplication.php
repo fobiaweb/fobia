@@ -16,7 +16,9 @@ use Symfony\Component\Console\Input\InputDefinition;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 
-
+use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Command\HelpCommand;
+use Symfony\Component\Console\Command\ListCommand;
 
 /**
  * FobiaApplication class
@@ -43,8 +45,8 @@ class FobiaApplication  extends Application
      *
      * @return array An array of default Command instances
      */
-//    protected function getDefaultCommands()
-//    {
+   // protected function getDefaultCommands()
+   // {
         // Keep the core default commands to have the HelpCommand
         // which is used when using the --help option
         // $defaultCommands = parent::getDefaultCommands();
@@ -52,7 +54,7 @@ class FobiaApplication  extends Application
 //        $defaultCommands[] = new Command\GetCommand();
 //
 //        return $defaultCommands;
-//    }
+   // }
 
     /**
      * Overridden so that the application doesn't expect the command
@@ -89,9 +91,9 @@ class FobiaApplication  extends Application
             new InputArgument('command', InputArgument::REQUIRED, 'The command to execute'),
 
             // new InputOption('--help',           '-h', InputOption::VALUE_NONE, 'Display this help message.'),
-            new InputOption('--quiet',          '-q', InputOption::VALUE_NONE, 'Do not output any message.'),
-            new InputOption('--verbose',        '-v|vv|vvv', InputOption::VALUE_NONE, 'Increase the verbosity of messages'),
-            new InputOption('--version',        '-V', InputOption::VALUE_NONE, 'Display this application version.'),
+            new InputOption('--quiet',          '-q', InputOption::VALUE_NONE, 'тихий (нет вывода).'),
+            new InputOption('--verbose',        '-v|vv|vvv', InputOption::VALUE_NONE, 'Информативность сообщений'),
+            new InputOption('--version',        '-V', InputOption::VALUE_NONE, 'Заценить версию приложения.'),
             // new InputOption('--[no-]ansi',           '',   InputOption::VALUE_NONE, 'Force ANSI output.'),
             // new InputOption('--no-ansi',        '',   InputOption::VALUE_NONE, 'Disable ANSI output.'),
             // new InputOption('--no-interaction', '-n', InputOption::VALUE_NONE, 'Do not ask any interactive question.'),
