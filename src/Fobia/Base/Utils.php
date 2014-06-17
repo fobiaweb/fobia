@@ -18,11 +18,11 @@ class Utils
      */
     public static function loadConfig($file, $format = null)
     {
-        if (substr($file, 0, 1) !== '/') {
-            if (defined('CONFIG_DIR')) {
-                $file = CONFIG_DIR . '/' . $file;
-            }
-        }
+        // if (substr($file, 0, 1) !== '/') {
+        //     if (defined('CONFIG_DIR')) {
+        //         $file = CONFIG_DIR . '/' . $file;
+        //     }
+        // }
         if (!$format) {
             $format = pathinfo($file, PATHINFO_EXTENSION);
         }

@@ -70,7 +70,7 @@ class Application extends \Slim\App
             $userSettings = array();
             if (file_exists($file)) {
                 $userSettings = Utils::loadConfig($file);
-                Log::debug("Configuration load", array(realpath($file)));
+                Log::debug("Configuration load: " . realpath($file) );
                 unset($file);
             }
         }

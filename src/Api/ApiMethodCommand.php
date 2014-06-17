@@ -16,36 +16,43 @@ namespace Api;
  * @property \Fobia\Base\Application $app
  *
  */
-class ApiMethod
+class ApiMethodCommand extends ApiMethod
 {
-
-    protected $method;
-    protected $params = array();
-    protected $options   = array();
-
-    protected $response;
-    protected $errors = array();
-
-    public function __construct(array $params = array())
+    /**
+     * 
+     * @api     package.method
+     */ 
+    public function methodName()
     {
-        $this->methodsDirectory = __DIR__ . '/methods';
-        $this->params = $params;
-    }
-
-    public function __get($name)
-    {
-        if ($name == 'app') {
-            return \Fobia\Base\Application::getInstance();
-        }
-        return $this->$name;
-    }
-
-
-    public function execute()
-    {
+        $p = $this->params;
         
     }
+    /**
+     * Выполнить подготовленый метод
+     *
+     * @return boolean флаг об успехе выполнения метода
+     */
+    public function execute()
+    {
+        $args   = func_get_args();
+        $params = array_merge($this->params, (array) $args[0]);
 
+        try {
+            $file = $this->methodsDirectory . '/' . $this->method . '.php';
+            if (!file_exists($file)) {
+                $this->error('Не известный метом');
+            }
+            $r = include $file ;
+            if ($r !== null) {
+                $this->response = $r;
+            }
+        } catch (\Api\ApiException $ex) {
+            $this->errors = $ex;
+            return false;
+        }
+
+        return true;
+    }
 
     /**
      * Установка/получение параметра
@@ -80,6 +87,8 @@ class ApiMethod
         return $this->response;
     }
 
+
+
     /**
      * @return array
      */
@@ -97,15 +106,9 @@ class ApiMethod
 
     protected function error($msg = 'error')
     {
-        $ex         = new \Api\Exception_BadRequest($msg, 0);
+        $ex         = new ApiException($msg, 0);
         $ex->method = $this->method;
         $ex->params = $this->params;
         throw $ex;
-    }
-
-    protected function halt($response)
-    {
-        $this->response = $response;
-        throw new \Api\Exception_Halt();
     }
 }
