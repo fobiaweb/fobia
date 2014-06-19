@@ -1,5 +1,4 @@
 <?php
-
 /**
  * stdata.getCities.php file
  *
@@ -35,49 +34,60 @@
  * Если задан параметр q, то будет возвращен список городов, которые релевантны поисковому запросу.
  * --------------------------------------------
  */
+class Api_Stdata_GetCities extends ApiInvoke
+{
 
-$db = $this->app->db;
+    protected function execute()
+    {
+        $p   = $this->params;
+        $app = App::instance();
+        $db  = $app->db;
 
-$query = $db->createSelectQuery();
-$query->from('st_cities');
-$query->where($query->expr->eq('country_id', $db->quote($params['country_id'])));
-if ((int)$params['region_id']) {
-    $query->where($query->expr->eq('region_id', $db->quote($params['region_id'])));
-}
+        $query = $db->createSelectQuery();
+        $query->from('st_cities');
+        $query->where($query->expr->eq('country_id',
+                                       $db->quote($p['country_id'])));
+        if ((int) $p['region_id']) {
+            $query->where($query->expr->eq('region_id',
+                                           $db->quote($p['region_id'])));
+        }
 
 
-if ($params['q']) {
-    $query->where($query->expr->like('city_name_ru', $db->quote("%{$params['q']}%")));
-}
+        if ($p['q']) {
+            $query->where($query->expr->like('city_name_ru',
+                                             $db->quote("%{$p['q']}%")));
+        }
 
-$qs = clone $query;
+        $qs = clone $query;
 
-$qs->select('id')->select('city_name_ru AS title');
+        $qs->select('id')->select('city_name_ru AS title');
 
-if (!$params['need_all']) {
-    $count = $params['count'];
-    if (!$count) {
-        $count = 100;
+        if ( ! $p['need_all']) {
+            if ( ! $$p['count']) {
+                $p['count'] = 100;
+            }
+            if ( ! $p['offset']) {
+                $p['offset'] = 0;
+            }
+
+            $qs->limit((int) $p['count'], (int) $p['offset']);
+        }
+
+        $stmt = $qs->prepare();
+        if ( ! $stmt->execute()) {
+            
+            dump($stmt->errorInfo());
+        }
+        $items = $stmt->fetchAll();
+
+        $query->select('COUNT(*) AS `count`');
+        $stmt = $query->prepare();
+        $stmt->execute();
+        $row  = $stmt->fetch();
+
+        $this->response = array(
+            'count' => (int) $row['count'],
+            'items' => $items
+         );
     }
-    $count = $params['offset'];
-    if (!$offset) {
-        $offset = 0;
-    }
-
-    $qs->limit((int)$count, (int)$offset);
 }
-
-$stmt = $qs->prepare();
-if (!$stmt->execute()) {
-
-    dump($stmt->errorInfo());
-}
-$items = $stmt->fetchAll();
-
-$query->select('COUNT(*) AS `count`');
-$stmt = $query->prepare();
-$stmt->execute();
-$row = $stmt->fetch();
-
-$this->response = array('count' => (int)$row['count'], 'items' => $items);
-

@@ -29,7 +29,7 @@ class ApiCreateCommand extends Command
                 ->setName('api:create')
                 ->setDescription('Создать метод API')
                 ->addArgument('name', InputArgument::REQUIRED, 'Название метода')
-                ->addArgument('name2', InputArgument::REQUIRED, 'Название метода');
+//                ->addArgument('name2', InputArgument::REQUIRED, 'Название метода')
         ;
     }
 
@@ -42,46 +42,13 @@ class ApiCreateCommand extends Command
 
     protected function template($name)
     {
-        return <<<HTML
-<?php
-/**
- * {$name}.php file
- *
- * Название метода
- * --------------------------------------------
- *
- * PARAMS:
- * ------
- *  offset      отступ, необходимый для получения определенного подмножества.
- *  count       количество записей, которые необходимо вернуть.
- *
- * --------------------------------------------
- *
- * RESULT:
- * ------
- * Возвращаемый результат
- * --------------------------------------------
- *
- * @author     Dmitriy Tyurin <fobia3d@gmail.com>
- * @copyright  Copyright (c) 2014 Dmitriy Tyurin
- *
- * @api
- */
+        $class = preg_replace_callback( '/^\w|\.\w/', function ($matches) {
+            return strtoupper($matches[0]);
+        }, $name );
+        $class = 'Api_' . str_replace('.', '_', $class);
+        $content =  file_get_contents( __DIR__ . '/../../Api/class/default.php' );
+        $content = preg_replace(array('/{{name}}/', '/Api_CLASSNAME/'), array($name, $class), $content);
 
-/* @var \$this   \Api\ApiMethod */
-/* @var \$params array */
-
-if (! \$this instanceof \Api\ApiMethod) {
-    throw new \Exception('Нельзя прос так выполнить этот файл');
-}
-
-
-\$db = \$this->app->db;
-
-
-\$this->response = 1;
-return;
-
-HTML;
+        echo $content;
     }
 }
