@@ -22,8 +22,11 @@
  *
  * @api
  */
-class Api_CLASSNAME extends ApiInvoke
+class Api_CLASSNAME extends AbstractApiInvoke
 {
+
+    protected $method = '{{name}}';
+
     protected function execute()
     {
         $p = $this->params;

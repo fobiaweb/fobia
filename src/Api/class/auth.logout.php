@@ -11,8 +11,11 @@
  *
  * @package
  */
-class Api_Auth_Logout extends ApiInvoke
+class Api_Auth_Logout extends AbstractApiInvoke
 {
+
+    protected $method = 'auth.logout';
+
     protected function execute()
     {
         $app = App::instance();
@@ -20,5 +23,4 @@ class Api_Auth_Logout extends ApiInvoke
 
         $this->response = 1;
     }
-
 }

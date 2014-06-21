@@ -39,7 +39,7 @@ class ApiHandler
             //
         } else {
             $obj = new $class($params);
-            /* @var $obj \ApiInvoke */
+            /* @var $obj \AbstractApiInvoke */
             $obj->invoke();
             return $obj->getResponse(true);
         }

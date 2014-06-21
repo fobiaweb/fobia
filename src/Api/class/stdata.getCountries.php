@@ -17,8 +17,10 @@
  * @return mixed
  * @api
  */
-class Api_Stdata_GetCountries extends ApiInvoke
+class Api_Stdata_GetCountries extends AbstractApiInvoke
 {
+
+    protected $method = 'stdata.getCountries';
 
     protected function execute()
     {

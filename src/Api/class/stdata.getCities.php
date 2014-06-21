@@ -34,8 +34,10 @@
  * Если задан параметр q, то будет возвращен список городов, которые релевантны поисковому запросу.
  * --------------------------------------------
  */
-class Api_Stdata_GetCities extends ApiInvoke
+class Api_Stdata_GetCities extends AbstractApiInvoke
 {
+
+    protected $method = 'stdata.getCities';
 
     protected function execute()
     {
@@ -75,7 +77,7 @@ class Api_Stdata_GetCities extends ApiInvoke
 
         $stmt = $qs->prepare();
         if ( ! $stmt->execute()) {
-            
+
             dump($stmt->errorInfo());
         }
         $items = $stmt->fetchAll();

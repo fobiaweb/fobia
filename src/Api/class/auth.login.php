@@ -22,9 +22,14 @@
  *
  * @api
  */
-class Api_Auth_Login extends ApiInvoke
+class Api_Auth_Login extends AbstractApiInvoke
 {
 
+    /**
+     * @var string название метода
+     */
+    protected $method = 'auth.login';
+    
     protected function execute()
     {
         $p = $this->params;
