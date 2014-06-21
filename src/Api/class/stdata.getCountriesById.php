@@ -20,13 +20,24 @@
  * @copyright  Copyright (c) 2014 Dmitriy Tyurin
  * @api
  */
+class Api_Stdata_GetCountriesById extends AbstractApiInvoke
+{
+    protected $method = 'stdata.getCountriesById';
 
-$ids  = parseNumbers($params['country_ids']);
-$q    = $this->getDb()->createSelectQuery();
-$q->from('st_countries')
-        ->select('id')
-        ->select('name_rus AS title')
-        ->where($q->expr->in('id', $ids));
-$stmt = $q->prepare();
-$stmt->execute();
-$this->response =  $stmt->fetchAll();
+    protected function execute()
+    {
+        $p = $this->params;
+        $app = App::instance();
+        $db = $app->db;
+
+        $ids  = parseNumbers($p['country_ids']);
+        $q    = $db->createSelectQuery();
+        $q->from('st_countries')
+                ->select('id')
+                ->select('name_rus AS title')
+                ->where($q->expr->in('id', $ids));
+        $stmt = $q->prepare();
+        $stmt->execute();
+        $this->response =  $stmt->fetchAll();
+    }
+}
