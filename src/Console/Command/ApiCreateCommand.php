@@ -23,13 +23,18 @@ use Symfony\Component\Console\Formatter\OutputFormatterStyle;
 class ApiCreateCommand extends Command
 {
 
+    protected $dir = null;
+
     protected function configure()
     {
+        $this->dir = __DIR__ . '/../../Api/class';
+
         $this
                 ->setName('api:create')
                 ->setDescription('Создать метод API')
                 ->addArgument('name', InputArgument::REQUIRED, 'Название метода')
-//                ->addArgument('name2', InputArgument::REQUIRED, 'Название метода')
+                ->addOption('output', 'o', InputOption::VALUE_NONE | InputOption::VALUE_OPTIONAL,
+                            'директоория для сохранения')
         ;
     }
 
@@ -37,18 +42,33 @@ class ApiCreateCommand extends Command
     {
         $name = $input->getArgument('name');
         $html = $this->template($name);
-        print_r($html);
+
+
+        $dir = $input->getOption('output');
+        if ($dir) {
+            $file = $dir . '/' . $name . '.php';
+            if (file_exists($file)) {
+                $output->writeln('<error>Файл существует<error>');
+                exit();
+            }
+            file_put_contents($file , $html);
+        } else {
+            print_r($html);
+        }
     }
+
 
     protected function template($name)
     {
-        $class = preg_replace_callback( '/^\w|\.\w/', function ($matches) {
+        $class = preg_replace_callback('/^\w|\.\w/', function ($matches) {
             return strtoupper($matches[0]);
-        }, $name );
-        $class = 'Api_' . str_replace('.', '_', $class);
-        $content =  file_get_contents( __DIR__ . '/../../Api/class/default.php' );
-        $content = preg_replace(array('/{{name}}/', '/Api_CLASSNAME/'), array($name, $class), $content);
+        }, $name);
 
-        echo $content;
+        $class   = 'Api_' . str_replace('.', '_', $class);
+        $content = file_get_contents($this->dir . '/default.php');
+        $content = preg_replace(array('/{{name}}/', '/Api_CLASSNAME/'),
+                                array($name, $class), $content);
+
+        return $content;
     }
 }
