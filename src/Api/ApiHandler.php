@@ -32,6 +32,13 @@ class ApiHandler
         $this->classDirectory = __DIR__ . '/class';
     }
 
+    /**
+     * Выполнить метод
+     * 
+     * @param string $method
+     * @param array $params
+     * @return array
+     */
     public function request($method, $params)
     {
         $class = $this->generateApiClass($method);
