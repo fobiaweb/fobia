@@ -42,7 +42,7 @@ class Api_Stdata_GetCities extends AbstractApiInvoke
     protected function execute()
     {
         $p   = $this->params;
-        $app = App::instance();
+        $app = \App::instance();
         $db  = $app->db;
 
         $query = $db->createSelectQuery();

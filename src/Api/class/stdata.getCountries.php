@@ -25,7 +25,7 @@ class Api_Stdata_GetCountries extends AbstractApiInvoke
     protected function execute()
     {
         $p   = $this->params;
-        $app = App::instance();
+        $app = \App::instance();
         $db  = $app->db;
 
         // $db->query('SET NAMES "UTF8"');

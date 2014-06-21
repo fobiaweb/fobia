@@ -1,4 +1,5 @@
 <?php
+
 /**
  * stdata.getRegions.php file
  *
@@ -27,7 +28,7 @@ class Api_Stdata_GetRegions extends AbstractApiInvoke
     protected function execute()
     {
         $p   = $this->params;
-        $app = App::instance();
+        $app = \App::instance();
         $db  = $app->db;
 
         extract($p);

@@ -28,7 +28,7 @@ class Api_Stdata_GetCitiesById extends AbstractApiInvoke
 
     protected function execute()
     {
-        $app = App::instance();
+        $app = \App::instance();
         $db = $app->db;
 
         $ids = parseNumbers($this->params['city_ids']);

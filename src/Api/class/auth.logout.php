@@ -18,7 +18,7 @@ class Api_Auth_Logout extends AbstractApiInvoke
 
     protected function execute()
     {
-        $app = App::instance();
+        $app = \App::instance();
         $app['auth']->logout();
 
         $this->response = 1;

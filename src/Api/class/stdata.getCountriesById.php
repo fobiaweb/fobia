@@ -27,7 +27,7 @@ class Api_Stdata_GetCountriesById extends AbstractApiInvoke
     protected function execute()
     {
         $p = $this->params;
-        $app = App::instance();
+        $app = \App::instance();
         $db = $app->db;
 
         $ids  = parseNumbers($p['country_ids']);
