@@ -27,6 +27,11 @@ abstract class AbstractApiInvoke
     protected $method;
 
     /**
+     * @var \Fobia\Base\Application
+     */
+    protected $app;
+
+    /**
      * @var \Exception
      */
     private $exc;
@@ -37,6 +42,7 @@ abstract class AbstractApiInvoke
     public function __construct($params = null)
     {
         $this->params = (array) $params;
+        $this->app = \App::instance();
     }
 
     /**
@@ -139,6 +145,7 @@ abstract class AbstractApiInvoke
             return array(
                 'err_msg'  => $this->exc->getMessage(),
                 'err_code' => $this->exc->getCode(),
+                'method'   =>  $this->method,
                 'params'   => $this->params
             );
         } else {
@@ -176,7 +183,8 @@ abstract class AbstractApiInvoke
      */
     protected function error($message)
     {
-        throw new \Exception($message);
+        $exc = new \Api\Exception_BadRequest($message);
+        throw $exc;
     }
 
     /**
@@ -188,6 +196,6 @@ abstract class AbstractApiInvoke
     protected function halt($data = 0)
     {
         $this->response = $data;
-        throw new \Фзш\Exception_Halt('halt');
+        throw new \Api\Exception_Halt('halt');
     }
 }

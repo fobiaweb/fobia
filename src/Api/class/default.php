@@ -1,4 +1,5 @@
 <?php
+
 /**
  * {{name}}.php file
  *
@@ -29,9 +30,9 @@ class Api_CLASSNAME extends AbstractApiInvoke
 
     protected function execute()
     {
-        $p = $this->params;
-        $app = App::instance();
-        $db = $app->db;
+        $p   = $this->params;
+        $app = \App::instance();
+        $db  = $app->db;
 
         // yeur code
 

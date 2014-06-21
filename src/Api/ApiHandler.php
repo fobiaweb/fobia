@@ -31,8 +31,8 @@ class ApiHandler
         $this->prefixClass    = 'api_';
         $this->classDirectory = __DIR__ . '/class';
 
-        require_once __DIR__ . '/AbstractApiInvoke.php';
-        class_alias('\\Api\\AbstractApiInvoke', 'AbstractApiInvoke');
+        // require_once __DIR__ . '/AbstractApiInvoke.php';
+        // class_alias('\\Api\\AbstractApiInvoke', 'AbstractApiInvoke');
     }
 
     /**
