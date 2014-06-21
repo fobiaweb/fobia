@@ -16,22 +16,50 @@ namespace Api;
 class ApiHandler
 {
 
-    function __construct()
+    /**
+     * @var string префикс классов
+     */
+    protected $prefixClass;
+
+    /**
+     * @var string директория классов
+     */
+    protected $classDirectory;
+
+    public function __construct()
     {
+        $this->prefixClass    = 'api_';
+        $this->classDirectory = __DIR__ . '/class';
     }
 
     public function request($method, $params)
     {
-        $method = str_replace('.', '_', $method);
-        $class = 'api_' . $method;
-        if (!class_exists($class)) {
-            require __DIR__ . '/class/' . $method . '.php';
+        $class = $this->generateApiClass($method);
+        if ( ! class_exists($class)) {
+            //
+        } else {
+            $obj = new $class($params);
+            /* @var $obj \ApiInvoke */
+            $obj->invoke();
+            return $obj->getResponse(true);
         }
-
-        $obj = new $class($params);
-        /* @var $obj \ApiInvoke */
-        $obj->invoke();
-        return $obj->getResponse(true);
     }
 
+    /**
+     * Генерирует название класса и подключает при необходимости
+     *
+     * @param string $method
+     * @return string
+     */
+    protected function generateApiClass($method)
+    {
+        $class = $this->prefixClass . str_replace('.', '_', $method);
+        if ( ! class_exists($class)) {
+            $file = $this->classDirectory . '/' . $method . '.php';
+            if (file_exists($file)) {
+                require $file;
+            }
+        }
+        return $class;
+    }
 }

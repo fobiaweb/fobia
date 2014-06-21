@@ -8,22 +8,38 @@
  */
 abstract class ApiInvoke
 {
-/**
- * @var array
- */
+
+    /**
+     * @var array
+     */
     protected $params;
+
+    /**
+     * @var array|mixed
+     */
     protected $response;
+
+    /**
+     * @var string название метода
+     */
+    protected $method;
 
     /**
      * @var \Exception
      */
     private $exc;
 
+    /**
+     * @internal
+     */
     public function __construct($params = null)
     {
         $this->params = (array) $params;
     }
 
+    /**
+     * @internal
+     */
     public function __invoke()
     {
         $this->dispatchMethod('invike', func_get_args());
@@ -127,8 +143,6 @@ abstract class ApiInvoke
             return null;
         }
     }
-
-
 
     /**
      * ХАК к вызову метода.
