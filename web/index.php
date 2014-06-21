@@ -17,18 +17,14 @@ $app->get('/', function() {
 });
 
 $app->any('/api/:method', function($method) use($app) {
-    $api = new \Api\ApiMethod();
-    $api->method = $method;
-    if($api->execute()) {
-        $d = array( 'response' => $api->getResponse() )   ;
-    }
-    else {
-        $app->response->setStatus(400);
-        $d = array( 'error' => $api->errorInfo() );
-    }
+    $api = new \Api\ApiHandler();
+
+    $params = $app->request->params();
+    $result = $api->request($method, $params);
+    var_dump($result);
 //    $app->response->setHeader('Content-Type', 'text/json; charset=utf-8');
     // print_r($d);
-    echo json_encode($d);
+//    echo json_encode($d);
 })->name('api');
 
 $app->any('/test(/:h+)', $app->createController('\\Controller::indexAction'));

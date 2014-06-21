@@ -28,6 +28,7 @@ class Api_Stdata_GetCountries extends AbstractApiInvoke
         $app = App::instance();
         $db  = $app->db;
 
+        // $db->query('SET NAMES "UTF8"');
         $q = $db->createSelectQuery();
         $q->from('st_countries')->select('id')->select('name_rus AS title');
         if ( ! $p['need_all']) {
@@ -44,7 +45,7 @@ class Api_Stdata_GetCountries extends AbstractApiInvoke
         $stmt->execute();
         $items = $stmt->fetchAll();
 
-        $stmt = $this->getDb()->query('SELECT COUNT(*) AS `count` FROM st_countries');
+        $stmt = $db->query('SELECT COUNT(*) AS `count` FROM st_countries');
         $row  = $stmt->fetch();
 
         $this->response = array(

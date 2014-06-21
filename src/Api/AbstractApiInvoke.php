@@ -1,7 +1,9 @@
 <?php
 
+namespace Api;
+
 /**
- * ApiInvoke.php file
+ * AbstractApiInvoke.php file
  *
  * @author     Dmitriy Tyurin <fobia3d@gmail.com>
  * @copyright  Copyright (c) 2014 Dmitriy Tyurin
