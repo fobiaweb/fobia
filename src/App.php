@@ -24,7 +24,7 @@ class App
     }
 
     /**
-    * @return Fobia\DataBase\Handler\DbConnectionMysql     
+    * @return Fobia\DataBase\Handler\MySQL     
     */ 
     public static function Db()
     {

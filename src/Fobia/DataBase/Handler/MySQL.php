@@ -19,7 +19,7 @@ use \Log;
  *
  * @package     Fobia.DataBase.Handler
  */
-class DbConnectionMysql extends ezcDbHandlerMysql
+class MySQL extends ezcDbHandlerMysql
 {
     protected $profiles = false;
 

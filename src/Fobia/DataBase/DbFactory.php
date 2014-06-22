@@ -14,8 +14,8 @@ if ( ! class_exists("\\ezcBase")) {
         \ezcBase::autoload($className);
     });
 }
-\ezcDbFactory::addImplementation('mysql', '\\Fobia\\DataBase\\Handler\\DbConnectionMysql');
-\ezcDbFactory::addImplementation('mssql', '\\Fobia\\DataBase\\Handler\\DbConnectionMssql');
+\ezcDbFactory::addImplementation('mysql', '\\Fobia\\DataBase\\Handler\\MySQL');
+\ezcDbFactory::addImplementation('mssql', '\\Fobia\\DataBase\\Handler\\MSSQL');
 
 
 require_once __DIR__ . '/DbStatement.php';

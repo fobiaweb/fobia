@@ -169,19 +169,19 @@ class Application extends \Slim\App
     public function createController($controller)
     {
         list( $class, $method ) = explode('::', $controller);
-        $params = func_get_args();
-        array_shift($params);
+        if (!$method) {
+            $method = 'indexAction';
+        }
 
+        $classArgs = func_get_args();
+        array_shift($classArgs);
         $app = & $this;
 
-        $callable = function() use ($app, $class, $method, $params ) {
-            $args       = func_get_args();
-            $controller = new $class( $app, $args, $params );
-
-            return call_user_method_array($method, $controller, array() );
+        return function() use ($app, $classArgs, $class, $method ) {
+            $methodArgs = func_get_args();
+            $classRoute = new $class( $classArgs );
+            return call_user_func_array(array($classRoute, $method), $methodArgs);
         };
-
-        return $callable;
     }
 
     protected function defaultNotFound()

@@ -17,7 +17,7 @@ use \Fobia\DataBase\Query\QueryInsert;
  *
  * @package     Fobia.DataBase.Handler
  */
-class DbConnectionMssql extends ezcDbHandlerMssql
+class MSSQL extends ezcDbHandlerMssql
 {
 
     /**

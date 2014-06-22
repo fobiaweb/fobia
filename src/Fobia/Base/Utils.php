@@ -144,13 +144,8 @@ class Utils
      */
     public static function getExecutionTime($end = null, $start = null)
     {
-        // Канстанта устанавливаеться в этой библиотеке
-        if ($start === null) {
-            $start = TIME_START; // $_SERVER["REQUEST_TIME_FLOAT"] ;
-        }
-        if ($end === null) {
-            $end = microtime(true);
-        }
+        $start = ($start !== null) ?: $_SERVER["REQUEST_TIME_FLOAT"] ;
+        $end   = ($end   !== null) ?: microtime(true) ;
         return $end - $start;
     }
 
