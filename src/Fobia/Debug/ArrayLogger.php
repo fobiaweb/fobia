@@ -23,9 +23,9 @@ class ArrayLogger extends AbstractLogger
     protected $display;
     protected $handle;
 
-    function __construct()
+    public function __construct()
     {
-        if (IS_CLI) {
+        if ( IS_CLI && !defined('TEST_BOOTSTRAP_FILE')) {
             $this->handle = fopen('php://stderr', 'a+');
         }
     }
@@ -133,7 +133,7 @@ HTML;
 
         $js = file_get_contents(__DIR__ . '/debug.js');
 
-        $js = preg_replace(array('/\n/', '/ +/'), array('', ' '), $js);
+//        $js = preg_replace(array('/\n/', '/ +/'), array('', ' '), $js);
         return $html . '<script>' . $js . '</script>';
     }
 
