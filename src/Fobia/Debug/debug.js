@@ -47,9 +47,11 @@
             head.appendChild(script);
         },
         initLog: function() {
+            $ = window.jQuery;
             $(document).ready(function() {
                 $(window).keyup(function(e) {
                     if (e.keyCode == 120) { // key: F9
+                      console.log('key:', e.keyCode);
                         $("#ac-logger").slideToggle(1, function() {
                             AC.ac_logger_session();
                         });

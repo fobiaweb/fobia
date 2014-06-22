@@ -68,14 +68,15 @@ class CVarDumper
             );
             $replace = array('', '<code class="debug-cvardumper">',
                 'class="string"',
-                'class="comment"',
+                'class="comment"',  // #888A85;
                 'class="keyword"',
                 'class="bg"',
                 'class="default"',
                 'class="html"',
             );
 
-            self::$_output = preg_replace($pattern, $replace, $result, 1);
+            // self::$_output = $result;// preg_replace($pattern, $replace, $result, 1);
+            self::$_output = preg_replace($pattern, $replace, $result);
         }
         return self::$_output;
     }

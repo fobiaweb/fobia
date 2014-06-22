@@ -174,9 +174,15 @@ class ArrayLogger extends AbstractLogger
 #ac-logger tr.dump {
   /* background-color: rgb(163, 163, 163); */
 }
+.debug-cvardumper {}
+.debug-cvardumper .string { color: #C00; }
+.debug-cvardumper .comment { color: #888A85; }
+.debug-cvardumper .keyword { color: #4E9A06; }
+.debug-cvardumper .default { color: #3465A4; }
+.debug-cvardumper .html {}
 </style>
 <div id="ac-logger-switch">DBG</div>
-<div id="ac-logger" class="hidden">
+<div id="ac-logger" class="">
     <div class="content">
         <table style="width: 100%;">
             <thead>
