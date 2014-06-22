@@ -12,6 +12,7 @@ fobia/fobia
 Интересные библиотеки
 
     "require-dev": {
+        "slimcontroller/slimcontroller": "0.4.1",
         "wp-cli/php-cli-tools": "~0.9.4",
         "tecnick.com/tcpdf": "6.*",
         "kriswallsmith/buzz": "*",
