@@ -10,11 +10,14 @@ if (defined('BOOTSTRAP_FILE')) {
 } else {
    define('BOOTSTRAP_FILE', true);
 }
+define('REMOTE_SERVER', true);
 
 if (!class_exists('\\Composer\\Autoload\\ClassLoader')) {    
     require_once __DIR__ . '/../vendor/autoload.php';
 }
-
+if (!class_exists(__DIR__ . '/classes/autoload.php')) {   
+    require_once  __DIR__ . '/classes/autoload.php';
+}
 
 //echo __FILE__;
 

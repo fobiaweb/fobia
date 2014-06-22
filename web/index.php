@@ -11,8 +11,10 @@ require_once __DIR__ . '/boot.php';
 $app = App::instance();
 
 $app->get('/', function() {
-    echo 'login';
+    echo 'MAIN';
+    // include __DIR__ . '/../app/view/login.php';
 });
+
 
 
 //$app->any('/test(/:h+)', $app->createController('\\Controller::indexAction'));
@@ -27,6 +29,8 @@ unset($route_arr);
 
 $app->run();
 
-// Log::alert('test');
 
- echo  Log::getLogger()->render() ;
+$logger = Log::getLogger();
+if (method_exists($logger, 'render')) {
+    echo  Log::getLogger()->render() ;
+}

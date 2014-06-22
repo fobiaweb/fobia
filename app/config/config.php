@@ -5,6 +5,7 @@
  * @author     Dmitriy Tyurin <fobia3d@gmail.com>
  * @copyright  Copyright (c) 2014 Dmitriy Tyurin
  */
+
 return array(
     // Application
     'mode'                  => 'development',
@@ -27,8 +28,7 @@ return array(
     'session.encrypt'       => false,
     // HTTP
     'http.version'          => '1.1',
-    // Routing
-    'routes.case_sensitive' => true,
+    // DataBase
     'database.dns'=> 'mysql://root@localhost/test',
     'database.charset' => 'utf8',
 );

@@ -1,15 +1,16 @@
 <?php
-
 /**
  * Auth class  - Auth.php file
  *
  * @author     Dmitriy Tyurin <fobia3d@gmail.com>
  * @copyright  Copyright (c) 2014 Dmitriy Tyurin
  */
+
 namespace Fobia\Auth;
 
 use Fobia\Base\Application;
 use Log;
+
 /**
  * Auth class
  *
@@ -65,11 +66,9 @@ class Authentication
         $this->app = $app;
         $this->map = array_merge($this->map, $map);
     }
-
-
-    /********************************************************************************
-    * USER Methods
-    *******************************************************************************/
+    /*     * ******************************************************************************
+     * USER Methods
+     * ***************************************************************************** */
 
     public function isRole($role)
     {
@@ -101,11 +100,9 @@ class Authentication
     {
         return $this->user->{$this->map['role']};
     }
-
-
-    /********************************************************************************
-    * Auth Methods
-    *******************************************************************************/
+    /*     * ******************************************************************************
+     * Auth Methods
+     * ***************************************************************************** */
 
     /**
      *
@@ -117,12 +114,12 @@ class Authentication
     public function login($login, $password, $hash = true)
     {
         if ($hash) {
-            $password = hash_hmac($this->app['settings']['crypt.method'], $password,
-                              $this->app['settings']['crypt.key']);
+            $password = hash_hmac($this->app['settings']['crypt.method'],
+                                  $password, $this->app['settings']['crypt.key']);
         }
 
         $user = $this->checkLogin($login, $password);
-        if ( ! $user ) {
+        if ( ! $user) {
             return false;
         }
 
@@ -146,7 +143,7 @@ class Authentication
     public function logout()
     {
         $this->app['session']['auth'] = array();
-        $this->user = null;
+        $this->user                   = null;
     }
 
     /**
@@ -159,12 +156,13 @@ class Authentication
      */
     public function checkLogin($login, $passhex)
     {
-        $q    = $this->app->db->createSelectQuery();
+        $db = $this->app->db;
+        $q  = $db->createSelectQuery();
+        $e  = $q->expr;
+
         $q->select('*')->from($this->tableName)
-                ->where($q->expr->eq($this->map['login'],
-                                     $this->app->db->quote($login)))
-                ->where($q->expr->eq($this->map['password'],
-                                     $this->app->db->quote($passhex)))
+                ->where($e->eq($this->map['login'], $db->quote($login)))
+                ->where($e->eq($this->map['password'], $db->quote($passhex)))
                 ->limit(1);
         $stmt = $q->prepare();
         $stmt->execute();
@@ -178,15 +176,16 @@ class Authentication
      */
     public function setOnline()
     {
-        if (!@$this->map['online'] || !@$this->user) {
+        if ( ! @$this->map['online'] || ! @$this->user) {
             return;
         }
         $id = $this->user->{$this->map['id']};
 
-        $q  = $this->app->db->createUpdateQuery();
+        $q = $this->app->db->createUpdateQuery();
         $q->update($this->tableName)
                 ->set($this->map['online'], 'NOW()')
-                ->where($q->expr->eq($this->map['id'], $this->app->db->quote($id)));
+                ->where($q->expr->eq($this->map['id'],
+                                     $this->app->db->quote($id)));
         $q->prepare()->execute();
         Log::debug('authenticate:: set online');
     }
@@ -197,7 +196,7 @@ class Authentication
     public function authenticate()
     {
 
-        if (!  is_array($this->app->session['auth'])) {
+        if ( ! is_array($this->app->session['auth'])) {
             $this->app->session['auth'] = array();
         }
 
@@ -214,7 +213,7 @@ class Authentication
 
         Log::debug('authenticate:: start', $this->app->session['auth']);
 
-        if (!$this->user && $login && $password) {
+        if ( ! $this->user && $login && $password) {
             Log::debug("authenticate:: checkLogin; online: $online ($this->cacheAuth)");
             $this->login($login, $password, false);
             // $this->user

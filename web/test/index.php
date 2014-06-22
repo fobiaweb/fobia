@@ -23,7 +23,7 @@ $app->get('/test1', function() use($app) {
     dump($app['environment']);
 });
 $app->get('/test2', function() use($app) {
-    $d = glob(__DIR__ . '/../../app/**.php');
+    $d = glob(__DIR__ . '/../../app/router/**.php');
     dump($d);
 });
 
