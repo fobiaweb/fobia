@@ -45,8 +45,8 @@ $app->map('/login', function() use($app) {
 
 
 $app->any('/logout', function() use($app) {
+    $app['auth']->authenticate();
     $app['auth']->logout();
-    // dump($app['session']);
     $app->redirect($app->urlFor('base') . '?r=' . rand());
-});
+})->name('logout');
 

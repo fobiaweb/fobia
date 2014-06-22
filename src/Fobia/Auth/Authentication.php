@@ -177,13 +177,16 @@ class Authentication
      */
     public function logout()
     {
-        $this->app['session']['auth'] = array();
-        $this->user                   = null;
         if ($this->map['sid'] && $this->user) {
             $db = $this->app->db;
             $id = (int) $this->user->id;
-            $db->query("UPDATE  `{$this->tableName}` SET `{$this->map['sid']}` = NULL WHERE `{$this->map['id']}` = '{$id}'");
+            if (!$db->query("UPDATE `{$this->tableName}` SET `{$this->map['sid']}` = NULL WHERE `{$this->map['id']}` = '{$id}'")) {
+                exit('error');
+            }
         }
+        
+        $this->app['session']['auth'] = array();
+        $this->user                   = null;
     }
 
     /**
