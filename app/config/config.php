@@ -9,6 +9,13 @@
 return array(
     // Application
     'mode'                  => 'development',
+    // Директория шаблонов
+    'templates.path'        => 'app/view', 
+   // Логер
+    'debug'                 => true,
+    'log.enabled'           => true,
+    'log.level'             => 600,
+
     'view'                  => null,
     // Cookies
     'cookies.encrypt'       => false,
