@@ -34,8 +34,10 @@ class Api_Stdata_GetCitiesById extends AbstractApiInvoke
         if (!$this->params['city_ids']) {
             throw new \Api\Exception\BadRequest("city_ids");
         }
-        $ids = parseNumbers($this->params['city_ids']);
-
+        $ids = $this->exp->numbers($this->params['city_ids']);
+        if (!  count($ids)) {
+            throw new \Api\Exception\BadRequest("city_ids");
+        }
         $q = $db->createSelectQuery();
         $q->from('st_cities')
                 ->select('id')

@@ -37,12 +37,19 @@ abstract class AbstractApiInvoke
     private $exc;
 
     /**
+     * @var \Api\ApiExpression
+     */
+    protected $exp;
+
+    /**
      * @internal
      */
     public function __construct($params = null)
     {
         $this->params = (array) $params;
         $this->app    = \App::instance();
+        
+        $this->exp = new \Api\ApiExpression();
     }
 
     /**
@@ -65,17 +72,19 @@ abstract class AbstractApiInvoke
     {
         $this->exc      = null;
         $this->response = null;
+        \Log::debug("API:: Вызов метода '$this->method' - ", $this->params);
 
         try {
             $this->dispatchMethod('execute', func_get_args());
             return true;
+        } catch (\Api\Exception\Halt $exc) {
+            return true;
         } catch (\Api\Exception\Error $exc) {
             $this->exc = $exc;
+            \Log::error("API:: (" . get_class($exc) . ") " . $exc->getMessage());
             return false;
-        } catch (\Api\Exception_Halt $exc) {
-            return true;
         } catch (\Exception $exc) {
-            echo $exc->getTraceAsString();
+            \Log::error("API:: (" . get_class($exc) . ") " . $exc->getMessage());
             return false;
         }
     }
@@ -186,9 +195,9 @@ abstract class AbstractApiInvoke
      * @param string $message
      * @throws \Exception
      */
-    protected function error($message)
+    protected function error($message, $code = 1)
     {
-        $exc = new \Api\Exception\ServerError ($message);
+        $exc = new \Api\Exception\Error($message, $code);
         throw $exc;
     }
 
@@ -198,9 +207,38 @@ abstract class AbstractApiInvoke
      * @param type $data
      * @throws \Exception
      */
-    protected function halt($data = 0)
+    protected function halt($data = null)
     {
-        $this->response = $data;
+        if ($data !== null) {
+            $this->response = $data;
+        } else {
+            if ( ! $this->response) {
+                $this->response = 1;
+            }
+        }
         throw new \Api\Exception\Halt();
+    }
+
+    protected function _parseNumbers($var)
+    {
+        $array = explode(',', str_replace(' ', '', $var));
+        array_walk($array,
+                   function(&$item) {
+            $item = (int) $item;
+            $item = ($item >= 0) ? : null;
+        });
+        array_unshift($array, null);
+        $array = array_unique($array);
+        array_shift($array);
+        return $array;
+    }
+
+    protected function _parseFields($var)
+    {
+        $array = explode(',', str_replace(' ', '', $var));
+        array_unshift($array, null);
+        $array = array_unique($array);
+        array_shift($array);
+        return $array;
     }
 }
