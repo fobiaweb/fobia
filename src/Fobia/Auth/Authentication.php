@@ -37,7 +37,8 @@ class Authentication
         'login'    => 'login',
         'password' => 'password',
         'role'     => 'role',
-        'online'   => 'online'
+        'online'   => 'online',
+        'sid'      => 'sid',
     );
 
     /**
@@ -55,6 +56,14 @@ class Authentication
      */
     protected $dTime = 300;
 
+    protected $status = null;//'AUTH_INCORRECT';
+
+    const STATUS_USERNAME_INCORRECT = 'USERNAME_INCORRECT';
+    const STATUS_SESSION_INCORRECT  = 'SESSION_INCORRECT';
+    const STATUS_AUTH_NONE          = 'AUTH_NONE';
+    const STATUS_AUTH_INCORRECT     = 'AUTH_INCORRECT';
+    const STATUS_AUTH_OK            = 'AUTH_OK';
+
     /**
      *
      * @param \Fobia\Base\Application $app
@@ -65,8 +74,11 @@ class Authentication
     {
         $this->app = $app;
         $this->map = array_merge($this->map, $map);
+
+        $this->status = self::STATUS_AUTH_NONE;
     }
-    /*     * ******************************************************************************
+    
+    /********************************************************************************
      * USER Methods
      * ***************************************************************************** */
 
@@ -100,7 +112,7 @@ class Authentication
     {
         return $this->user->{$this->map['role']};
     }
-    /*     * ******************************************************************************
+    /********************************************************************************
      * Auth Methods
      * ***************************************************************************** */
 
@@ -120,8 +132,21 @@ class Authentication
 
         $user = $this->checkLogin($login, $password);
         if ( ! $user) {
+            $this->status = self::STATUS_USERNAME_INCORRECT;
             return false;
         }
+        if ($this->map['sid']) {
+            $sidName = $this->map['sid'];
+            $onlineName = $this->map['online'];
+            $d_time = time() - strtotime($user->$onlineName);
+            if ($d_time < $this->dTime && $user->$sidName) {
+                if (!$this->checkSidAuth($user->$sidName)) {
+                    $this->status = self::STATUS_SESSION_INCORRECT;
+                    return false;
+                }
+            }
+        }
+
 
         $this->user = $user;
 
@@ -132,6 +157,16 @@ class Authentication
             'online'   => time()
         );
         $this->setOnline();
+
+
+        if ($this->map['sid']) {
+            $db = $this->app->db;
+            $id = (int) $this->user->id;
+            $sid = $this->app->request->getClientIp() . ';' . session_id();
+            if (!$db->query("UPDATE `{$this->tableName}` SET `{$this->map['sid']}` = '{$sid}' WHERE `{$this->map['id']}` = '{$id}'")) {
+                exit('error');
+            }
+        }
 
         return true;
     }
@@ -144,6 +179,11 @@ class Authentication
     {
         $this->app['session']['auth'] = array();
         $this->user                   = null;
+        if ($this->map['sid'] && $this->user) {
+            $db = $this->app->db;
+            $id = (int) $this->user->id;
+            $db->query("UPDATE  `{$this->tableName}` SET `{$this->map['sid']}` = NULL WHERE `{$this->map['id']}` = '{$id}'");
+        }
     }
 
     /**
@@ -169,6 +209,16 @@ class Authentication
         return $stmt->fetchObject();
     }
 
+    public function checkSidAuth($userSid)
+    {
+        list($ip, $sid) = explode(';', $userSid);
+        if ($ip == $this->app->request->getClientIp() && $sid == session_id()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     /**
      * Устанавливает флаг в online
      *
@@ -186,7 +236,11 @@ class Authentication
                 ->set($this->map['online'], 'NOW()')
                 ->where($q->expr->eq($this->map['id'],
                                      $this->app->db->quote($id)));
-        $q->prepare()->execute();
+        if ($q->prepare()->execute()) {
+            $_a = $this->app->session['auth'];
+            $_a['online'] = time();
+            $this->app->session['auth'] = $_a;
+        }
         Log::debug('authenticate:: set online');
     }
 
@@ -195,11 +249,11 @@ class Authentication
      */
     public function authenticate()
     {
-
         if ( ! is_array($this->app->session['auth'])) {
             $this->app->session['auth'] = array();
         }
-
+        $this->status = self::STATUS_AUTH_INCORRECT;
+        
         $login    = $this->app->session['auth']['login'];
         $password = $this->app->session['auth']['password'];
         $online   = $this->app->session['auth']['online'];
@@ -208,16 +262,36 @@ class Authentication
             $d_time = time() - $online;
             if ($d_time < $this->dTime) {
                 $this->user = $this->app->session['auth']['user'];
+                $this->status = self::STATUS_AUTH_OK;
+            } else {
+                $this->user = null;
             }
         }
 
         Log::debug('authenticate:: start', $this->app->session['auth']);
 
         if ( ! $this->user && $login && $password) {
+            if ($user = $this->checkLogin($login, $password)) {
+                if ($this->map['sid']) {
+                    $sidName = $this->map['sid'];
+                    if ($this->checkSidAuth($user->$sidName)) {
+                        $this->user = $user;
+                        $this->setOnline();
+                    } else {
+                        $this->status = self::STATUS_SESSION_INCORRECT;
+                    }
+                } else {
+                    $this->user = $user;
+                    $this->setOnline();
+                }
+            } else {
+                $this->status = self::STATUS_USERNAME_INCORRECT;
+            }
+
             Log::debug("authenticate:: checkLogin; online: $online ($this->cacheAuth)");
-            $this->login($login, $password, false);
-            // $this->user
         }
+
+
         Log::debug('authenticate:: init');
         // $this->user = $this->app->session['auth']['user'];
         // SELECT roles, (roles & 4) AS r FROM users WHERE roles & (SELECT SUM(id) FROM `roles` WHERE name IN(  'login', 'admin'))
