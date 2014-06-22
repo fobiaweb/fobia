@@ -26,6 +26,12 @@ class ApiHandler
      */
     protected $classDirectory;
 
+    /**
+     * 'apiMethodName' => array('className', 'classMethod')
+     * @var array
+     */
+    protected $apimap = array();
+
     public function __construct()
     {
         $this->prefixClass    = 'api_';
@@ -44,15 +50,35 @@ class ApiHandler
      */
     public function request($method, $params)
     {
-        $class = $this->generateApiClass($method);
-        if ( ! class_exists($class)) {
-            //
+        if (array_key_exists($method, $this->apimap)) {
+            $map = $this->apimap[$method];
+            $class = array_shift($map);
+            $classMethod = array_shift($map);
         } else {
-            $obj = new $class($params);
-            /* @var $obj \AbstractApiInvoke */
-            $obj->invoke();
-            return $obj->getResponse(true);
+            $class = $this->generateApiClass($method);
+            $classMethod = 'invoke';
+            $map = array();
         }
+
+
+        
+        if ( ! class_exists($class) || ! method_exists( $class,  $classMethod)) {
+            return array(
+                'error' => array(
+                    'err_msg'  => 'неизвестный метод',
+                    'err_code' => 0,
+                    'method'   =>  $method,
+                    'params'   =>  $params
+                )
+            );
+        }
+
+        $obj = new $class($params);
+        /* @var $obj \AbstractApiInvoke */
+
+        call_user_func_array(array($obj, $classMethod), $map);
+        // $obj->invoke();
+        return $obj->getResponse(true);
     }
 
     /**
@@ -72,4 +98,5 @@ class ApiHandler
         }
         return $class;
     }
+
 }

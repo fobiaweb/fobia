@@ -17,10 +17,12 @@ use Fobia\Base\Model;
  */
 class ModelAction
 {
-
+    /**
+     * @var \Fobia\Base\Model
+     */
     protected $model;
 
-    function __construct(Model $model)
+    public function __construct(Model $model)
     {
         $this->model = $model;
     }
@@ -33,10 +35,11 @@ class ModelAction
      */
     public function select($data = null)
     {
-        $db = Application::getInstance()->db;
+        $app = \App::instance();
+        $db = $app->db;
 
         $q = $db->createSelectQuery();
-        $q->select('*')->from($this->getTableName());
+        $q->select('*')->from($this->model->getTableName());
 
         $column = 'id';
         $value  = $this->id;
