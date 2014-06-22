@@ -11,8 +11,9 @@ if (defined('BOOTSTRAP_FILE')) {
    define('BOOTSTRAP_FILE', true);
 }
 
-
-require_once __DIR__ . '/../vendor/autoload.php';
+if (!class_exists('\\Composer\\Autoload\\ClassLoader')) {    
+    require_once __DIR__ . '/../vendor/autoload.php';
+}
 
 
 //echo __FILE__;

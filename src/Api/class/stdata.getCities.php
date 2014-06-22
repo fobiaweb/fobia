@@ -1,12 +1,8 @@
 <?php
+
 /**
  * stdata.getCities.php file
  *
- * @author     Dmitriy Tyurin <fobia3d@gmail.com>
- * @copyright  Copyright (c) 2014 Dmitriy Tyurin
- */
-
-/**
  * Возвращает список городов.
  * --------------------------------------------
  *
@@ -33,6 +29,11 @@
  * Если не задан параметр q, то будет возвращен список всех городов в заданной стране.
  * Если задан параметр q, то будет возвращен список городов, которые релевантны поисковому запросу.
  * --------------------------------------------
+ *
+ * @author     Dmitriy Tyurin <fobia3d@gmail.com>
+ * @copyright  Copyright (c) 2014 Dmitriy Tyurin
+ *
+ * @api
  */
 class Api_Stdata_GetCities extends AbstractApiInvoke
 {
@@ -90,6 +91,6 @@ class Api_Stdata_GetCities extends AbstractApiInvoke
         $this->response = array(
             'count' => (int) $row['count'],
             'items' => $items
-         );
+        );
     }
 }

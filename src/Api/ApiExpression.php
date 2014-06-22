@@ -29,6 +29,7 @@ class ApiExpression
         array_unshift($array, null);
         $array = array_unique($array);
         array_shift($array);
+        sort($array);
         return $array;
     }
 
@@ -43,6 +44,7 @@ class ApiExpression
         array_unshift($array, '');
         $array = array_unique($array);
         array_shift($array);
+        sort($array);
         return $array;
     }
 

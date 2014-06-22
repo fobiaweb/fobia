@@ -32,13 +32,10 @@ class ApiHandler
      */
     protected $apimap = array();
 
-    public function __construct()
+    public function __construct($classDirectory = null, $prefixClass = null)
     {
-        $this->prefixClass    = 'api_';
-        $this->classDirectory = __DIR__ . '/class';
-
-        // require_once __DIR__ . '/AbstractApiInvoke.php';
-        // class_alias('\\Api\\AbstractApiInvoke', 'AbstractApiInvoke');
+        $this->prefixClass    = ($prefixClass) ? $prefixClass : 'api_';
+        $this->classDirectory = ($classDirectory) ? $classDirectory : __DIR__ . '/class';
     }
 
     /**
