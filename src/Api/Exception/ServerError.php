@@ -6,14 +6,22 @@
  * @copyright  Copyright (c) 2014 Dmitriy Tyurin
  */
 
-namespace Api;
+namespace Api\Exception;
 
 /**
  * ServerError class
  *
- * @package   Api
+ * @package   Api.Exception
  */
-class Exception_ServerError extends \Exception
+class ServerError extends Error
 {
+    public function __construct($message = null)
+    {
+        $msg = 'Произошла ошибка сервера.';
+        if ($message !== null) {
+            $msg .= ' - ' . $message . '.';
+        }
+        parent::__construct($msg);
+    }
 
 }

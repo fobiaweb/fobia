@@ -6,7 +6,7 @@
  * @copyright  Copyright (c) 2014 Dmitriy Tyurin
  */
 
-namespace Api;
+namespace Api\Exception;
 
 /**
  * BadRequest class
@@ -14,9 +14,20 @@ namespace Api;
  * Исключение возникает в случае неверно переданых параметров,
  * и генерирует ошибку в Api методе
  *
- * @package   Api
+ * @package   Api.Exception
  */
-class Exception_BadRequest extends \Exception
+class BadRequest extends Error
 {
+    /**
+     * 
+     * @param string $params
+     * @param ...
+     */
+    public function __construct($params)
+    {
+        $params = func_get_args();
+        $message = 'Не передан один из аргуиентов (' . implode(', ', $params) . ')';
+        parent::__construct($message, 5);
+    }
 
 }

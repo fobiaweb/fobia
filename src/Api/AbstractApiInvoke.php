@@ -42,7 +42,7 @@ abstract class AbstractApiInvoke
     public function __construct($params = null)
     {
         $this->params = (array) $params;
-        $this->app = \App::instance();
+        $this->app    = \App::instance();
     }
 
     /**
@@ -68,6 +68,11 @@ abstract class AbstractApiInvoke
 
         try {
             $this->dispatchMethod('execute', func_get_args());
+            return true;
+        } catch (\Api\Exception\Error $exc) {
+            $this->exc = $exc;
+            return false;
+        } catch (\Api\Exception_Halt $exc) {
             return true;
         } catch (\Exception $exc) {
             echo $exc->getTraceAsString();
@@ -116,15 +121,15 @@ abstract class AbstractApiInvoke
     /**
      * Возвращает результат
      *
-     * @param boolean $format  форматировать масив к ответу
      * @return mixed|array
      */
-    public function getResponse($format = false)
+    public function getResponse()
     {
-        if ($format === false) {
-            return $this->response;
-        }
+        return $this->response;
+    }
 
+    public function getFormatResponse()
+    {
         if ($this->exc === null) {
             return array('response' => $this->response);
         } else {
@@ -145,7 +150,7 @@ abstract class AbstractApiInvoke
             return array(
                 'err_msg'  => $this->exc->getMessage(),
                 'err_code' => $this->exc->getCode(),
-                'method'   =>  $this->method,
+                'method'   => $this->method,
                 'params'   => $this->params
             );
         } else {
@@ -183,7 +188,7 @@ abstract class AbstractApiInvoke
      */
     protected function error($message)
     {
-        $exc = new \Api\Exception_BadRequest($message);
+        $exc = new \Api\Exception\ServerError ($message);
         throw $exc;
     }
 
@@ -196,6 +201,6 @@ abstract class AbstractApiInvoke
     protected function halt($data = 0)
     {
         $this->response = $data;
-        throw new \Api\Exception_Halt('halt');
+        throw new \Api\Exception\Halt();
     }
 }

@@ -78,7 +78,7 @@ class ApiHandler
 
         call_user_func_array(array($obj, $classMethod), $map);
         // $obj->invoke();
-        return $obj->getResponse(true);
+        return $obj->getFormatResponse();
     }
 
     /**

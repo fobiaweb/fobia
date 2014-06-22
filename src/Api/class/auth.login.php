@@ -41,7 +41,7 @@ class Api_Auth_Login extends AbstractApiInvoke
         }
 
         if ( ! $p['login'] || ! $p['password']) {
-            $this->error('Не передан один из параметров');
+            throw new \Api\Exception\BadRequest('login', 'password');
         }
 
         $this->response = $app['auth']->login($p['login'], $p['password'], true);

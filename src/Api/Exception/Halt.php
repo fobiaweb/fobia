@@ -14,9 +14,9 @@ namespace Api;
  * Исключение характерезуещее немедленый выход из обработки метода,
  * и формирует результат успешного выполнения
  *
- * @package   Api
+ * @package   Api.Exception
  */
-class Exception_Halt extends \Exception
+class Halt extends \Exception
 {
 
 }
