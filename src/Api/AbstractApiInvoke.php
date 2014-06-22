@@ -219,26 +219,4 @@ abstract class AbstractApiInvoke
         throw new \Api\Exception\Halt();
     }
 
-    protected function _parseNumbers($var)
-    {
-        $array = explode(',', str_replace(' ', '', $var));
-        array_walk($array,
-                   function(&$item) {
-            $item = (int) $item;
-            $item = ($item >= 0) ? : null;
-        });
-        array_unshift($array, null);
-        $array = array_unique($array);
-        array_shift($array);
-        return $array;
-    }
-
-    protected function _parseFields($var)
-    {
-        $array = explode(',', str_replace(' ', '', $var));
-        array_unshift($array, null);
-        $array = array_unique($array);
-        array_shift($array);
-        return $array;
-    }
 }

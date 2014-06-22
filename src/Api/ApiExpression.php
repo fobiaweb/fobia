@@ -18,9 +18,11 @@ class ApiExpression
 
     public function numbers($var)
     {
-        $array = explode(',', str_replace(' ', '', $var));
-        array_walk($array,
-                   function(&$item) {
+        if (is_string($var)) {
+            $array = explode(',', str_replace(' ', '', $var));
+        }
+
+        array_walk($array, function(&$item) {
             $item = (int) $item;
             $item = ($item >= 0) ? : null;
         });
@@ -32,8 +34,13 @@ class ApiExpression
 
     public function fields($var)
     {
-        $array = explode(',', str_replace(' ', '', $var));
-        array_unshift($array, null);
+        if (is_string($var)) {
+            $array = explode(',', $var);
+        }
+        array_walk($array, function(&$item) {
+            $item = trim( $item );
+        });
+        array_unshift($array, '');
         $array = array_unique($array);
         array_shift($array);
         return $array;
@@ -42,7 +49,7 @@ class ApiExpression
 
     public function date($var)
     {
-
+        list($y, $m, $d) =  explode('-', $var);
     }
 
 
@@ -55,5 +62,13 @@ class ApiExpression
     public function time($var)
     {
 
+    }
+
+
+    public function valRequired($value, $name, $options = null)
+    {
+        if (!$value) {
+            throw new \Api\Exception\BadRequest($name);
+        }
     }
 }
