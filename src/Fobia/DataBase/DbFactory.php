@@ -53,7 +53,7 @@ class DbFactory extends \ezcDbFactory
             $dbParams['username'] = $dbParams['user'];
             unset($dbParams['user']);
         }
-
+        
         if ( @array_key_exists('dns', $dbParams)) {
             $params = self::parseDSN($dbParams['dns']);
             $dbParams = array_merge($params, $dbParams);

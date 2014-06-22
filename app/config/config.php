@@ -29,5 +29,6 @@ return array(
     'http.version'          => '1.1',
     // Routing
     'routes.case_sensitive' => true,
-    'database.dns'=> 'mysql://root@localhost/test'
+    'database.dns'=> 'mysql://root@localhost/test',
+    'database.charset' => 'utf8',
 );

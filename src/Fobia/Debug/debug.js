@@ -49,7 +49,7 @@
         initLog: function() {
             $(document).ready(function() {
                 $(window).keyup(function(e) {
-                    if (e.keyCode == 120) {
+                    if (e.keyCode == 120) { // key: F9
                         $("#ac-logger").slideToggle(1, function() {
                             AC.ac_logger_session();
                         });
