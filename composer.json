@@ -10,12 +10,10 @@
         "symfony/console": "2.*",
         "symfony/debug": "2.*",
         "symfony/filesystem": "2.*",
-        "symfony/yaml": "2.*",
-        "wp-cli/php-cli-tools": "~0.9.4"
+        "symfony/yaml": "2.*"
     },
     "require-dev": {
-        "kriswallsmith/buzz": "*",
-        "dropbox/dropbox-sdk": "1.1.*"
+        "php": ">=5.3.0"
     },
     "autoload": {
         "psr-0": {
