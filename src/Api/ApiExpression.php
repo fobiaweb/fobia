@@ -24,7 +24,7 @@ class ApiExpression
 
         array_walk($array, function(&$item) {
             $item = (int) $item;
-            $item = ($item >= 0) ? : null;
+            $item = ($item >= 0) ? $item : null;
         });
         array_unshift($array, null);
         $array = array_unique($array);

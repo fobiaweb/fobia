@@ -130,13 +130,18 @@ abstract class AbstractApiInvoke
     /**
      * Возвращает результат
      *
-     * @return mixed|array
+     * @return mixed
      */
     public function getResponse()
     {
         return $this->response;
     }
-
+    
+    /**
+     * Возвращает форматированный результат
+     *
+     * @return array
+     */
     public function getFormatResponse()
     {
         if ($this->exc === null) {

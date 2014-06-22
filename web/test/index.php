@@ -22,8 +22,10 @@ $app->get('/test1', function() use($app) {
     echo $app->urlFor('base') . BR;
     dump($app['environment']);
 });
-
-
+$app->get('/test2', function() use($app) {
+    $d = glob(__DIR__ . '/../../app/**.php');
+    dump($d);
+});
 
 $app->run();
 // Log::alert('test');

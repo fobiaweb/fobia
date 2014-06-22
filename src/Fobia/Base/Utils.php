@@ -144,8 +144,8 @@ class Utils
      */
     public static function getExecutionTime($end = null, $start = null)
     {
-        $start = ($start !== null) ?: $_SERVER["REQUEST_TIME_FLOAT"] ;
-        $end   = ($end   !== null) ?: microtime(true) ;
+        $start = ($start !== null) ? $start : $_SERVER["REQUEST_TIME_FLOAT"] ;
+        $end   = ($end   !== null) ? $end : microtime(true) ;
         return $end - $start;
     }
 

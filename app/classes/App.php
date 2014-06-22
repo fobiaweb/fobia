@@ -13,19 +13,20 @@
  */
 class App
 {
+
     protected static $_instance = array();
 
     /**
      * @return Fobia\Base\Application
-     */ 
+     */
     public static function instance()
     {
         return \Fobia\Base\Application::getInstance();
     }
 
     /**
-    * @return Fobia\DataBase\Handler\MySQL     
-    */ 
+     * @return Fobia\DataBase\Handler\MySQL     
+     */
     public static function Db()
     {
         return \ezcDbInstance::get();
@@ -40,6 +41,3 @@ class App
         return $app['auth'];
     }
 }
-
-
-class Log extends \Fobia\Debug\Log {}

@@ -8,9 +8,7 @@
 
 require_once __DIR__ . '/boot.php';
 
-require_once __DIR__ . '/auth-inc.php';
-
-/* @var $app \Fobia\Base\Application */
+$app = App::instance();
 
 $app->get('/', function() {
     echo 'login';
@@ -28,6 +26,13 @@ $app->any('/api/:method', function($method) use($app) {
 })->name('api');
 
 $app->any('/test(/:h+)', $app->createController('\\Controller::indexAction'));
+
+
+$route_arr = glob(__DIR__ . '/../app/router/*.php');
+foreach ($route_arr as $file) {
+    include $file;
+}
+unset($route_arr);
 
 
 $app->run();
