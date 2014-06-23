@@ -48,7 +48,9 @@ $app->hook('slim.before', function() use($app) {
         // echo "urlFor - base (s:j): ";
         // echo $app->urlFor('base', array('page'=> '11', '22')) . BR;
         // echo "Time: " . \Fobia\Base\Utils::getExecutionTime();
-    })->name('auto');
+    })
+        ->name('auto')
+    ;
 });
 
 $app->hook('slim.after.router', function() use($app) {

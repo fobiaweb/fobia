@@ -15,7 +15,11 @@ $app->get('/', function() {
     // include __DIR__ . '/../app/view/login.php';
 });
 
-
+$app->get('/sub', function() use($app) {
+    echo $app->subRequest('/logout', 'GET')->getBody()->__toString() ;
+    var_dump($app['request']->params());
+    var_dump($app['request']->getBody());
+});
 
 //$app->any('/test(/:h+)', $app->createController('\\Controller::indexAction'));
 

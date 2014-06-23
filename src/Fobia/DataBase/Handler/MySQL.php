@@ -15,7 +15,7 @@ use \Fobia\DataBase\Query\QueryReplace;
 use \Log;
 
 /**
- * DBConnection class
+ * MySQL class, extends PDO
  *
  * @package     Fobia.DataBase.Handler
  */
@@ -23,6 +23,20 @@ class MySQL extends ezcDbHandlerMysql
 {
     protected $profiles = false;
 
+    /**
+     * Создает объект из параметров $dbParams.
+     *
+     * Supported database parameters are:
+     * - dbname|database: Database name
+     * - user|username:   Database user name
+     * - pass|password:   Database user password
+     * - host|hostspec:   Name of the host database is running on
+     * - port:            TCP port
+     * - charset:         Client character set
+     * - socket:          UNIX socket path
+     *
+     * @param array $dbParams Database connection parameters (key=>value pairs).
+     */
     public function __construct(array $dbParams)
     {
         parent::__construct($dbParams);
@@ -100,7 +114,7 @@ class MySQL extends ezcDbHandlerMysql
     /**
      * Returns a new ezcQueryInsert derived object for the correct database type.
      *
-     * @return \Fobia\DataBase\Query\QueryInsert
+     * @return \Fobia\DataBase\Query\QueryReplace
      */
     public function createReplaceQuery()
     {
