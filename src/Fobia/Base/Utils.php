@@ -206,6 +206,20 @@ class Utils
     }
 
     /**
+     * Возвращает ресурсы (время, память) в связи с запросом в виде строки.
+     *
+     * @return string
+     */
+    public static function resourceUsage()
+    {
+        $ms = self::getExecutionTime();
+        return sprintf('Memory usage: %4.2fMB (peak: %4.2fMB), time: %6.4f',
+                memory_get_usage() / 1048576,
+                memory_get_peak_usage(true) / 1048576,
+                $ms);
+    }
+
+    /**
      * IP клиента
      *
      * @return string
