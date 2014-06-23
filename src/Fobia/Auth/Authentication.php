@@ -30,7 +30,7 @@ class Authentication
     public $user;
 
     /**
-     * @var array
+     * @var array карта-схема таблицы
      */
     protected $map = array(
         'id'       => 'id',
@@ -52,7 +52,7 @@ class Authentication
     protected $tableName = 'users';
 
     /**
-     * @var int интервал онлайна
+     * @var int интервал онлайна сесии
      */
     protected $dTime = 300;
 
@@ -67,10 +67,10 @@ class Authentication
     /**
      *
      * @param \Fobia\Base\Application $app
-     * @param type $map
+     * @param array $map
      * @internal
      */
-    function __construct(Application $app, $map = array())
+    public function __construct(Application $app, $map = array())
     {
         $this->app = $app;
         $this->map = array_merge($this->map, $map);
@@ -82,12 +82,26 @@ class Authentication
      * USER Methods
      * ***************************************************************************** */
 
-    public function isRole($role)
+    /**
+     * Get user ID
+     * @return int
+     */
+    public function getId()
     {
-        return $this->getRoles() & (int) $role;
+        return $this->user->{$this->map['id']};
     }
 
     /**
+     * Get user mask roles
+     * @return int
+     */
+    public function getRoles()
+    {
+        return $this->user->{$this->map['role']};
+    }
+
+    /**
+     * Get user login
      * @return string
      */
     public function getLogin()
@@ -104,41 +118,55 @@ class Authentication
         return $this->user->{$this->map['password']};
     }
 
-    /**
-     * Get user mask roles
-     * @return int
-     */
-    public function getRoles()
-    {
-        return $this->user->{$this->map['role']};
-    }
+
     /********************************************************************************
      * Auth Methods
      * ***************************************************************************** */
 
     /**
+     * Проверить принадлежность роли
+     * @param int $role числовой индетификатор роли
+     * @return boolean
+     */
+    public function isRole($role)
+    {
+        return (($this->user) && ($this->getRoles() & (int) $role)) 
+            ? true
+            : false;
+    }
+
+    /**
+     * Зарегистрироваться в системе
      *
      * @param string $login
      * @param string $password
+     * @param boolean $hash использовать функцию для хеширования пароля
      * @return boolean
      * @api
      */
     public function login($login, $password, $hash = true)
     {
+        // хеш пароля
         if ($hash) {
             $password = hash_hmac($this->app['settings']['crypt.method'],
-                                  $password, $this->app['settings']['crypt.key']);
+                                  $password,
+                                  $this->app['settings']['crypt.key']);
         }
 
+        // находим пользователя из базы
         $user = $this->checkLogin($login, $password);
         if ( ! $user) {
             $this->status = self::STATUS_USERNAME_INCORRECT;
             return false;
         }
+
+        // если сесии храняться в базе
         if ($this->map['sid']) {
             $sidName = $this->map['sid'];
             $onlineName = $this->map['online'];
             $d_time = time() - strtotime($user->$onlineName);
+            // Имееться ли пользователь уже в системе
+            // для это проверяем имееться ли запись о сесии в базе
             if ($d_time < $this->dTime && $user->$sidName) {
                 if (!$this->checkSidAuth($user->$sidName)) {
                     $this->status = self::STATUS_SESSION_INCORRECT;
@@ -147,7 +175,7 @@ class Authentication
             }
         }
 
-
+        // Все хорошо - пользователь найден и он ни где не используеться
         $this->user = $user;
 
         $this->app->session['auth'] = array(
@@ -157,16 +185,6 @@ class Authentication
             'online'   => time()
         );
         $this->setOnline();
-
-
-        if ($this->map['sid']) {
-            $db = $this->app->db;
-            $id = (int) $this->user->id;
-            $sid = $this->app->request->getClientIp() . ';' . session_id();
-            if (!$db->query("UPDATE `{$this->tableName}` SET `{$this->map['sid']}` = '{$sid}' WHERE `{$this->map['id']}` = '{$id}'")) {
-                exit('error');
-            }
-        }
 
         return true;
     }
@@ -186,7 +204,8 @@ class Authentication
         }
         
         $this->app['session']['auth'] = array();
-        $this->user                   = null;
+
+        $this->user = null;
     }
 
     /**
@@ -212,6 +231,11 @@ class Authentication
         return $stmt->fetchObject();
     }
 
+    /**
+     * Проверка сессии на принадлежнасть текущей сесии
+     * @param string $userSid сесия в формате 'IP;SID'
+     * @return boolean
+     */
     public function checkSidAuth($userSid)
     {
         list($ip, $sid) = explode(';', $userSid);
@@ -227,24 +251,31 @@ class Authentication
      *
      * @return void
      */
-    public function setOnline()
+    public function setOnline($sid = true)
     {
         if ( ! @$this->map['online'] || ! @$this->user) {
             return;
         }
-        $id = $this->user->{$this->map['id']};
 
-        $q = $this->app->db->createUpdateQuery();
+        $id = $this->user->{$this->map['id']};
+        $db = $this->app->db;
+        $q = $db->createUpdateQuery();
+
         $q->update($this->tableName)
                 ->set($this->map['online'], 'NOW()')
-                ->where($q->expr->eq($this->map['id'],
-                                     $this->app->db->quote($id)));
+                ->where($q->expr->eq($this->map['id'], $db->quote($id)));
+        if (@$this->map['sid'] && $sid) {
+            $sid = $this->app->request->getClientIp() . ';' . session_id();
+            $q->set($this->map['sid'], $db->quote($sid));
+        }
+
+
         if ($q->prepare()->execute()) {
             $_a = $this->app->session['auth'];
             $_a['online'] = time();
             $this->app->session['auth'] = $_a;
         }
-        Log::debug('authenticate:: set online');
+        Log::debug('[authenticate]:: set online');
     }
 
     /**
@@ -261,6 +292,8 @@ class Authentication
         $password = $this->app->session['auth']['password'];
         $online   = $this->app->session['auth']['online'];
 
+        Log::debug('[authenticate]:: start', $this->app->session['auth']);
+
         if ($this->cacheAuth) {
             $d_time = time() - $online;
             if ($d_time < $this->dTime) {
@@ -271,13 +304,10 @@ class Authentication
             }
         }
 
-        Log::debug('authenticate:: start', $this->app->session['auth']);
-
         if ( ! $this->user && $login && $password) {
             if ($user = $this->checkLogin($login, $password)) {
                 if ($this->map['sid']) {
-                    $sidName = $this->map['sid'];
-                    if ($this->checkSidAuth($user->$sidName)) {
+                    if ($this->checkSidAuth($user->{$this->map['sid']})) {
                         $this->user = $user;
                         $this->setOnline();
                     } else {
@@ -291,11 +321,10 @@ class Authentication
                 $this->status = self::STATUS_USERNAME_INCORRECT;
             }
 
-            Log::debug("authenticate:: checkLogin; online: $online ($this->cacheAuth)");
+            Log::debug("[authenticate]:: checkLogin; online: $online ($this->cacheAuth)");
         }
 
-
-        Log::debug('authenticate:: init');
+        Log::debug("[authenticate]:: Status: '{$this->status}'");
         // $this->user = $this->app->session['auth']['user'];
         // SELECT roles, (roles & 4) AS r FROM users WHERE roles & (SELECT SUM(id) FROM `roles` WHERE name IN(  'login', 'admin'))
     }
