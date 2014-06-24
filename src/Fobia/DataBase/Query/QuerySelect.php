@@ -35,7 +35,16 @@ class QuerySelect extends ezcQuerySelect
         return call_user_func_array(array('parent', 'doJoin'), $args);
     }
 
-
+    public function fetchItemsCount()
+    {
+        $s = $this->prepare();
+        $s->execute();
+        return array(
+            'items' => $s->fetchAll(),
+            'count' => $this->findAll()
+        );
+    }
+    
     public function findAll()
     {
         $q = clone $this;
