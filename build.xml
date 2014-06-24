@@ -64,7 +64,7 @@
         <delete file="${basedir}/composer.lock"/>
         <delete file="${basedir}/composer.phar"/>
 
-        <exec executable="composer${os.bat}">
+        <exec executable="composer">
             <arg value="install" />
             <arg value="--no-dev" />
             <arg value="--prefer-dist" />
@@ -127,8 +127,8 @@
     <target name="phpab">
         <exec executable="${exec.phpab}">
             <arg value="--output" />
-            <arg path="tests/src/__autoload.php" />
-            <arg path="tests/src" />
+            <arg path="app/classes/api/autoload.php" />
+            <arg path="app/classes/api/" />
         </exec>
     </target>
 
