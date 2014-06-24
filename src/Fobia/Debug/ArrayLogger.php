@@ -52,6 +52,8 @@ class ArrayLogger extends AbstractLogger
             $string =  sprintf("%-7s %s %s\n", "[{$row['level']}]", $row['message'], $row['context']);
             fwrite($this->handle, $string);
         }
+
+        return $row;
     }
 
     public function getRows()
