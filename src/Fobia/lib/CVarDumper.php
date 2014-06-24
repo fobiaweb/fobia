@@ -58,33 +58,30 @@ class CVarDumper
         self::dumpInternal($var, 0);
         if ($highlight) {
             $result = highlight_string("<?php\n" . self::$_output, true);
-            $pattern = array(
-                '/&lt;\\?php<br \\/>/',
-                '/<code>/',
-                '/style="color: ' .  ini_get('highlight.string')   .'"/',
-                '/style="color: ' .  ini_get('highlight.comment')  .'"/',
-                '/style="color: ' .  ini_get('highlight.keyword')  .'"/',
-                '/style="color: ' .  ini_get('highlight.bg')       .'"/',
-                '/style="color: ' .  ini_get('highlight.default')  .'"/',
-                '/style="color: ' .  ini_get('highlight.html')     .'"/',
-            );
-            $replace = array(
-                '',                                 // for <?php
-                '<code class="debug-cvardumper">',  // for <code>
-                'class="string"',                   // style="color:
-                'class="comment"',  // #888A85;
-                'class="keyword"',
-                'class="bg"',
-                'class="default"',
-                'class="html"',
-            );
-            if ($highlight == 'css') {
-                self::$_output = preg_replace($pattern, $replace, $result);
-            } else {
-                self::$_output = $result;
-            }
-            // self::$_output = $result;// preg_replace($pattern, $replace, $result, 1);
-            // self::$_output = preg_replace($pattern, $replace, $result);
+            if ($highlight === 'css') {
+                $pattern = array(
+                    '/&lt;\\?php<br \\/>/',
+                    '/<code>/',
+                    '/style="color: ' .  ini_get('highlight.string')   .'"/',
+                    '/style="color: ' .  ini_get('highlight.comment')  .'"/',
+                    '/style="color: ' .  ini_get('highlight.keyword')  .'"/',
+                    '/style="color: ' .  ini_get('highlight.bg')       .'"/',
+                    '/style="color: ' .  ini_get('highlight.default')  .'"/',
+                    '/style="color: ' .  ini_get('highlight.html')     .'"/',
+                );
+                $replace = array(
+                    '',                                 // for <?php
+                    '<code class="debug-cvardumper">',  // for <code>
+                    'class="string"',                   // style="color:
+                    'class="comment"',  // #888A85;
+                    'class="keyword"',
+                    'class="bg"',
+                    'class="default"',
+                    'class="html"',
+                );
+                $result = preg_replace($pattern, $replace, $result);
+            } 
+            self::$_output = $result;
         }
         return self::$_output;
     }
