@@ -8,11 +8,12 @@
 
 namespace Fobia\DataBase\Handler;
 
-use \PDO;
-use \ezcDbHandlerMysql;
-use \Fobia\DataBase\Query\QueryInsert;
-use \Fobia\DataBase\Query\QueryReplace;
-use \Log;
+use PDO;
+use ezcDbHandlerMysql;
+use Fobia\DataBase\Query\QueryInsert;
+use Fobia\DataBase\Query\QueryReplace;
+use Fobia\DataBase\Query\QuerySelect;
+use Log;
 
 /**
  * MySQL class, extends PDO
@@ -119,5 +120,11 @@ class MySQL extends ezcDbHandlerMysql
     public function createReplaceQuery()
     {
         return new QueryReplace( $this );
+    }
+
+
+    public function createSelectQuery()
+    {
+        return new QuerySelect( $this );
     }
 }
