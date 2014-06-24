@@ -16,7 +16,6 @@ use \Fobia\Debug\Log;
  *
  * @property \ezcDbHandler $db database
  * @property \Slim\Session $session current session
- * @property \Psr\Log\LoggerInterface $log логер
  * @property \Fobia\Auth\Authentication $auth
  *
  */
@@ -184,6 +183,26 @@ class Application extends \Slim\App
             $classRoute = new $class( $classArgs );
             return call_user_func_array(array($classRoute, $method), $methodArgs);
         };
+    }
+    
+    /**
+     * Добавить маршрут без метода HTTP
+     *
+     * @param маршрут $path
+     * @param type $controller
+     * @return \Slim\Route
+     */
+    public function route($path, $controller)
+    {
+        $args = func_get_args();
+        $controller = array_pop($args);
+        if (is_callable($controller)) {
+            $callable = $controller;
+        } else {
+            $callable = $this->createController($controller);
+        }
+        $args = array_push($args, $callable);
+        return call_user_func_array(array($this, 'map'), $args);
     }
 
     protected function defaultNotFound()

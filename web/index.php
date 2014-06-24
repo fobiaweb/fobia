@@ -24,6 +24,9 @@ $app->get('/sub', function() use($app) {
 //$app->any('/test(/:h+)', $app->createController('\\Controller::indexAction'));
 
 
+//$app->route('/te', 'IndexController::test')->via();
+
+
 $route_arr = glob(__DIR__ . '/../app/router/*.php');
 foreach ($route_arr as $file) {
     include $file;

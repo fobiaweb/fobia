@@ -13,5 +13,18 @@
  */
 class Controller_Index
 {
+    public function login()
+    {
 
+    }
+
+    public function logout()
+    {
+
+    }
+
+    public function auth()
+    {
+
+    }
 }
