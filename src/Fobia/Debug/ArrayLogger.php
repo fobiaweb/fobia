@@ -58,7 +58,7 @@ class ArrayLogger extends AbstractLogger
 
     public function getRows()
     {
-        return $list;
+        return $this->list;
     }
 
     public static function getLevelCode($level)
@@ -123,13 +123,27 @@ class ArrayLogger extends AbstractLogger
         }
     }
 
-    public function render()
+    public function render($format = 'html')
     {
         if ($this->handle || !  $this->enableRender) {
             return;
         }
+        $file = __DIR__ . '/view/' . $format . '.php';
+        if (!file_exists($file)) {
+            trigger_error("Файл не найден '{$file}'", E_USER_WARNING);
+        }
         ob_start();
-        include __DIR__ . '/view/plain.php';
+        include $file;
         return ob_get_clean();
+    }
+
+
+    public function registry()
+    {
+        register_shutdown_function(function(){
+            register_shutdown_function(function(){
+                echo $this->render('html');
+            });
+        });
     }
 }
