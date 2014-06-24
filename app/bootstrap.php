@@ -12,15 +12,26 @@ if (defined('BOOTSTRAP_FILE')) {
 }
 define('REMOTE_SERVER', true);
 
+// COMPOSER
 if (!class_exists('\\Composer\\Autoload\\ClassLoader')) {    
     require_once __DIR__ . '/../vendor/autoload.php';
 }
-if (!class_exists(__DIR__ . '/classes/autoload.php')) {   
+
+// CLASSES
+if (file_exists(__DIR__ . '/classes/autoload.php')) {   
     require_once  __DIR__ . '/classes/autoload.php';
 }
 
-//echo __FILE__;
 
+// APPRC
+$apprc_file = dirname(__DIR__) . '/.apprc';
+if (file_exists($apprc_file)) {
+    require_once $apprc_file;
+}
+unset($apprc_file);
+
+
+// INIT CONSTANTS
 defined('SYSPATH') or define('SYSPATH', realpath( dirname(__DIR__)) );
 
 defined('SRC_DIR') or define('SRC_DIR',   __DIR__ );

@@ -132,24 +132,6 @@
         </exec>
     </target>
 
-    <target name="system-install">
-        <exec executable="pear">
-            <arg line="config-set auto_discover 1" />
-        </exec>
-        <exec executable="pear">
-            <arg line="install pear/Console_CommandLine" />
-        </exec>
-        <exec executable="pear">
-            <arg line="install components.ez.no/Base ezc/DataBase ezc/ConsoleTools" />
-        </exec>
-        <exec executable="pear">
-            <arg line="install -a pear.netpirates.net/autoload" />
-        </exec>
-        <exec executable="pear">
-            <arg line="install pear.twig-project.org/twig" />
-        </exec>
-    </target>
-
     <!--
         #
         # Системные переменые
