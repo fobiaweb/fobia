@@ -17,22 +17,11 @@ use ezcQuerySelect;
  */
 class QuerySelect extends ezcQuerySelect
 {
-    /**
-     * Resets the query object for reuse.
-     *
-     * @return void
-     */
-    protected function resetLimit()
-    {
-        $this->selectString = null;
-        $this->limitString = null;
-    }
 
     protected function doJoin($type)
     {
-        $args = func_get_args();
         $this->lastInvokedMethod = 'from';
-        return call_user_func_array(array('parent', 'doJoin'), $args);
+        return call_user_func_array(array('parent', 'doJoin'), func_get_args());
     }
 
     public function fetchItemsCount()
@@ -44,13 +33,16 @@ class QuerySelect extends ezcQuerySelect
             'count' => $this->findAll()
         );
     }
-    
+
     public function findAll()
     {
         $q = clone $this;
-        $q->resetLimit();
+
+        $q->selectString = null;
+        $q->limitString  = null;
+
         $q->select('COUNT(*) AS count');
-        $stmt = $q->prepare();
+        $stmt   = $q->prepare();
         $stmt->execute();
         $result = $stmt->fetch();
         return $result['count'];
