@@ -27,11 +27,6 @@ abstract class AbstractApiInvoke
     protected $method;
 
     /**
-     * @var \Fobia\Base\Application
-     */
-    protected $app;
-
-    /**
      * @var \Exception
      */
     private $exc;
@@ -47,7 +42,6 @@ abstract class AbstractApiInvoke
     public function __construct($params = null)
     {
         $this->params = (array) $params;
-        $this->app    = \App::instance();
         
         $this->exp = new \Api\ApiExpression();
     }
