@@ -1,5 +1,5 @@
 +(function(window) {
-    var jf = "http://ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js";
+    var jf = "http://yandex.st/jquery/2.1.0/jquery.min.js";
     
     function initLog() {
         var $ = window.jQuery;
