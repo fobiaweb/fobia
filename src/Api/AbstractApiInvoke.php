@@ -127,6 +127,13 @@ abstract class AbstractApiInvoke
         }
     }
 
+    protected function reset()
+    {
+        $this->response = null;
+        $this->exc = null;
+        
+    }
+    
     /**
      * Возвращает результат
      *

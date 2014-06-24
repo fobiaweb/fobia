@@ -78,5 +78,14 @@ class MySQLTest extends \PHPUnit_Framework_TestCase
         $stmt  = $q->prepare();
         $this->assertInstanceOf('\\Fobia\\DataBase\\DbStatement', $stmt);
         $this->assertEquals('SELECT * FROM test', $stmt->queryString);
+
+
+        $q = $this->db->createSelectQuery();
+        $e = $q->expr;
+        $q->select( '*' )->from( 'table' )
+                ->where( $e->not($e->isNull('id')) )
+//                ->where( $e->isNull('id') )
+                         ->where( $e->eq( 'id', $e->not( 'null' ) ) );
+        echo $q->getQuery();
     }
 }

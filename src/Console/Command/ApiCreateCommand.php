@@ -23,12 +23,10 @@ use Symfony\Component\Console\Formatter\OutputFormatterStyle;
 class ApiCreateCommand extends Command
 {
 
-    protected $dir = null;
+    protected $dir = 'app/classes/api';
 
     protected function configure()
     {
-        $this->dir = __DIR__ . '/../../Api/class';
-
         $this
                 ->setName('api:create')
                 ->setDescription('Создать метод API')
