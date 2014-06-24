@@ -283,7 +283,7 @@ class Authentication
      */
     public function authenticate()
     {
-        if ( ! is_array($this->app->session['auth'])) {
+        if ( ! is_array($this->app->session['auth']) ) {
             $this->app->session['auth'] = array();
         }
         $this->status = self::STATUS_AUTH_INCORRECT;
@@ -291,8 +291,7 @@ class Authentication
         $login    = $this->app->session['auth']['login'];
         $password = $this->app->session['auth']['password'];
         $online   = $this->app->session['auth']['online'];
-
-        Log::debug('[authenticate]:: start', $this->app->session['auth']);
+        Log::debug('[authenticate]:: start ', $this->app->session['auth']);
 
         if ($this->cacheAuth) {
             $d_time = time() - $online;

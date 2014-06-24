@@ -65,10 +65,14 @@ class Application extends \Slim\App
      */
     public function __construct($userSettings = null)
     {
+        $configDir = '.';
+
         if ( ! is_array($userSettings)) {
             $file = $userSettings;
             $userSettings = array();
             if (file_exists($file)) {
+                $configDir = dirname($file);
+
                 $userSettings = Utils::loadConfig($file);
                 Log::debug("Configuration load: " . realpath($file) );
                 unset($file);
@@ -109,11 +113,9 @@ class Application extends \Slim\App
             if (is_array($autoload)) {
                 foreach (@$autoload as $cfg => $file) {
                     $this['settings']['app'][$cfg] = function($c) use($cfg, $file, $configDir) {
-                        Log::debug(">> autoload config",
-                                          array($cfg, $file));
+                        Log::debug(">> autoload config", array($cfg, $file));
                         if ( ! file_exists($configDir . "/$file")) {
-                            trigger_error("Нет автозагрузочной секции конфигурации '$cfg'" . "/$file",
-                                          E_USER_ERROR);
+                            trigger_error("Нет автозагрузочной секции конфигурации '$cfg'" . "/$file", E_USER_ERROR);
                             return;
                         }
                         return Utils::loadConfig($file);
@@ -121,7 +123,7 @@ class Application extends \Slim\App
                 }
             }
         }
-        unset($autoload);
+        unset($autoload, $cfg, $file);
 
         // Session
         $this->extend('session', function($session, $c) {

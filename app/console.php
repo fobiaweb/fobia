@@ -20,5 +20,6 @@ register_shutdown_function(function(){
 $application = new FobiaApplication();
 $application->add(new Console\Command\GetCommand());
 $application->add(new Console\Command\ApiCreateCommand());
+$application->add(new Console\Command\ApiSearchCommand());
 $application->run();
 

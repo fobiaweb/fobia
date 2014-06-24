@@ -12,16 +12,16 @@
     "require": {
         "php": ">=5.3.0",
         "fobiaweb/ezc-database": "1.*",
-        "fobiaweb/slim": "3.*",
-        "monolog/monolog": "1.*",
-        "symfony/console": "2.*",
-        "symfony/debug": "2.*",
-        "symfony/filesystem": "2.*",
-        "symfony/yaml": "2.*"
+        "fobiaweb/slim": "3.0.0",
+        "monolog/monolog": "~1",
+        "symfony/console": "~2.5",
+        "symfony/debug": "~2.5",
+        "symfony/filesystem": "~2.5",
+        "symfony/yaml": "~2.5"
     },
     "require-dev": {
         "php": ">=5.3.0",
-        "smarty/smarty": "3.*",
+        "smarty/smarty": "~3",
         "twig/twig": "1.*"
     },
     "autoload": {
