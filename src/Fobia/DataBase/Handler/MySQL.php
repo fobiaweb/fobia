@@ -50,7 +50,7 @@ class MySQL extends ezcDbHandlerMysql
         //     parent::query("SET NAMES '{$dbParams['charset']}'");
         // }
 
-        \Fobia\Log::info('SQL:: Connect database', array($dbParams['database']));
+        \Fobia\Log::info('[SQL]:: Connect database', array($dbParams['database']));
 
         if (@$dbParams['params']['debug']) {
             parent::query('SET profiling = 1');
@@ -94,11 +94,11 @@ class MySQL extends ezcDbHandlerMysql
             $stmt = $this;
         }
 
-        \Fobia\Log::info('SQL:: ' . $query, array( round( microtime(true) - $time , 6)) );
+        \Fobia\Log::info('[SQL]:: ' . $query, array( round( microtime(true) - $time , 6)) );
 
         if ((int) $stmt->errorCode()) {
             $error = $stmt->errorInfo();
-            \Fobia\Log::error('==> SQL:: '. $error[1].': '.$error[2]);
+            \Fobia\Log::error('==> [SQL]:: '. $error[1].': '.$error[2]);
         }
     }
 
