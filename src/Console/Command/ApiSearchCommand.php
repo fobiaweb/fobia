@@ -35,6 +35,12 @@ class ApiSearchCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        if ($input->getOption('profile')) {
+            register_shutdown_function(function() use($output) {
+                $output->write(sprintf("\n<info>%s</info>", \Fobia\Base\Utils::resourceUsage()));
+            });
+        }
+
         $r = shell_exec("grep -Hr '@api' app/classes/");
         $arr = explode("\n", trim($r));
 
