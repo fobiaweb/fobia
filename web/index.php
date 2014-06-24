@@ -20,7 +20,11 @@ $app->get('/sub', function() use($app) {
     var_dump($app['request']->params());
     var_dump($app['request']->getBody());
 });
+$app->get('/file', function() use($app) {
+    $file = SYSPATH . '/app/file.rar';
+    $app->sendFile($file);
 
+});
 //$app->any('/test(/:h+)', $app->createController('\\Controller::indexAction'));
 
 

@@ -82,7 +82,7 @@
         var display = $("#ac-logger").css("display");
         $.cookie('ac-logger', display);
     }
-
+    
     if (typeof window.jQuery == 'undefined') {
         loadScript(jf, function() {
             initLog();

@@ -125,10 +125,31 @@ class Application extends \Slim\App
         unset($autoload, $cfg, $file);
 
         // Session
-        $this->extend('session', function($session, $c) {
-            Log::debug('Session start', array(session_id()));
+        //  session.gc_maxlifetime = 1440
+        //  ;setting session.gc_maxlifetime to 1440 (1440 seconds = 24 minutes):
+        $this['session'] = function($c) {
+            $sid = null;
+            if (@$_COOKIE['SID']) {
+                $sid = $_COOKIE['SID'];
+            }
+            if ($sid) {
+                session_id($sid);
+            } 
+            $session = new \Slim\Session($c['settings']['session.handler']);
+            $session->start();
+            if ($c['settings']['session.encrypt'] === true) {
+                $session->decrypt($c['crypt']);
+            }
+            if ($sid === null) {
+                $sid =  session_id();
+                $c->setCookie('SID', $sid, time() + 1440);
+                Log::debug('Session save cookie');
+            }
+
+            Log::debug('Session start', array($sid));
+
             return $session;
-        });
+        };
 
         // Database
         // ------------------
