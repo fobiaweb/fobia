@@ -13,7 +13,6 @@ use ezcDbHandlerMysql;
 use Fobia\DataBase\Query\QueryInsert;
 use Fobia\DataBase\Query\QueryReplace;
 use Fobia\DataBase\Query\QuerySelect;
-use Log;
 
 /**
  * MySQL class, extends PDO
@@ -23,6 +22,8 @@ use Log;
 class MySQL extends ezcDbHandlerMysql
 {
     protected $profiles = false;
+
+    protected $logger = null;
 
     /**
      * Создает объект из параметров $dbParams.
@@ -46,16 +47,18 @@ class MySQL extends ezcDbHandlerMysql
         $this->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_SILENT);
         $this->setAttribute(PDO::ATTR_STATEMENT_CLASS, array('Fobia\DataBase\DbStatement', array($this)));
 
+        $this->logger = \Fobia\Log::getLogger();
+
         // if (@$dbParams['charset']) {
         //     parent::query("SET NAMES '{$dbParams['charset']}'");
         // }
 
-        \Fobia\Log::info('[SQL]:: Connect database', array($dbParams['database']));
+        $this->logger->info('[SQL]:: Connect database', array($dbParams['database']));
 
         if (@$dbParams['params']['debug']) {
             parent::query('SET profiling = 1');
             $this->profiles = true;
-            \Fobia\Log::debug('==> Set profiling');
+            $this->logger->debug('==> Set profiling');
         }
     }
 
@@ -94,11 +97,11 @@ class MySQL extends ezcDbHandlerMysql
             $stmt = $this;
         }
 
-        \Fobia\Log::info('[SQL]:: ' . $query, array( round( microtime(true) - $time , 6)) );
+        $this->logger->info('[SQL]:: ' . $query, array( round( microtime(true) - $time , 6)) );
 
         if ((int) $stmt->errorCode()) {
             $error = $stmt->errorInfo();
-            \Fobia\Log::error('==> [SQL]:: '. $error[1].': '.$error[2]);
+            $this->logger->error('==> [SQL]:: '. $error[1].': '.$error[2]);
         }
     }
 

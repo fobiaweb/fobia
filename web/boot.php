@@ -54,8 +54,8 @@ $app->hook('slim.before', function() use($app) {
 });
 
 $app->hook('slim.after.router', function() use($app) {
-    Log::info('router: ' . $app['router']->getCurrentRoute()->getName()  );
-    // dump($app['router']->getCurrentRoute());
+    Log::info('router: ' . $app['router']->getCurrentRoute()->getPattern() /* getName() */ );
+     // dump($app['router']->getCurrentRoute()->getPattern());
 });
 
 

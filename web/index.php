@@ -28,7 +28,7 @@ $app->get('/file', function() use($app) {
 //$app->any('/test(/:h+)', $app->createController('\\Controller::indexAction'));
 
 
-//$app->route('/te', 'IndexController::test')->via();
+$app->route('/bla', 'AuthController:test')->via('GET');
 
 
 $route_arr = glob(__DIR__ . '/../app/router/*.php');

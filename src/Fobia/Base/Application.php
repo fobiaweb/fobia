@@ -190,10 +190,11 @@ class Application extends \Slim\App
      */
     public function createController($controller)
     {
-        list( $class, $method ) = explode('::', $controller);
+        list( $class, $method ) = explode(':', $controller);
         if (!$method) {
             $method = 'indexAction';
         }
+        $class = $this['settings']['controller.prefix'].$class;
 
         $classArgs = func_get_args();
         array_shift($classArgs);
@@ -202,6 +203,7 @@ class Application extends \Slim\App
         return function() use ($app, $classArgs, $class, $method ) {
             $methodArgs = func_get_args();
             $classRoute = new $class( $classArgs );
+            \Fobia\Log::debug("Call controller: $class -> $method", $methodArgs);
             return call_user_func_array(array($classRoute, $method), $methodArgs);
         };
     }
@@ -209,8 +211,8 @@ class Application extends \Slim\App
     /**
      * Добавить маршрут без метода HTTP
      *
-     * @param маршрут $path
-     * @param type $controller
+     * @param string  $path   маршрут
+     * @param string|callable $controller карта контроллера или функция
      * @return \Slim\Route
      */
     public function route($path, $controller)
@@ -222,7 +224,7 @@ class Application extends \Slim\App
         } else {
             $callable = $this->createController($controller);
         }
-        $args = array_push($args, $callable);
+        array_push($args, $callable);
         return call_user_func_array(array($this, 'map'), $args);
     }
 
