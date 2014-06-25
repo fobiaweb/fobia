@@ -48,7 +48,7 @@ return array(
     'database.charset' => 'utf8',
 
     // Controller
-    'controller.prefix' => '\\Controller\\',
+    'controller.prefix' => 'Controller\\',
 
 
 );

@@ -10,10 +10,23 @@ require_once __DIR__ . '/boot.php';
 
 $app = App::instance();
 
+$app['auth'] = function() use($app) {
+    $auth = new Fobia\Auth\Authentication($app);
+    return $auth;
+};
+
+
 $app->get('/', function() {
-    echo 'MAIN';
+     echo 'MAIN';
     // include __DIR__ . '/../app/view/login.php';
+//    if (@$_ENV['loader'] ) {
+//        dump($_ENV['loader'] );
+//    }
 });
+
+
+
+
 
 $app->get('/sub', function() use($app) {
     echo $app->subRequest('/logout', 'GET')->getBody()->__toString() ;
@@ -28,7 +41,9 @@ $app->get('/file', function() use($app) {
 //$app->any('/test(/:h+)', $app->createController('\\Controller::indexAction'));
 
 
-$app->route('/bla', 'AuthController:test')->via('GET');
+$app->route('/login',  'AuthController:login')->via('GET', 'POST');
+$app->route('/logout', 'AuthController:logout')->via('GET', 'POST');
+$app->route('/auth',   'AuthController:auth')->via('GET');
 
 
 $route_arr = glob(__DIR__ . '/../app/router/*.php');
@@ -37,11 +52,21 @@ foreach ($route_arr as $file) {
 }
 unset($route_arr);
 
+        register_shutdown_function(function(){
+            register_shutdown_function(function(){
+                $logger = Log::getLogger();
+                if (method_exists($logger, 'render')) {
+                    Log::info(Fobia\Base\Utils::resourceUsage());
+                    echo  Log::getLogger()->render() ;
+                }
+            });
+        });
 
 $app->run();
 
 
-$logger = Log::getLogger();
-if (method_exists($logger, 'render')) {
-    echo  Log::getLogger()->render() ;
-}
+
+
+
+
+

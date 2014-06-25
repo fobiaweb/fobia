@@ -194,7 +194,6 @@ class Application extends \Slim\App
         if (!$method) {
             $method = 'indexAction';
         }
-        $class = $this['settings']['controller.prefix'].$class;
 
         $classArgs = func_get_args();
         array_shift($classArgs);
@@ -222,6 +221,7 @@ class Application extends \Slim\App
         if (is_callable($controller)) {
             $callable = $controller;
         } else {
+            $controller = str_replace('.', '\\', $this['settings']['controller.prefix'].$controller);
             $callable = $this->createController($controller);
         }
         array_push($args, $callable);
