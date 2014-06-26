@@ -58,13 +58,18 @@ class ApiCreateCommand extends Command
 
     protected function template($name)
     {
+        // Первые символы после точки в верхний регистр
         $class = preg_replace_callback('/^\w|\.\w/', function ($matches) {
             return strtoupper($matches[0]);
         }, $name);
-
+        // Префикс к классу и заменяем точки подчеркиванием
         $class   = 'Api_' . str_replace('.', '_', $class);
-        $content = file_get_contents($this->dir . '/default.php');
-        $content = preg_replace(array('/{{name}}/', '/Api_CLASSNAME/'),
+
+        // Загружаем шаблон
+        $content = file_get_contents($this->dir . '/default.tpl');
+
+        // Производим замену
+        $content = preg_replace(array('/{{name}}/', '/{{classname}}/'),
                                 array($name, $class), $content);
 
         return $content;

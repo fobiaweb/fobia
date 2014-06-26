@@ -1,26 +1,24 @@
 <?php
+
 /**
- * auth.login.php file
- *
- * Авторизайия
+ * Авторизайия <br>
  * --------------------------------------------
  *
- * PARAMS:
- * ------
- *  login
- *  password
- *
+ * PARAMS:<br>
  * --------------------------------------------
+ * <pre>
+ *   login      - ff
+ *   password   - ff
+ * </pre>
  *
- * RESULT
- * ------
+ * RESULT <br>
+ * --------------------------------------------<br>
  * Возвращает 0 в случии неудачи результат
- * --------------------------------------------
+ *
  *
  * @author     Dmitriy Tyurin <fobia3d@gmail.com>
- * @copyright  Copyright (c) 2014 Dmitriy Tyurin
  *
- * @api
+ * @api         auth.login
  */
 class Api_Auth_Login extends AbstractApiInvoke
 {
