@@ -7,8 +7,8 @@
  * PARAMS:<br>
  * --------------------------------------------
  * <pre>
- *   login      - ff
- *   password   - ff
+ *   login      -(*) логин
+ *   password   -(*) пароль
  * </pre>
  *
  * RESULT <br>

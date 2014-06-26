@@ -2,6 +2,8 @@
 
 namespace Api;
 
+use Log;
+
 /**
  * AbstractApiInvoke.php file
  *
@@ -10,6 +12,7 @@ namespace Api;
  */
 abstract class AbstractApiInvoke
 {
+   private $options;
 
     /**
      * @var array
@@ -66,7 +69,7 @@ abstract class AbstractApiInvoke
     {
         $this->exc      = null;
         $this->response = null;
-        \Log::debug("API:: Вызов метода '$this->method' - ", $this->params);
+        \Log::info("[API]:: Вызов метода '$this->method' - ", $this->params);
 
         try {
             $this->dispatchMethod('execute', func_get_args());
@@ -75,10 +78,10 @@ abstract class AbstractApiInvoke
             return true;
         } catch (\Api\Exception\Error $exc) {
             $this->exc = $exc;
-            \Log::error("API:: (" . get_class($exc) . ") " . $exc->getMessage());
+            \Log::error("[API]:: (" . get_class($exc) . ") " . $exc->getMessage());
             return false;
         } catch (\Exception $exc) {
-            \Log::error("API:: (" . get_class($exc) . ") " . $exc->getMessage());
+            \Log::error("[API]:: (" . get_class($exc) . ") " . $exc->getMessage());
             return false;
         }
     }
