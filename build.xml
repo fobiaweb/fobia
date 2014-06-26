@@ -132,6 +132,12 @@
         </exec>
     </target>
 
+    <!-- Генерация файлов автозагрузки классов -->
+    <target name="_branch">
+        <exec executable="git" >
+            <arg value="branch" />
+        </exec>
+    </target>
     <!--
         #
         # Системные переменые

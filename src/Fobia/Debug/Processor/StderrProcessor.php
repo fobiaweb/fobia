@@ -6,6 +6,8 @@
  * @copyright  Copyright (c) 2014 Dmitriy Tyurin
  */
 
+namespace Fobia\Debug\Processor;
+
 /**
  * StderrProcessor class
  *

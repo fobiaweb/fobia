@@ -94,7 +94,7 @@ class GetCommand extends Command
         $_SERVER['SCRIPT_NAME'] = '/fobia/index.php';
         $_SERVER['REQUEST_URI'] = '/fobia' . $name ;
         $_SERVER['QUERY_STRING'] = '';// . $name ;
-        require_once '/srv/fobiaweb/fobia/web/index.php';
 
+        include HTML_DIR . '/index.php';
     }
 }
