@@ -449,4 +449,25 @@ class Utils
         $instance = $reflectionClass->newInstanceArgs($args);
         return $instance;
     }
+
+    /**
+     * Проверяет подключен ли файл
+     * 
+     * @param string $file __FILE__ or markName
+     * @param bool $add добавить в список подключаемых
+     * @return bool TRUE если файл уже был подключен
+     */ 
+    public static function isRequire($file, $add = true)
+    {
+        static $files = array();
+
+        if (in_array($file, $files)) {
+            return true;
+        } else {
+            if ($add) {
+                $files[] = $file;
+            }
+            return false;
+        }
+    }
 }

@@ -17,6 +17,12 @@ if (!class_exists('\\Composer\\Autoload\\ClassLoader')) {
     $_ENV['loader']  = require_once __DIR__ . '/../vendor/autoload.php';
 }
 
+// Fobia\Base\Utils::isRequire(__FILE__);
+
+// if (Fobia\Base\Utils::isRequire(__FILE__)) {
+    // die('Хуй вам');
+// }
+
 // CLASSES
 if (file_exists(__DIR__ . '/classes/autoload.php')) {   
     require_once  __DIR__ . '/classes/autoload.php';
