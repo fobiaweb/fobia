@@ -233,11 +233,10 @@ class Application extends \Slim\App
         $this->halt(404, "Not Found");
     }
 
-    // protected function defaultError($e)
-    // {
-    //     $this->contentType('text/html');
-    //     dump($e);
-    // }
+    protected function defaultError($e)
+    {
+       parent::defaultError($e);
+    }
 
     public function isCli()
     {
