@@ -51,6 +51,10 @@
             <arg value="-am" />
             <arg value="commit - ${datemsg}" />
         </exec>
+        <exec executable="git" dir="${basedir}" >
+            <arg value="push" />
+            <arg value="origin" />
+        </exec>
     </target>
 
     <target name="clean" description="Cleanup build artifacts">
