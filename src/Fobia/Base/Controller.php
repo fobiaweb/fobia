@@ -15,12 +15,14 @@ namespace Fobia\Base;
  */
 class Controller
 {
-
+    /**
+     * @var \Fobia\Base\Application
+     */
     public $app;
     public $segments = array();
     public $params   = array();
 
-    public function __construct($app, $segments = array(), $params = array())
+    public function __construct(Application $app, $segments = array(), $params = array())
     {
         $this->app      = $app;
         $this->segments = $segments;
@@ -34,7 +36,7 @@ class Controller
 
     public function index()
     {
-        \App::instance()->notFound();
+        $this->app->notFound();
     }
 
     public function indexAction()

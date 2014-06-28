@@ -24,8 +24,36 @@ $app->get('/', function() {
 //    }
 });
 
+$app->get('/redirect', function() use($app) {
+    if ($dsid = $app->request->getCookie('X-DebugSid')) {
+        $app->response->setCookie('X-DebugSid', null);
+        echo $sid;
+        dump($app);
+    } else {
+        $app->response->setCookie('X-DebugSid', '11');
+        $app->redirect($app->urlFor('base') . 'redirect');
+    }
+});
+$app->get('/redirect/yes', function() use($app) {
+    dump($_SERVER);
+});
 
+$app->get('/view', function() use($app){
+    $smarty = new \Smarty();
+    $smarty->setTemplateDir(SYSPATH . '/' .  $app->config('templates.path') . '/');
+    $smarty->setCompileDir(CACHE_DIR . '/templates');
+    $smarty->setCacheDir(CACHE_DIR );
+    $smarty->left_delimiter = "{{";
+    $smarty->right_delimiter = "}}";
 
+    $obj = new stdClass();
+    $obj->id = 1;
+    $obj->name = 'TestName';
+    $smarty->assign('obj', $obj);
+    $smarty->display('test.tpl');
+    $obj->id = 11;
+    $smarty->display('test.tpl');
+});
 
 
 $app->get('/sub', function() use($app) {
@@ -44,23 +72,26 @@ $app->get('/file', function() use($app) {
 $app->route('/login',  'AuthController:login')->via('GET', 'POST');
 $app->route('/logout', 'AuthController:logout')->via('GET', 'POST');
 $app->route('/auth',   'AuthController:auth')->via('GET');
+$app->route('/api/:method',   'ApiController:index')->via('ANY');
 
 
-$route_arr = glob(__DIR__ . '/../app/router/*.php');
-foreach ($route_arr as $file) {
-    include $file;
-}
-unset($route_arr);
+$logger = Log::getLogger();
+register_shutdown_function(function() use($logger) {
+    register_shutdown_function(function() use($logger)  {
+        if (method_exists($logger, 'render')) {
+            Log::info(Fobia\Base\Utils::resourceUsage());
+            echo  Log::getLogger()->render() ;
+        }
+    });
+});
 
-        register_shutdown_function(function(){
-            register_shutdown_function(function(){
-                $logger = Log::getLogger();
-                if (method_exists($logger, 'render')) {
-                    Log::info(Fobia\Base\Utils::resourceUsage());
-                    echo  Log::getLogger()->render() ;
-                }
-            });
-        });
+$app->hook('slim.after', function() use ($app) {
+    $logger = Log::getLogger();
+    if (method_exists($logger, 'render')) {
+        $r =  Log::getLogger()->render() ;
+
+    }
+});
 
 $app->run();
 

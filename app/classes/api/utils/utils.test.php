@@ -28,7 +28,7 @@
  *
  * @api        utils.test
  */
-class Api_Utils_Test extends \Api\Method
+class Api_Utils_Test extends \Api\Method\Method
 {
 
     protected $name = 'utils.test';
