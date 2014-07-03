@@ -42,6 +42,8 @@ class Controller
         dump($this->app['router']->getCurrentRoute()->getParams());
 
         dump($this->app['request']->getPathInfo());
+
+        dump($this->app['view']);
     }
 
 
