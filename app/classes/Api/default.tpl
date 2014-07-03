@@ -8,6 +8,8 @@
  * @copyright  Copyright (c) 2014 Dmitriy Tyurin
  */
 
+ use Api\Method\Method;
+
 /**
  * Название метода <br>
  * --------------------------------------------
@@ -24,11 +26,9 @@
  * Возвращаемый результат
  *
  * 
- * @author     Dmitriy Tyurin <fobia3d@gmail.com>
- *
  * @api        {{name}}
  */
-class {{classname}} extends AbstractApiInvoke
+class {{classname}} extends Method
 {
 
     protected $method = '{{name}}';

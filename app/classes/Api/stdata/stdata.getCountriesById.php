@@ -1,4 +1,8 @@
 <?php
+
+use Api\Method\Method;
+
+
 /**
  * stdata.getCountriesById.php file
  * Возвращает информацию о странах по их идентификаторам
@@ -20,7 +24,7 @@
  * @copyright  Copyright (c) 2014 Dmitriy Tyurin
  * @api
  */
-class Api_Stdata_GetCountriesById extends AbstractApiInvoke
+class Api_Stdata_GetCountriesById extends Method
 {
     protected $method = 'stdata.getCountriesById';
 

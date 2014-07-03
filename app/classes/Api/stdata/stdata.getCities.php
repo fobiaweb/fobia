@@ -1,5 +1,7 @@
 <?php
 
+use Api\Method\Method;
+
 /**
  * stdata.getCities.php file
  *
@@ -35,7 +37,7 @@
  *
  * @api
  */
-class Api_Stdata_GetCities extends AbstractApiInvoke
+class Api_Stdata_GetCities extends Method
 {
 
     protected $method = 'stdata.getCities';

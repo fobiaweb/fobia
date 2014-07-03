@@ -1,4 +1,7 @@
 <?php
+
+use Api\Method\Method;
+
 /**
  * stdata.getCitiesById.php file
  *
@@ -21,7 +24,7 @@
  * @copyright  Copyright (c) 2014 Dmitriy Tyurin
  * @api
  */
-class Api_Stdata_GetCitiesById extends AbstractApiInvoke
+class Api_Stdata_GetCitiesById extends Method
 {
 
     protected $method = 'stdata.getCitiesById';

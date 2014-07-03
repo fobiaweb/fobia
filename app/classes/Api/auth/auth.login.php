@@ -1,5 +1,8 @@
 <?php
 
+
+use Api\Method\Method;
+
 /**
  * Авторизайия <br>
  * --------------------------------------------
@@ -20,14 +23,14 @@
  *
  * @api         auth.login
  */
-class Api_Auth_Login extends AbstractApiInvoke
+class Api_Auth_Login extends Method
 {
 
     /**
      * @var string название метода
      */
     protected $method = 'auth.login';
-    
+
     protected function execute()
     {
         $p = $this->params;

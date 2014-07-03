@@ -1,5 +1,8 @@
 <?php
 
+use Api\Method\Method;
+
+
 /**
  * stdata.getRegions.php file
  *
@@ -20,7 +23,7 @@
  * @copyright  Copyright (c) 2014 Dmitriy Tyurin
  * @api
  */
-class Api_Stdata_GetRegions extends AbstractApiInvoke
+class Api_Stdata_GetRegions extends Method
 {
 
     protected $method = 'stdata.getCountriesById';

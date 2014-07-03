@@ -1,5 +1,7 @@
 <?php
 
+use Api\Method\Method;
+
 /**
  * Возвращает список стран.
  * --------------------------------------------
@@ -17,7 +19,7 @@
  * @return mixed
  * @api
  */
-class Api_Stdata_GetCountries extends AbstractApiInvoke
+class Api_Stdata_GetCountries extends Method
 {
 
     protected $method = 'stdata.getCountries';

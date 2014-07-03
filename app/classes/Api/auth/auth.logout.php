@@ -6,12 +6,14 @@
  * @copyright  Copyright (c) 2014 Dmitriy Tyurin
  */
 
+use Api\Method\Method;
+
 /**
  * Api_Auth_logout class
  *
  * @package
  */
-class Api_Auth_Logout extends AbstractApiInvoke
+class Api_Auth_Logout extends Method
 {
 
     protected $method = 'auth.logout';
