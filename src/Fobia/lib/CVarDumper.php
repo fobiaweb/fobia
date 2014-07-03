@@ -58,6 +58,10 @@ class CVarDumper
         self::dumpInternal($var, 0);
         if ($highlight) {
             $result = highlight_string("<?php\n" . self::$_output, true);
+            $pattern = array( '/&lt;\\?php<br \\/>/', '/<code>/' );
+            $replace = array( '', '<code class="debug-cvardumper">' );
+            $result = preg_replace($pattern, $replace, $result);
+
             if ($highlight === 'css') {
                 $pattern = array(
                     '/&lt;\\?php<br \\/>/',
