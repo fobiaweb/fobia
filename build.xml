@@ -48,12 +48,15 @@
         </exec>
         <exec executable="git" dir="${basedir}" >
             <arg value="commit" />
+            <arg value="--amend" />
             <arg value="-am" />
             <arg value="commit - ${datemsg}" />
         </exec>
+        <echo message="commit - ${datemsg}" />
         <exec executable="git" dir="${basedir}" >
             <arg value="push" />
             <arg value="origin" />
+            <arg value="develop" />
         </exec>
     </target>
 
@@ -156,6 +159,8 @@
         <exec executable="git" >
             <arg value="branch" />
         </exec>
+
+        <echo message="${datemsg}" />
     </target>
     <!--
         #
@@ -182,6 +187,6 @@
     <property name="exec.php" value="php${os.bat}" />
 
     <tstamp>
-        <format property="datemsg" pattern="d-MMM-yyyy hh:mm" locale="en,GB" />
+        <format property="datemsg" pattern="d/MMM/yyyy HH:mm" locale="en,GB" />
     </tstamp>
 </project>
