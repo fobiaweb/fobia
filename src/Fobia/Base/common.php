@@ -178,6 +178,23 @@ function sortByKey(&$array, $sortby, $order = 'asc', $type = SORT_NUMERIC)
     return $out;
 }
 
+
+function parseInt($value)
+{
+    return (int) $value;
+}
+
+function parseFloat($value)
+{
+    return (float) $value;
+}
+
+function parsePositive($value)
+{
+    $value = (int) $value;
+    return ($value >= 0) ? $value : null;
+}
+
 /**
  * Сортировк масива $array по ключу $sortby в порядке, как перечислено $keys.
  *

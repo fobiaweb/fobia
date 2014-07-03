@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This file is part of API.
  *
@@ -7,20 +8,21 @@
  * @author     Dmitriy Tyurin <fobia3d@gmail.com>
  * @copyright  Copyright (c) 2014 Dmitriy Tyurin
  */
+use \Api\Method\Method;
 
 /**
- * Название метода <br>
+ * Название метода 
  * --------------------------------------------
  *
- * PARAMS <br>
+ * PARAMS 
  * --------------------------------------------
- * <pre>
+ * 
  *  offset      отступ, необходимый для получения определенного подмножества.
  *  count       количество записей, которые необходимо вернуть.
- * </pre>
+ * 
  *
- * RESULT <br>
- * -------------------------------------------- <br>
+ * RESULT 
+ * -------------------------------------------- 
  * Возвращаемый результат
  *
  *
@@ -28,32 +30,38 @@
  *
  * @api        utils.test
  */
-class Api_Utils_Test extends \Api\Method\Method
+class Api_Utils_Test extends Method
 {
 
     protected $name = 'utils.test';
 
     protected function configure()
     {
-        $this->map = array(
-            'name' => array(),
-            'count' => array(),
-            'offset' => array(),
-            'fields' => array()
-        );
+        $this->setDefinition('count',
+                             array(
+            'default' => 100,
+            'parse'   => 'parsePositive',
+        ));
+        $this->setDefinition('offset',
+                             array(
+            'default' => 0,
+            'parse'   => 'parsePositive',
+        ));
+        $this->setDefinition('name',
+                             array(
+            'mode'   => Method::VALUE_OPTIONAL,
+//            'assert' => array('is_numeric')
+        ));
     }
-
 
     protected function execute()
     {
-        $p   = $this->params;
-        $app = \App::instance();
-        $db  = $app->db;
+        $args = $this->getDefinitionParams();
 
-        $this->params();
 
-        // yeur code
-
-        $this->response = 1;
+//        var_dump($this->getDefinition());
+        var_dump($this->getParams());
+        var_dump($args);
+        echo "<hr>";
     }
 }

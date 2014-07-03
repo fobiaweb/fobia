@@ -26,7 +26,7 @@ class BadRequest extends Error
     public function __construct($params)
     {
         $params = func_get_args();
-        $message = 'Не передан один из аргуиентов (' . implode(', ', $params) . ')';
+        $message = "Не передан либо имеет не правельный формат один из аргументов ('" . implode("', '", $params) . "')";
         parent::__construct($message, 5);
     }
 

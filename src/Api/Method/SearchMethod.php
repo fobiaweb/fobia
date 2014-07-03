@@ -22,16 +22,26 @@ class SearchMethod extends Method
      */
     protected $query;
 
+    protected function configure()
+    {
+        $this->setDefinition('limit', array(
+            'mode' => Method::VALUE_OPTIONAL,
+            'default' => 100,
+        ));
+        $this->setDefinition('offset',  array(
+            'mode' => Method::VALUE_OPTIONAL,
+            'default' => 0,
+        ));
+        $this->setDefinition('sort',  array(
+            'mode' => Method::VALUE_OPTIONAL,
+        ));
+        $this->setDefinition('fields',  array(
+            'mode' => Method::VALUE_OPTIONAL,
+        ));
+    }
+
     protected function execute()
     {
-        $params = array(
-            'limit' => array(Method::VALUE_OPTIONAL, 100),
-            'offset' => array(Method::VALUE_OPTIONAL, 0),
-            'sort' => array(Method::VALUE_OPTIONAL),
-            'fields' => array(Method::VALUE_OPTIONAL)
-        );
-
-
         $app = \App::instance();
         $db  = $app->db;
         $q   = $db->createSelectQuery();

@@ -15,15 +15,22 @@ namespace Api\Method;
  */
 abstract class Method
 {
-    const VALUE_NONE = 1;
+
+    const VALUE_NONE     = 1;
     const VALUE_REQUIRED = 2;
     const VALUE_OPTIONAL = 4;
     const VALUE_IS_ARRAY = 8;
 
-    private $options;
+    /**
+     * Переданые параметры
+     */
     private $params;
+
+    /**
+     * определение параметров
+     */
     private $definition;
-    private $application;
+    private $definitionMergedWithArgs;
     private $ignoreValidationErrors = false;
     protected $name;
     protected $response;
@@ -34,33 +41,11 @@ abstract class Method
     public function __construct($params = null)
     {
         $this->params = (array) $params;
-    }
+        $this->definition = array();
+        $this->ignoreValidationErrors = array();
 
-    protected function setName($name)
-    {
-        $this->name = $name;
-    }
-    
-    protected function getName()
-    {
-        return $name;
-    }
+        $this->configure();
 
-    /**
-     * Configures the current command.
-     */
-    protected function configure()
-    {
-    }
-
-    /**
-     * Ignores validation errors.
-     *
-     * This is mainly useful for the help command.
-     */
-    public function ignoreValidationErrors()
-    {
-        $this->ignoreValidationErrors = true;
     }
 
     /**
@@ -72,8 +57,6 @@ abstract class Method
         return $this->getFormatResponse();
     }
 
-    abstract protected function execute();
-
     /**
      * Выполнить метод
      *
@@ -83,8 +66,9 @@ abstract class Method
     {
         $this->exc      = null;
         $this->response = null;
-        \Log::info("[API]:: Вызов метода '$this->method' - ", $this->params);
+        \Log::info("[API]:: Вызов метода '$this->name' - ", $this->params);
 
+        $this->initialize();
         try {
             $this->dispatchMethod('execute', func_get_args());
             return true;
@@ -97,44 +81,6 @@ abstract class Method
         } catch (\Exception $exc) {
             \Log::error("[API]:: (" . get_class($exc) . ") " . $exc->getMessage());
             return false;
-        }
-    }
-
-    /**
-     * Установка/получение параметра
-     *
-     * # // возвращает параметр
-     * # params->params('name')
-     *
-     * # // устанавливает параметр
-     * # params->params('name', 'value')
-     *
-     * # // обнуляет масив и устанавливает новые параметры
-     * # params->params(array('name1', 'name2'))
-     *
-     *
-     * @param array|string $name
-     * @param array|string $value
-     *
-     * @return array|string
-     */
-    public function params($name = null, $value = null)
-    {
-        $n = func_num_args();
-
-        switch ($n) {
-            case 0:
-                return $this->params;
-            case 1:
-                if (is_array($name)) {
-                    $this->params = $name;
-                    return;
-                }
-                return $this->params[$name];
-            case 2:
-            default:
-                $this->params[$name] = $value;
-                return;
         }
     }
 
@@ -180,6 +126,153 @@ abstract class Method
             );
         } else {
             return null;
+        }
+    }
+
+    /**
+     * Ignores validation errors.
+     *
+     * This is mainly useful for the help command.
+     */
+    public function ignoreValidationErrors()
+    {
+        $this->ignoreValidationErrors = true;
+    }
+
+    /**
+     * Configures the current command.
+     */
+    protected function configure()
+    {
+
+    }
+
+    /**
+     * Initializes the command just after the input has been validated.
+     */
+    protected function initialize()
+    {
+        $params     = $this->params;
+        $definition = $this->definition;
+
+        $args = array();
+        foreach ($definition as $key => $value) {
+            if (key_exists($key, $params)) {
+                $args[$key] = $params[$key];
+            } else {
+                if ($value['default'] !== null) {
+                    $args[$key] = $value['default'];
+                }
+                continue;
+            }
+
+            foreach ((array) $value['parse'] as $cb) {
+                if (is_callable($cb)) {
+                    $args[$key] = $cb($args[$key]);
+                } else {
+                    throw new \Api\Exception\ServerError('Не верный формат callable - ' . $cb);
+                }
+            }
+            foreach ((array) $value['assert'] as $cb) {
+                if (is_callable($cb)) {
+                    if ( ! $cb($args[$key])) {
+                        throw new \Api\Exception\BadRequest($key);
+                    }
+                } else {
+                    throw new \Api\Exception\ServerError('Не верный формат callable - ' . $cb);
+                }
+            }
+        }
+
+        $this->definitionMergedWithArgs =  $args ;
+    }
+
+    /**
+     * Устанавить атрибуты параметру
+     *
+     * <pre>
+     * mode     - режим
+     * default  - по умолчанию
+     * parse    - парсировка и разборка
+     * assert   - проверка валидности
+     * </pre>
+     *
+     * @param string $name
+     * @param array $options
+     */
+    protected function setDefinition($name, array $options)
+    {
+        $options_default = array(
+            'mode' => self::VALUE_NONE,
+            'default' => null,
+            'parse' => null,// array(),
+            'assert' => null, // array(),
+        );
+        $this->definition[$name] = array_merge($options_default, $options);
+    }
+
+    protected function getDefinition()
+    {
+        return $this->definition;
+    }
+
+    protected function getDefinitionParams()
+    {
+        return $this->definitionMergedWithArgs;
+    }
+
+    protected function getParams()
+    {
+        return $this->params;
+    }
+
+    protected function setName($name)
+    {
+        $this->name = $name;
+    }
+
+    protected function getName()
+    {
+        return $name;
+    }
+
+    abstract protected function execute();
+
+    /**
+     * Установка/получение параметра
+     *
+     * # // возвращает параметр
+     * # params->params('name')
+     *
+     * # // устанавливает параметр
+     * # params->params('name', 'value')
+     *
+     * # // обнуляет масив и устанавливает новые параметры
+     * # params->params(array('name1', 'name2'))
+     *
+     *
+     * @param array|string $name
+     * @param array|string $value
+     *
+     * @return array|string
+     */
+    protected function params($name = null, $value = null)
+    {
+        $n = func_num_args();
+
+        switch ($n) {
+            case 0:
+                return $this->params;
+            case 1:
+                if (is_array($name)) {
+                    $this->params = $name;
+                    return;
+                }
+                return $this->params[$name];
+            case 2:
+            default:
+                $this->params[$name] = $value;
+                return;
         }
     }
 
