@@ -26,5 +26,11 @@ $app->route('/', '\Fobia\Base\Controller:index' )->via('GET');
 $app->route('/tt', '\Fobia\Base\Controller:indexAction' )->via('GET');
 $app->route('/error', '\Fobia\Base\Controller:errorAction' )->via('GET');
 
+$app->route('/login',  'AuthController:login')->via('GET', 'POST');
+$app->route('/logout', 'AuthController:logout')->via('GET', 'POST');
+$app->route('/auth',   'AuthController:auth')->via('GET');
+$app->route('/api/:method',   'ApiController:index')->via('ANY');
+
+
 
 $app->run();
