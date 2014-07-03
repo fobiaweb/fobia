@@ -1,11 +1,11 @@
 <?php
+
 /**
  * Api_Auth_logout class  - Api_Auth_logout.php file
  *
  * @author     Dmitriy Tyurin <fobia3d@gmail.com>
  * @copyright  Copyright (c) 2014 Dmitriy Tyurin
  */
-
 use Api\Method\Method;
 
 /**
@@ -21,8 +21,12 @@ class Api_Auth_Logout extends Method
     protected function execute()
     {
         $app = \App::instance();
-        $app['auth']->logout();
 
-        $this->response = 1;
+        if ($app['auth']->hasIdentity()) {
+            $app['auth']->logout();
+            $this->response = 1;
+        } else {
+            $this->response = 0;
+        }
     }
 }

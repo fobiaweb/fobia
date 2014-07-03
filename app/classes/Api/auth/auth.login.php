@@ -1,6 +1,5 @@
 <?php
 
-
 use Api\Method\Method;
 
 /**
@@ -33,20 +32,20 @@ class Api_Auth_Login extends Method
 
     protected function execute()
     {
-        $p = $this->params;
-
+        $p   = $this->params();
         $app = \App::instance();
-        $app['auth']->authenticate();
+
         if ($app['auth']->hasIdentity()) {
-            $this->halt(0);
+            $this->response = 0;
+            throw new \Api\Exception\Halt();
         }
 
         if ( ! $p['login'] || ! $p['password']) {
             throw new \Api\Exception\BadRequest('login', 'password');
         }
 
-        $this->response = $app['auth']->login($p['login'], $p['password'], true);
+        $result = $app['auth']->login($p['login'], $p['password'], true);
 
-        $this->halt(1);
+        $this->response = (int) $result;
     }
 }

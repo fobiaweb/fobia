@@ -17,7 +17,7 @@ class Access extends Error
 {
     public function __construct($access)
     {
-        parent::__construct("Не достаточно прав ({$access})");
+        parent::__construct("Недостаточно прав ({$access})");
     }
 
 }

@@ -35,6 +35,7 @@ class Api_Stdata_GetCountriesById extends Method
         $db = $app->db;
 
         $ids  = parseNumbers($p['country_ids']);
+
         $q    = $db->createSelectQuery();
         $q->from('st_countries')
                 ->select('id')

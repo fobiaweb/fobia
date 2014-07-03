@@ -46,8 +46,8 @@ class QuerySelect extends ezcQuerySelect
         $s = $this->prepare();
         $s->execute();
         return array(
+            'count' => $this->findAll(),
             'items' => $s->fetchAll(),
-            'count' => $this->findAll()
         );
     }
 
@@ -62,6 +62,6 @@ class QuerySelect extends ezcQuerySelect
         $stmt   = $q->prepare();
         $stmt->execute();
         $result = $stmt->fetch();
-        return $result['count'];
+        return (int) $result['count'];
     }
 }

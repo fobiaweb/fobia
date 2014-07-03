@@ -30,7 +30,7 @@ class Api_Stdata_GetRegions extends Method
 
     protected function execute()
     {
-        $p   = $this->params;
+        $p   = $this->params();
         $app = \App::instance();
         $db  = $app->db;
 

@@ -34,13 +34,13 @@ class Api_Stdata_GetCitiesById extends Method
         $app = \App::instance();
         $db = $app->db;
 
-        if (!$this->params['city_ids']) {
+        $p = $this->params();
+
+        $ids = parseNumbers($p['city_ids']);
+        if ( !count($ids) ) {
             throw new \Api\Exception\BadRequest("city_ids");
         }
-        $ids = $this->exp->numbers($this->params['city_ids']);
-        if (!  count($ids)) {
-            throw new \Api\Exception\BadRequest("city_ids");
-        }
+
         $q = $db->createSelectQuery();
         $q->from('st_cities')
                 ->select('id')

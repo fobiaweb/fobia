@@ -32,7 +32,11 @@ class Api_Stdata_GetCountries extends Method
 
         // $db->query('SET NAMES "UTF8"');
         $q = $db->createSelectQuery();
-        $q->from('st_countries')->select('id')->select('name_rus AS title');
+
+        $q->from('st_countries')
+                ->select('id')
+                ->select('name_rus AS title');
+
         if ( ! $p['need_all']) {
             if ( ! $p['count']) {
                 $p['count'] = 100;
@@ -43,16 +47,7 @@ class Api_Stdata_GetCountries extends Method
 
             $q->limit((int) $p['count'], (int) $p['offset']);
         }
-        $stmt  = $q->prepare();
-        $stmt->execute();
-        $items = $stmt->fetchAll();
 
-        $stmt = $db->query('SELECT COUNT(*) AS `count` FROM st_countries');
-        $row  = $stmt->fetch();
-
-        $this->response = array(
-            'count' => (int) $row['count'],
-            'items' => $items
-        );
+        $this->response = $q->fetchItemsCount();
     }
 }

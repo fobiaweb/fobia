@@ -314,10 +314,12 @@ function parseNumbers()
         $array = am($array, $var);
     }
 
-    array_walk($array, function(&$v) {
-        $v = (int) $v;
+    array_unshift($array, null);
+    array_walk($array, function(&$v)  {
+        $v = (is_numeric($v)) ? (int) $v : null;
     });
     $array = array_unique($array);
+    array_shift($array);
     return array_values($array);
 }
 

@@ -15,8 +15,6 @@ namespace Api\Method;
  */
 abstract class Method
 {
-        // VALUE_IS_ARRAY
-//InputOption::VALUE_OPTIONAL
     const VALUE_NONE = 1;
     const VALUE_REQUIRED = 2;
     const VALUE_OPTIONAL = 4;
@@ -70,8 +68,8 @@ abstract class Method
      */
     public function __invoke()
     {
-        $this->dispatchMethod('invike', func_get_args());
-        return $this->response;
+        $this->dispatchMethod('invoke', func_get_args());
+        return $this->getFormatResponse();
     }
 
     abstract protected function execute();

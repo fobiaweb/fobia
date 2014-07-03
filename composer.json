@@ -34,7 +34,7 @@
             ]
         },
         "classmap": [
-            "app/classes/api"
+            "app/classes/Api"
         ],
         "files": [
             "src/Fobia/Base/common.php",

@@ -14,7 +14,7 @@ use \Fobia\Debug\Log;
 /**
  * Application class
  *
- * @property \ezcDbHandler $db database
+ * @property \Fobia\DataBase\Handler\MySQL $db database
  * @property \Slim\Session $session current session
  * @property \Fobia\Auth\Authentication $auth
  *
@@ -278,11 +278,13 @@ class Application extends \Slim\App
             $dispatched = false;
             $matchedRoutes = $this['router']->getMatchedRoutes($request->getMethod(), $request->getPathInfo(), true);
             foreach ($matchedRoutes as $route) {
+                /* @var $route \Slim\Route */
                 try {
                     $this->applyHook('slim.before.dispatch');
                     $dispatched = $route->dispatch();
                     $this->applyHook('slim.after.dispatch');
                     if ($dispatched) {
+                        Log::debug('Route dispatched: ' . $route->getPattern());
                         break;
                     }
                 } catch (\Slim\Exception\Pass $e) {

@@ -6,7 +6,7 @@
  * @copyright  Copyright (c) 2014 Dmitriy Tyurin
  */
 
-namespace Api;
+namespace Api\Exception;
 
 /**
  * Halt class

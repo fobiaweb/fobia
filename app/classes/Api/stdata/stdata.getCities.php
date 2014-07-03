@@ -44,55 +44,38 @@ class Api_Stdata_GetCities extends Method
 
     protected function execute()
     {
-        $p   = $this->params;
+        $p   = $this->params();
         $app = \App::instance();
         $db  = $app->db;
 
-        $query = $db->createSelectQuery();
-        $query->from('st_cities');
-        $query->where($query->expr->eq('country_id',
-                                       $db->quote($p['country_id'])));
-        if ((int) $p['region_id']) {
-            $query->where($query->expr->eq('region_id',
-                                           $db->quote($p['region_id'])));
-        }
+        $q = $db->createSelectQuery();
+        $e = $q->expr;
 
+        $q->from('st_cities')
+                ->select('id')
+                ->select('city_name_ru AS title')
+                ->orderBy('id')
+                ->where($e->eq('id_country', $db->quote($p['country_id'])));
+
+        if ((int) $p['region_id']) {
+            $q->where($e->eq('id_region', $db->quote($p['region_id'])));
+        }
 
         if ($p['q']) {
-            $query->where($query->expr->like('city_name_ru',
-                                             $db->quote("%{$p['q']}%")));
+            $q->where($e->like('city_name_ru', $db->quote("%{$p['q']}%")));
         }
 
-        $qs = clone $query;
-
-        $qs->select('id')->select('city_name_ru AS title');
-
         if ( ! $p['need_all']) {
-            if ( ! $$p['count']) {
+            if ( ! $p['count']) {
                 $p['count'] = 100;
             }
             if ( ! $p['offset']) {
                 $p['offset'] = 0;
             }
 
-            $qs->limit((int) $p['count'], (int) $p['offset']);
+            $q->limit((int) $p['count'], (int) $p['offset']);
         }
 
-        $stmt = $qs->prepare();
-        if ( ! $stmt->execute()) {
-
-            dump($stmt->errorInfo());
-        }
-        $items = $stmt->fetchAll();
-
-        $query->select('COUNT(*) AS `count`');
-        $stmt = $query->prepare();
-        $stmt->execute();
-        $row  = $stmt->fetch();
-
-        $this->response = array(
-            'count' => (int) $row['count'],
-            'items' => $items
-        );
+        $this->response = $q->fetchItemsCount();
     }
 }

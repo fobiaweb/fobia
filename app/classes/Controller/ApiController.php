@@ -8,6 +8,8 @@
 
 namespace Controller;
 
+use Log;
+
 /**
  * ApiController class
  *
@@ -18,23 +20,26 @@ class ApiController extends \Fobia\Base\Controller
 
     public function index($method)
     {
-        var_dump($method);
-        
-        echo $this->generateApiClass($method);
+        $_json = true;
+         $_json = $this->app->request->isAjax();
 
-//                if (array_key_exists($method, $this->apimap)) {
-//            $map = $this->apimap[$method];
-//            $class = array_shift($map);
-//            $classMethod = array_shift($map);
-//        } else {
-//            $class = $this->generateApiClass($method);
-//            $classMethod = 'invoke';
-//            $map = array();
-//        }
-//
-//
-//
-//        if ( ! class_exists($class) || ! method_exists( $class,  $classMethod)) {
+        $class = $this->generateApiClass($method);
+        $params = $this->app->request->params();
+
+        $apiMethod = new $class($params);
+
+        $apiMethod->invoke();
+        $result = $apiMethod->getFormatResponse();
+
+        if ($_json) {
+            Log::getLogger()->enableRender = false;
+            $this->app->response->setHeader('Content-Type', 'text/json; charset=utf-8');
+            echo \CJSON::encode($result);
+        } else {
+            dump($result);
+        }
+
+ //        if ( ! class_exists($class) || ! method_exists( $class,  $classMethod)) {
 //            return array(
 //                'error' => array(
 //                    'err_msg'  => 'неизвестный метод',
@@ -44,34 +49,6 @@ class ApiController extends \Fobia\Base\Controller
 //                )
 //            );
 //        }
-//
-//        $obj = new $class($params);
-//        /* @var $obj \AbstractApiInvoke */
-//
-//        call_user_func_array(array($obj, $classMethod), $map);
-//        // $obj->invoke();
-//        return $obj->getFormatResponse();
-
-
-
-
-/*
-        $app = \App::instance();
-        
-        $api = new \Api\ApiHandler();
-
-        $params = $app->request->params();
-        $result = $api->request($method, $params);
-
-        if ($app->request->isAjax()) {
-            \Log::getLogger()->enableRender = false;
-            $app->response->setHeader('Content-Type', 'text/json; charset=utf-8');
-            echo CJSON::encode($result);
-        } else {
-            dump($result);
-        }
- * 
- */
     }
 
 
@@ -83,19 +60,19 @@ class ApiController extends \Fobia\Base\Controller
      */
     protected function generateApiClass($method)
     {
-        /*
-        $list = explode('.', $method);
-        array_pop($list);
-        array_push($list, $method);
+        $class = 'Api_' . preg_replace_callback('/^\w|_\w/', function($matches) {
+            return strtoupper($matches[0]);
+        }, str_replace('.', '_', $method));
 
-        $class = implode('/', $list);
-        */
-
-        $class = $this->prefixClass . str_replace('.', '_', $method);
         if ( ! class_exists($class)) {
-            $file = $this->classDirectory . '/' . $method . '.php';
+            Log::debug("Class '$class' not autoloaded");
+            $list = explode('.', $method);
+            array_pop($list);
+            array_push($list, $method);
+
+            $file = dirname(__DIR__) . '/Api/' . implode('/', $list) . '.php';
             if (file_exists($file)) {
-                require $file;
+                require_once $file;
             }
         }
 
