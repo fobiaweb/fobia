@@ -23,5 +23,8 @@ App::instance();
 
 
 $app->route('/', '\Fobia\Base\Controller:index' )->via('GET');
+$app->route('/tt', '\Fobia\Base\Controller:indexAction' )->via('GET');
+$app->route('/error', '\Fobia\Base\Controller:errorAction' )->via('GET');
+
 
 $app->run();

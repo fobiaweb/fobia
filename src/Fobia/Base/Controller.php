@@ -42,13 +42,11 @@ class Controller
         dump($this->app['router']->getCurrentRoute()->getParams());
 
         dump($this->app['request']->getPathInfo());
+    }
 
-        $api         = new \Api\ApiMethod();
-        $api->method = 'default';
-        if ($api->execute()) {
-            dump($api->getResponse());
-        } else {
-            dump($api->errorInfo());
-        }
+
+    public function errorAction()
+    {
+        $this->app->error();
     }
 }

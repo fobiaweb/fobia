@@ -80,7 +80,11 @@ class Application extends \Slim\App
                 unset($file);
             }
         }
-
+        if ($p = $userSettings['templates.path']) {
+            if (substr($p, 0, 1) !== '/') {
+                $userSettings['templates.path'] = SYSPATH . '/' . $p;
+            }
+        }
 
         // if (is_array($userSettings['import'])) {
         //     $import = $userSettings['import'];
@@ -235,12 +239,17 @@ class Application extends \Slim\App
 
     protected function defaultNotFound()
     {
-        $this->halt(404, "Not Found");
+        $this->status(404);
+        $view = new \Slim\View($this->config('templates.path'));
+        $view->display('error/404.php');
     }
 
     protected function defaultError($e)
     {
-       parent::defaultError($e);
+        $this->status(500);
+        $view = new \Slim\View($this->config('templates.path'));
+        $view->display('error/500.php');
+       //parent::defaultError($e);
     }
 
     public function isCli()
