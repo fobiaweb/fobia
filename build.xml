@@ -57,6 +57,21 @@
         </exec>
     </target>
 
+    <target name="pull" description="Собрать ">
+        <exec executable="git" dir="${basedir}" >
+            <arg value="pull" />
+            <arg value="origin" />
+            <arg value="develop" />
+        </exec>
+
+        <delete file="${basedir}/composer.lock" />
+
+        <exec executable="composer">
+            <arg value="install" />
+        </exec>
+    </target>
+
+
     <target name="clean" description="Cleanup build artifacts">
         <delete dir="${basedir}/vendor"/>
         <delete file="${basedir}/composer.lock"/>
