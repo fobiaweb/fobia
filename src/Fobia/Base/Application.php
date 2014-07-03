@@ -59,6 +59,9 @@ class Application extends \Slim\App
         self::$instance[$name] = $app;
     }
 
+    //-------------------------------------------------------------------------
+    //-------------------------------------------------------------------------
+
     /**
      * @internal
      */
@@ -134,7 +137,7 @@ class Application extends \Slim\App
             }
             if ($sid) {
                 session_id($sid);
-            } 
+            }
             $session = new \Slim\Session($c['settings']['session.handler']);
             $session->start();
             if ($c['settings']['session.encrypt'] === true) {
@@ -190,23 +193,23 @@ class Application extends \Slim\App
      */
     public function createController($controller)
     {
-        list( $class, $method ) = explode(':', $controller);
-        if (!$method) {
-            $method = 'indexAction';
+        list( $class, $methodController ) = explode(':', $controller);
+        if (!$methodController) {
+            $methodController = 'indexAction';
         }
 
         $classArgs = func_get_args();
         array_shift($classArgs);
         $app = & $this;
 
-        return function() use ($app, $classArgs, $class, $method ) {
+        return function() use ($app, $classArgs, $class, $methodController ) {
             $methodArgs = func_get_args();
-            $classRoute = new $class( $classArgs );
-            \Fobia\Log::debug("Call controller: $class -> $method", $methodArgs);
-            return call_user_func_array(array($classRoute, $method), $methodArgs);
+            $classController = new $class( $app, $classArgs );
+            \Fobia\Log::debug("Call controller: $class -> $methodController", $methodArgs);
+            return call_user_func_array(array($classController, $methodController), $methodArgs);
         };
     }
-    
+
     /**
      * Добавить маршрут без метода HTTP
      *
@@ -221,7 +224,9 @@ class Application extends \Slim\App
         if (is_callable($controller)) {
             $callable = $controller;
         } else {
-            $controller = str_replace('.', '\\', $this['settings']['controller.prefix'].$controller);
+            if (substr($controller, 0, 1) !== '\\') {
+                $controller = str_replace('.', '\\', $this['settings']['controller.prefix'].$controller);
+            }
             $callable = $this->createController($controller);
         }
         array_push($args, $callable);

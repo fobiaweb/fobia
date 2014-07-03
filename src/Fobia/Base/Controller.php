@@ -19,19 +19,12 @@ class Controller
      * @var \Fobia\Base\Application
      */
     public $app;
-    public $segments = array();
     public $params   = array();
 
-    public function __construct(Application $app, $segments = array(), $params = array())
+    public function __construct(Application $app, $params = array())
     {
         $this->app      = $app;
-        $this->segments = $segments;
         $this->params   = $params;
-    }
-
-    public function segment($id)
-    {
-        return $this->segments[$id];
     }
 
     public function index()

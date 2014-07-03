@@ -10,17 +10,17 @@ return array(
 
     // Application
     'mode'                  => 'development',
-    
+
     // Директория шаблонов
-    'templates.path'        => 'app/view', 
-    
+    'templates.path'        => 'app/view',
+
     // Логер
     'debug'                 => true,
     'log.enabled'           => true,
     'log.level'             => 600,
-    
+
     'view'                  => null,
-    
+
     // Cookies
     'cookies.encrypt'       => false,
     'cookies.lifetime'      => '20 minutes',
@@ -28,21 +28,21 @@ return array(
     'cookies.domain'        => null,
     'cookies.secure'        => false,
     'cookies.httponly'      => false,
-    
+
     // Encryption
     'crypt.key'             => 'A9s_lWeIn7cML8M]S6Xg4aR^GwovA&UN',
     'crypt.cipher'          => MCRYPT_RIJNDAEL_256,
     'crypt.mode'            => MCRYPT_MODE_CBC,
     'crypt.method'          => 'sha256',
-    
+
     // Session
     'session.handler'       => null,
     'session.flash_key'     => 'slimflash',
     'session.encrypt'       => false,
-    
+
     // HTTP
     'http.version'          => '1.1',
-    
+
     // DataBase
     'database.dns'=> 'mysql://root@localhost/test',
     'database.charset' => 'utf8',
