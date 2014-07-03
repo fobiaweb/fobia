@@ -26,14 +26,14 @@ CREATE TABLE IF NOT EXISTS `roles` (
 
 CREATE TABLE IF NOT EXISTS `users` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `login` varchar(50) NOT NULL,
-  `password` varchar(64) DEFAULT NULL,
-  `role_mask` int(10) unsigned NOT NULL DEFAULT '0',
-  `online` datetime DEFAULT NULL COMMENT 'время online',
-  `sid` varchar(47) DEFAULT NULL COMMENT 'Текущая сессия',
+  `login` varchar(50) NOT NULL COMMENT 'Логин пользователя или емаил',
+  `password` varchar(64) DEFAULT NULL COMMENT 'Пароль захешированый методам приложения ',
+  `role_mask` int(10) unsigned NOT NULL DEFAULT '0' COMMENT 'принимаемые роли (битовая маска)',
+  `online` datetime DEFAULT NULL COMMENT 'Время online',
+  `sid` varchar(47) DEFAULT NULL COMMENT 'Текущая сесия',
   PRIMARY KEY (`id`),
   UNIQUE KEY `login` (`login`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COMMENT='пользователи' AUTO_INCREMENT=2 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COMMENT='пользователи';
 
 --
 -- Дамп данных таблицы `users`

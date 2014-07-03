@@ -8,14 +8,15 @@
 
 namespace Api\Method;
 
+use Api\Method\Method;
+
 /**
  * SearchMethod class
  *
  * @package   Api.Method
  */
-class SearchMethod extends \Api\Method
+class SearchMethod extends Method
 {
-
     /**
      * @var \Fobia\DataBase\Query\QuerySelect
      */
@@ -24,7 +25,10 @@ class SearchMethod extends \Api\Method
     protected function execute()
     {
         $params = array(
-            'limit' => array('OPTION', 100)
+            'limit' => array(Method::VALUE_OPTIONAL, 100),
+            'offset' => array(Method::VALUE_OPTIONAL, 0),
+            'sort' => array(Method::VALUE_OPTIONAL),
+            'fields' => array(Method::VALUE_OPTIONAL)
         );
 
 
@@ -33,10 +37,7 @@ class SearchMethod extends \Api\Method
         $q   = $db->createSelectQuery();
         /* @var $q \Fobia\DataBase\Query\QuerySelect */
 
-        $response = array(
-            'count' => $q->findAll(),
-            'items' => $q->fetchItemsCount(),
-        );
+        $this->query = $q;
     }
 
     protected function execQuery()

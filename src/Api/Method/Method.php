@@ -6,15 +6,22 @@
  * @copyright  Copyright (c) 2014 Dmitriy Tyurin
  */
 
-namespace Api;
+namespace Api\Method;
 
 /**
  * Method class
  *
- * @package   Api
+ * @package   Api.Method
  */
 abstract class Method
 {
+        // VALUE_IS_ARRAY
+//InputOption::VALUE_OPTIONAL
+    const VALUE_NONE = 1;
+    const VALUE_REQUIRED = 2;
+    const VALUE_OPTIONAL = 4;
+    const VALUE_IS_ARRAY = 8;
+
     private $options;
     private $params;
     private $definition;

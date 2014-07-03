@@ -101,6 +101,8 @@ class Application extends \Slim\App
 
         parent::__construct((array) $userSettings);
 
+        $app = & $this;
+        
         // Если Internet Explorer, то шлем на хуй
         /*
           if (preg_match('/(rv:11.0|MSIE)/i', $_SERVER['HTTP_USER_AGENT'])) {
@@ -164,6 +166,13 @@ class Application extends \Slim\App
             $db = \Fobia\DataBase\DbFactory::create($c['settings']['database']);
             \ezcDbInstance::set($db);
             return $db;
+        };
+
+        // Auth
+        $this['auth'] = function($c) use($app) {
+            $auth = new \Fobia\Auth\Authentication($app);
+            $auth->authenticate();
+            return $auth;
         };
 
         $this['controller_factory'] = $this->protect(function($controller)  {

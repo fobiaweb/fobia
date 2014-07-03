@@ -19,7 +19,7 @@ class ApiController extends \Fobia\Base\Controller
     public function index($method)
     {
         var_dump($method);
-
+/*
         $app = \App::instance();
         
         $api = new \Api\ApiHandler();
@@ -34,5 +34,7 @@ class ApiController extends \Fobia\Base\Controller
         } else {
             dump($result);
         }
+ * 
+ */
     }
 }

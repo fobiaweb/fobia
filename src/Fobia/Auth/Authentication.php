@@ -283,6 +283,10 @@ class Authentication
      */
     public function authenticate()
     {
+        if ($this->status !== self::STATUS_AUTH_NONE) {
+            return;
+        }
+        
         if ( ! is_array($this->app->session['auth']) ) {
             $this->app->session['auth'] = array();
         }
