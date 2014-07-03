@@ -125,6 +125,7 @@ class ArrayLogger extends AbstractLogger
 
     public function render($format = 'html')
     {
+        echo "handle: {$this->handle};  enableRender: {$this->enableRender}" .BR;
         if ($this->handle || !  $this->enableRender) {
             return;
         }

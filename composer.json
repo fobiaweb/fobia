@@ -28,12 +28,12 @@
     "autoload": {
         "psr-0": { 
             "": [ 
-                "src/", 
+                "src/",
+                "src/Fobia/lib",
                 "app/classes/" 
             ] 
         },
         "classmap": [
-            "src/Fobia/lib",
             "app/classes/api"
         ],
         "files": [

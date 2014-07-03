@@ -47,7 +47,7 @@ class MySQL extends ezcDbHandlerMysql
         $this->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_SILENT);
         $this->setAttribute(PDO::ATTR_STATEMENT_CLASS, array('Fobia\DataBase\DbStatement', array($this)));
 
-        $this->logger = \Fobia\Log::getLogger();
+        $this->logger = \Fobia\Debug\Log::getLogger();
 
         // if (@$dbParams['charset']) {
         //     parent::query("SET NAMES '{$dbParams['charset']}'");

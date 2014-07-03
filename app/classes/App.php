@@ -40,4 +40,6 @@ class App
         $app = \Fobia\Base\Application::getInstance();
         return $app['auth'];
     }
+
+
 }

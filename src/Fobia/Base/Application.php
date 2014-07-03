@@ -209,7 +209,7 @@ class Application extends \Slim\App
         return function() use ($app, $classArgs, $class, $methodController ) {
             $methodArgs = func_get_args();
             $classController = new $class( $app, $classArgs );
-            \Fobia\Log::debug("Call controller: $class -> $methodController", $methodArgs);
+            Log::debug("Call controller: $class -> $methodController", $methodArgs);
             return call_user_func_array(array($classController, $methodController), $methodArgs);
         };
     }
@@ -249,6 +249,7 @@ class Application extends \Slim\App
         $this->status(500);
         $view = new \Slim\View($this->config('templates.path'));
         $view->display('error/500.php');
+        echo $e->xdebug_message;
        //parent::defaultError($e);
     }
 
