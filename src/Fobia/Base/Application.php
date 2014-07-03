@@ -286,4 +286,21 @@ class Application extends \Slim\App
         $response->write(ob_get_clean());
         $this->applyHook('slim.after');
     }
+
+    public function createView()
+    {
+        $templateDirectory = $this->config('templates.path');
+        $view = new \Slim\View($templateDirectory);
+
+        // Smarty
+        $view = new \Slim\Views\Smarty($templateDirectory);
+        $view->parserCompileDirectory = CACHE_DIR . '/templates';
+        $view->parserCacheDirectory = CACHE_DIR;
+        $view->getInstance()->left_delimiter = $this->config('smarty.left_delimiter');
+        $view->getInstance()->right_delimiter = $this->config('smarty.right_delimiter');
+
+        // Twig
+        $view = new \Slim\Views\Twig($templateDirectory);
+        
+    }
 }
