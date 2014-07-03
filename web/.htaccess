@@ -24,7 +24,7 @@ AddDefaultCharset utf-8
 <IfModule mod_rewrite.c>
     RewriteEngine on
     #RewriteBase /dev-0.2/
-    
+
     # # Protect application and system files from being viewed
     RewriteRule ^(vendor|protected|app)\b.* index.php/$0 [L]
 
@@ -39,4 +39,11 @@ AddDefaultCharset utf-8
     Order Allow,Deny
     Deny From All
 </Files>
+
+
+
+AuthType Basic
+AuthName "Private zone. Only for administrator!"
+AuthUserFile  /srv/fobiaweb/fobia/web/.htpasswd
+require valid-user
 
