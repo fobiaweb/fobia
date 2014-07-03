@@ -26,6 +26,11 @@ $app['auth'] = function() use($app) {
     return $auth;
 };
 
+
+//$logger = new \Monolog\Logger('app');
+
+
+
 $app->route('/', '\Fobia\Base\Controller:index' )->via('GET');
 $app->route('/tt', '\Fobia\Base\Controller:indexAction' )->via('GET');
 $app->route('/error', '\Fobia\Base\Controller:errorAction' )->via('GET');
@@ -35,14 +40,23 @@ $app->route('/logout', 'AuthController:logout')->via('GET', 'POST');
 $app->route('/auth',   'AuthController:auth')->via('GET');
 $app->route('/api/:method',   'ApiController:index')->via('ANY');
 
+$app->hook('slim.after', function() use($app) {
+    $l = Log::getLogger();
+    $logtxt = $l->render();
+//    file_put_contents('log.txt', $logtxt);
+    // echo $logtxt;
+    $app->response->write($logtxt);
 
-// Log::getLogger()->registry();
+//    $len = strlen($logtxt);
+//    $start = 0;
+//    while($start < $len) {
+//        $txt = substr($logtxt, $start, 1000);
+//        $app->response->write($txt);
+//        $start += 1000;
+//    }
+ });
 
 $app->run();
 
- $l = Log::getLogger();
-// CVarDumper::dump($l);
+echo "=========";//  Fobia\Base\Utils::resourceUsage() ;
 
-
- var_dump($l);
- 

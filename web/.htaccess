@@ -42,8 +42,8 @@ AddDefaultCharset utf-8
 
 
 
-AuthType Basic
-AuthName "Private zone. Only for administrator!"
-AuthUserFile  /srv/fobiaweb/fobia/web/.htpasswd
-require valid-user
+#AuthType Basic
+#AuthName "Private zone. Only for administrator!"
+#AuthUserFile  /srv/fobiaweb/fobia/web/.htpasswd
+#require valid-user
 

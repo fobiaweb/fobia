@@ -1,6 +1,6 @@
 +(function(window) {
     var jf = "http://yandex.st/jquery/2.1.0/jquery.min.js";
-    
+
     function initLog() {
         var $ = window.jQuery;
         $(document).ready(function() {
@@ -25,7 +25,7 @@
             }
         });
     }
-    
+
     function addLoadEvent(func) {
         var oldonload = window.onload;
         if (typeof window.onload != 'function') {
@@ -82,7 +82,6 @@
         var display = $("#ac-logger").css("display");
         $.cookie('ac-logger', display);
     }
-    
     if (typeof window.jQuery == 'undefined') {
         loadScript(jf, function() {
             initLog();
