@@ -26,12 +26,12 @@
         "twig/twig": "1.*"
     },
     "autoload": {
-        "psr-0": { 
-            "": [ 
+        "psr-0": {
+            "": [
                 "src/",
                 "src/Fobia/lib",
-                "app/classes/" 
-            ] 
+                "app/classes/"
+            ]
         },
         "classmap": [
             "app/classes/api"

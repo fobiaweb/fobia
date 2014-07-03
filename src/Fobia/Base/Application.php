@@ -261,6 +261,7 @@ class Application extends \Slim\App
 
     protected function dispatchRequest(\Slim\Http\Request $request, \Slim\Http\Response $response)
     {
+        Log::debug('App run dispatch request');
         try {
             $this->applyHook('slim.before');
             ob_start();

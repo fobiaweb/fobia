@@ -13,7 +13,7 @@ if (defined('BOOTSTRAP_FILE')) {
 defined('REMOTE_SERVER') or define('REMOTE_SERVER', true);
 
 // COMPOSER
-if (!class_exists('\\Composer\\Autoload\\ClassLoader')) {    
+if (!class_exists('\\Composer\\Autoload\\ClassLoader')) {
     $_ENV['loader']  = require_once __DIR__ . '/../vendor/autoload.php';
 }
 
@@ -24,7 +24,7 @@ if (!class_exists('\\Composer\\Autoload\\ClassLoader')) {
 // }
 
 // CLASSES
-if (file_exists(__DIR__ . '/classes/autoload.php')) {   
+if (file_exists(__DIR__ . '/classes/autoload.php')) {
     require_once  __DIR__ . '/classes/autoload.php';
 }
 
@@ -46,3 +46,5 @@ defined('HTML_DIR') or define('HTML_DIR',   SYSPATH . '/web');
 defined('LOGS_DIR') or define('LOGS_DIR',   SYSPATH . "/app/logs");
 defined('CACHE_DIR') or define('CACHE_DIR',  SYSPATH . "/app/cache");
 defined('CONFIG_DIR') or define('CONFIG_DIR', SYSPATH . "/app/config");
+
+Log::debug('bootstrap init');
