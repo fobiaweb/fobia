@@ -17,5 +17,6 @@ $application = new Fobia\Base\ConsoleApplication();
 $application->add(new Console\Command\GetCommand());
 $application->add(new Console\Command\ApiCreateCommand());
 $application->add(new Console\Command\ApiSearchCommand());
+$application->add(new Console\Command\ModelCreateCommand());
 $application->run();
 
