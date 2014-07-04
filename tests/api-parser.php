@@ -9,12 +9,12 @@
 
 require_once 'bootstrap.php';
 
-$api = 'utils.getServerTime';
+$app = new \Fobia\Base\Application( __DIR__ . '/../app/config/config.php' );
+
+//dump($app->db);
 
 
-$result = 'Api_' . preg_replace_callback('/^\w|_\w/', function($matches) {
-    return strtoupper($matches[0]);
-}, str_replace('.', '_', $api));
 
+$l = \Model\Department::getItem(42);
 
-dump($result);
+dump($l->getParents());

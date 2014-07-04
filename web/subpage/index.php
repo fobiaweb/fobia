@@ -23,4 +23,6 @@ $app->hook('slim.after', function() use($app) {
     $app->response->write($logtxt);
  });
 
+$app->route('/search(/(:section))', 'SearchController:index')->via('GET');
+
 $app->run();

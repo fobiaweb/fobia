@@ -84,9 +84,12 @@ class Smarty extends \Slim\View
      */
     public function render($template, $data = null)
     {
+        if ('php' ==  pathinfo($template, PATHINFO_EXTENSION)) {
+            return parent::render($template, (array) $data);
+        }
+        
         $parser = $this->getInstance();
         $parser->assign($this->all());
-
         return $parser->fetch($template, $data);
     }
 

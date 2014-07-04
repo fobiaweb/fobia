@@ -53,6 +53,8 @@ $app->route('/auth',   'AuthController:auth')->via('GET');
 $app->route('/api/:method',   'ApiController:index')->via('ANY');
 
 
+$app->route('/search(/(:section))', 'SearchController:index')->via('GET');
+
 $app->hook('slim.after', function() use($app) {
     Log::info(\Fobia\Base\Utils::resourceUsage());
     $l = Log::getLogger();
