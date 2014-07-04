@@ -19,6 +19,8 @@ fobia/fobia
         "dropbox/dropbox-sdk": "1.1.*"
     },
 
+[LOCAL]  Memory usage: 1.70MB (peak: 2.25MB), time: 0.5008
+[REMOTE] Memory usage: 1.15MB (peak: 1.75MB), time: 0.0107
 
 [slim-auth](https://github.com/jeremykendall/slim-auth)
 

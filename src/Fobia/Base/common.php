@@ -45,7 +45,7 @@ define('BR', '<br />' . PHP_EOL);
 
 /** Указывае что скрипт был запущен через консоль */
 define('IS_CLI', !isset($_SERVER['HTTP_HOST']));
-defined('REMOTE_SERVER') or define('REMOTE_SERVER', !IS_CLI && $_SERVER['REMOTE_ADDR'] != '127.0.0.1');
+defined('REMOTE_SERVER') or define('REMOTE_SERVER', !IS_CLI && $_SERVER['REMOTE_ADDR'] != '127.0.0.1' && $_SERVER['REMOTE_ADDR'] != '192.168.33.1');
 
 /* * **********************************************
  * ENVIRONMENT

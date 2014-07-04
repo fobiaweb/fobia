@@ -26,6 +26,10 @@ $app->get('/', function() use($app) {
     $app->pass();
 })->name('base');
 
+$app->get('/info', function() use($app) {
+    dump($_SERVER);
+});
+
 //$app->route('/', '\Fobia\Base\Controller:index' )->via('GET');
 $app->route('/tt', '\Fobia\Base\Controller:indexAction' )->via('GET');
 $app->route('/error', '\Fobia\Base\Controller:errorAction' )->via('GET');
@@ -40,6 +44,7 @@ $app->route('/api/:method',   'ApiController:index')->via('ANY');
 
 
 $app->hook('slim.after', function() use($app) {
+    Log::info(\Fobia\Base\Utils::resourceUsage());
     $l = Log::getLogger();
     $logtxt = $l->render();
     $app->response->write($logtxt);

@@ -8,7 +8,7 @@
 return array(
     // Application
     'mode' => 'development',
-    
+
     // Вьюшки, Директория шаблонов
     'templates.path' => 'app/view',
     'view' => null,
@@ -44,6 +44,8 @@ return array(
 
     // DataBase
     'database.dns'     => 'mysql://root@localhost/test',
+    // 'database.dns'     => 'mysql://srv55412_ab@localhost/srv55412_ab',
+    // 'database.password'     => 'abpass',
     'database.charset' => 'utf8',
 
     // Controller
