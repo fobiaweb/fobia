@@ -212,8 +212,13 @@ abstract class Method
      * @param string $name
      * @param array $options
      */
-    protected function setDefinition($name, array $options)
+    protected function setDefinition($name, array $options = array())
     {
+        if (is_array($name)) {
+            $options = $name;
+            $name = $options['name'];
+            unset($options['name']);
+        }
         $options_default = array(
             'mode' => self::VALUE_NONE,
             'default' => null,
