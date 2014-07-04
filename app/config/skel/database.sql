@@ -24,13 +24,15 @@
 CREATE TABLE IF NOT EXISTS `authors` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Автор',
   `type` varchar(20) NOT NULL COMMENT 'К чему относится авторство(publication, thesis)',
-  `data_id` int(11) NOT NULL,
+  `data_id` int(11) NOT NULL COMMENT 'Родительский объект',
   `employee_id` int(11) NOT NULL DEFAULT '0' COMMENT 'Сотрудник',
-  `name` varchar(50) NOT NULL,
+  `name` varchar(50) NOT NULL COMMENT 'Имя автора для отображения (альтернативное)',
   `ord` int(3) NOT NULL DEFAULT '100' COMMENT 'Порядок сортировки',
   PRIMARY KEY (`id`),
-  KEY `publication_id` (`employee_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='Авторы публикаций';
+  KEY `publication_id` (`employee_id`),
+  KEY `name` (`name`(20)),
+  KEY `data_id` (`type`,`data_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Авторы публикаций';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -39,7 +41,6 @@ CREATE TABLE IF NOT EXISTS `authors` (
 
 LOCK TABLES `authors` WRITE;
 /*!40000 ALTER TABLE `authors` DISABLE KEYS */;
-INSERT INTO `authors` VALUES (19,'p',1,2,'tt',7),(18,'p',1,2,'tt',6),(17,'p',1,2,'tt',1),(16,'p',1,2,'tt',3),(15,'p',1,2,'tt',5),(14,'p',1,2,'tt',2),(13,'p',1,2,'tt',4);
 /*!40000 ALTER TABLE `authors` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -262,4 +263,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2014-07-04  8:36:15
+-- Dump completed on 2014-07-04 11:13:01
