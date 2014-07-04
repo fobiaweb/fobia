@@ -26,7 +26,7 @@
         </exec>
     </target>
 
-    <target name="commit" description="Собрать и скомитить">
+    <target name="commit" depends="db-dump" description="Собрать и скомитить">
         <exec executable="git" dir="${basedir}" >
             <arg value="submodule" />
             <arg value="foreach" />
@@ -48,10 +48,8 @@
         </exec>
         <exec executable="git" dir="${basedir}" >
             <arg value="commit" />
-            <arg value="--amend" />
-            <arg value="-a" />
-            <arg value="--file" />
-            <arg path="${basedir}/.git/COMMIT_EDITMSG" />
+            <arg value="-am" />
+            <arg value="commit - ${datemsg}" />
         </exec>
         <exec executable="git" dir="${basedir}" >
             <arg value="push" />

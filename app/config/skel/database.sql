@@ -69,6 +69,45 @@ INSERT INTO `departments` VALUES (1,'Институт сердца и сосуд
 UNLOCK TABLES;
 
 --
+-- Table structure for table `employees`
+--
+
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE IF NOT EXISTS `employees` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'id сотрудника',
+  `exist` tinyint(1) NOT NULL DEFAULT '1' COMMENT 'Запись существует',
+  `datecreate` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Дата записи',
+  `firstname` varchar(25) NOT NULL COMMENT 'Имя',
+  `lastname` varchar(25) NOT NULL COMMENT 'Фамилия',
+  `patronymic` varchar(25) DEFAULT NULL COMMENT 'Отчество',
+  `translate` varchar(50) DEFAULT NULL COMMENT 'Транслит на английский',
+  `birthday` date DEFAULT NULL COMMENT 'Дата рождения',
+  `sex` enum('m','w','n') NOT NULL DEFAULT 'n' COMMENT 'Пол',
+  `photo` varchar(16) DEFAULT NULL COMMENT 'Фото профиля',
+  `address` varchar(50) DEFAULT NULL COMMENT 'Адрес',
+  `phones` varchar(50) DEFAULT NULL COMMENT 'Контактные телефоны',
+  `email` varchar(50) DEFAULT NULL COMMENT 'Email',
+  `data` varchar(100) DEFAULT NULL COMMENT 'Дополнительные параметры',
+  `cache_data` varchar(255) NOT NULL COMMENT 'Кешированые свойства сотрудника. JOB/ARC:001:NNS:B; RANK:LECTURER; DEGREE:CANDIDATE:MED;',
+  PRIMARY KEY (`id`),
+  KEY `exist` (`exist`),
+  KEY `fio` (`firstname`,`lastname`,`patronymic`),
+  KEY `birthday` (`birthday`),
+  KEY `cache_data` (`cache_data`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Персонал';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `employees`
+--
+
+LOCK TABLES `employees` WRITE;
+/*!40000 ALTER TABLE `employees` DISABLE KEYS */;
+/*!40000 ALTER TABLE `employees` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `files`
 --
 
@@ -263,4 +302,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2014-07-04 11:13:01
+-- Dump completed on 2014-07-04 12:21:07
