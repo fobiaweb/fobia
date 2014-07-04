@@ -21,10 +21,10 @@ class ApiController extends \Fobia\Base\Controller
     public function index($method)
     {
         $_json = true;
-         $_json = $this->app->request->isAjax();
+        $_json = $this->app->request->isAjax();
 
         $class = $this->generateApiClass($method);
-        $params = $this->app->request->params();
+        $params = array_merge($this->app->request->params(), $_FILES);
 
         $apiMethod = new $class($params);
 

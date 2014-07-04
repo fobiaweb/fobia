@@ -10,7 +10,7 @@ if (defined('BOOTSTRAP_FILE')) {
 } else {
    define('BOOTSTRAP_FILE', true);
 }
-defined('REMOTE_SERVER') or define('REMOTE_SERVER', true);
+//defined('REMOTE_SERVER') or define('REMOTE_SERVER', true);
 
 // COMPOSER
 if (!class_exists('\\Composer\\Autoload\\ClassLoader')) {

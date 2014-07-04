@@ -15,20 +15,30 @@
 |
 */
 
-define('REMOTE_SERVER', true);
+//define('REMOTE_SERVER', true);
 
 require_once __DIR__ . '/../app/bootstrap.php';
 $app = new \Fobia\Base\Application( __DIR__ . '/../app/config/config.php' );
 
 //$logger = new \Monolog\Logger('app');
-$app->get('/', function() use($app) {
+$app->map('/', function() use($app) {
     echo 'MAIN';
     $app->pass();
 })->name('base');
 
 $app->get('/info', function() use($app) {
+    dump(REMOTE_SERVER);
     dump($_SERVER);
-});
+    dump($app->request->params());
+    dump($_FILES);
+    echo <<<HTML
+<form method="post" enctype="multipart/form-data" action="/api/files.add">
+<input type="file" name="file" />
+<input type="submit" name="submit" />
+
+</form>
+HTML;
+})->via('GET', 'POST');
 
 //$app->route('/', '\Fobia\Base\Controller:index' )->via('GET');
 $app->route('/tt', '\Fobia\Base\Controller:indexAction' )->via('GET');
