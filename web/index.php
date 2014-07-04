@@ -60,6 +60,11 @@ $app->hook('slim.after', function() use($app) {
     $l = Log::getLogger();
     $logtxt = $l->render();
     $app->response->write($logtxt);
+
+    $msg = $app->request->getClientIp()
+        . ' - ' . $app['auth']->getLogin()
+        . ' - ' . date('Y-m-d H:i:s')
+    ;
  });
 
 $app->run();
