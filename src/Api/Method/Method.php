@@ -33,6 +33,7 @@ abstract class Method
     private $definitionMergedWithArgs;
     private $ignoreValidationErrors = false;
     protected $name;
+    protected $method;
     protected $response;
 
     /**
@@ -66,10 +67,10 @@ abstract class Method
     {
         $this->exc      = null;
         $this->response = null;
-        \Log::info("[API]:: Вызов метода '$this->name' - ", $this->params);
+        \Log::info("[API]:: Вызов метода '$this->method' - ", $this->params);
 
-        $this->initialize();
         try {
+            $this->initialize();
             $this->dispatchMethod('execute', func_get_args());
             return true;
         } catch (\Api\Exception\Halt $exc) {
@@ -162,13 +163,24 @@ abstract class Method
             } else {
                 if ($value['default'] !== null) {
                     $args[$key] = $value['default'];
+                } else if ($value['mode'] == self::VALUE_REQUIRED) {
+                    throw new \Api\Exception\BadRequest($key);
                 }
                 continue;
             }
 
             foreach ((array) $value['parse'] as $cb) {
+                $callback_args = array();
+                if (is_array($cb)) {
+                    $callback_args = $cb;
+                    $cb = array_shift($callback_args);
+                    array_unshift($callback_args, $args[$key]);
+                } else {
+                    $callback_args = array($args[$key]);
+                }
+                
                 if (is_callable($cb)) {
-                    $args[$key] = $cb($args[$key]);
+                    $args[$key] = call_user_func_array($cb, $callback_args);
                 } else {
                     throw new \Api\Exception\ServerError('Не верный формат callable - ' . $cb);
                 }

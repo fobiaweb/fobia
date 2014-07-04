@@ -192,7 +192,7 @@ function parseFloat($value)
 function parsePositive($value)
 {
     $value = (int) $value;
-    return ($value >= 0) ? $value : null;
+    return ($value >= 0) ? $value : 0;
 }
 
 /**

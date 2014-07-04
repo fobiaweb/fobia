@@ -7,7 +7,7 @@
  * @copyright  Copyright (c) 2014 Dmitriy Tyurin
  */
 
-require_once __DIR__ . '/../vendor/autoload.php';
+require_once __DIR__ . '/bootstrap.php';
 
 
 use Console\FobiaApplication;

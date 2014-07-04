@@ -23,7 +23,7 @@ use Symfony\Component\Console\Formatter\OutputFormatterStyle;
 class ApiCreateCommand extends Command
 {
 
-    protected $dir = 'app/classes/api';
+    protected $dir = 'app/classes/Api';
 
     protected function configure()
     {
@@ -31,7 +31,7 @@ class ApiCreateCommand extends Command
                 ->setName('api:create')
                 ->setDescription('Создать метод API')
                 ->addArgument('name', InputArgument::REQUIRED, 'Название метода')
-                ->addOption('output', 'o', InputOption::VALUE_NONE | InputOption::VALUE_OPTIONAL,
+                ->addOption('output', 'o', InputOption::VALUE_NONE ,
                             'директоория для сохранения')
         ;
     }
@@ -44,12 +44,19 @@ class ApiCreateCommand extends Command
 
         $dir = $input->getOption('output');
         if ($dir) {
-            $file = $dir . '/' . $name . '.php';
+            $path = explode('.', $name);
+            array_pop($path);
+            $path = SYSPATH . '/app/classes/Api/' . implode('/', $path);
+            @mkdir($path, 0777, true);
+
+            $file = $path . '/' . $name . '.php';
             if (file_exists($file)) {
                 $output->writeln('<error>Файл существует<error>');
                 exit();
             }
-            file_put_contents($file , $html);
+            if(!file_put_contents($file , $html)) {
+                $output->writeln('<error>Не удалось записать файл<error>');
+            }
         } else {
             print_r($html);
         }

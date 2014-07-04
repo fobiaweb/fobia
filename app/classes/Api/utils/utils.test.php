@@ -33,7 +33,7 @@ use \Api\Method\Method;
 class Api_Utils_Test extends Method
 {
 
-    protected $name = 'utils.test';
+    protected $method = 'utils.test';
 
     protected function configure()
     {
@@ -49,9 +49,14 @@ class Api_Utils_Test extends Method
         ));
         $this->setDefinition('name',
                              array(
-            'mode'   => Method::VALUE_OPTIONAL,
+            'mode' => Method::VALUE_REQUIRED,
 //            'assert' => array('is_numeric')
         ));
+        $this->setDefinition('func', array(
+            'assert' => array('is_numeric')
+        ));
+
+        // empty()
     }
 
     protected function execute()

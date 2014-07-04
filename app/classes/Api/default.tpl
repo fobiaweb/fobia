@@ -11,7 +11,7 @@
  use Api\Method\Method;
 
 /**
- * Название метода <br>
+ * Метода '{{name}}' <br>
  * --------------------------------------------
  *
  * PARAMS <br>
@@ -23,7 +23,7 @@
  *
  * RESULT <br>
  * -------------------------------------------- <br>
- * Возвращаемый результат
+ * Возвращает результат успеха
  *
  * 
  * @api        {{name}}
@@ -35,7 +35,7 @@ class {{classname}} extends Method
 
     protected function execute()
     {
-        $p   = $this->params;
+        $p   = $this->getDefinitionParams();
         $app = \App::instance();
         $db  = $app->db;
 
