@@ -49,10 +49,10 @@
         <exec executable="git" dir="${basedir}" >
             <arg value="commit" />
             <arg value="--amend" />
-            <arg value="-am" />
-            <arg value="commit - ${datemsg}" />
+            <arg value="-a" />
+            <arg value="--file" />
+            <arg path="${basedir}/.git/COMMIT_EDITMSG" />
         </exec>
-        <echo message="commit - ${datemsg}" />
         <exec executable="git" dir="${basedir}" >
             <arg value="push" />
             <arg value="origin" />
