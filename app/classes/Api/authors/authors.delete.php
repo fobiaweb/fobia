@@ -1,7 +1,7 @@
 <?php
 /**
  * This file is part of API.
- * 
+ *
  * authors.delete.php file
  *
  * @author     Dmitriy Tyurin <fobia3d@gmail.com>
@@ -25,14 +25,21 @@
  * -------------------------------------------- <br>
  * Возвращает результат успеха
  *
- * 
+ *
  * @api        authors.delete
  */
 class Api_Authors_Delete extends Method
 {
 
     protected $method = 'authors.delete';
-
+    protected function configure()
+    {
+        $this->setDefinition(array(
+            'name'  => 'author_id',
+            'mode'  => Method::VALUE_REQUIRED,
+            'parse' => 'parsePositive',
+        ));
+    }
     protected function execute()
     {
         $p   = $this->getDefinitionParams();
@@ -40,7 +47,7 @@ class Api_Authors_Delete extends Method
         $db  = $app->db;
 
         // yeur code
-
-        $this->response = 1;
+        $stmt = $db->query("DELETE FROM authors WHERE id = '{$p['author_id']}'");
+        $this->response = $stmt->rowCount();
     }
 }

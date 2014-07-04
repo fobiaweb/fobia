@@ -1,7 +1,7 @@
 <?php
 /**
  * This file is part of API.
- * 
+ *
  * {{name}}.php file
  *
  * @author     Dmitriy Tyurin <fobia3d@gmail.com>
@@ -11,27 +11,31 @@
  use Api\Method\Method;
 
 /**
- * Метода '{{name}}' <br>
+ * Метода '{{name}}'
  * --------------------------------------------
  *
- * PARAMS <br>
+ * PARAMS
  * --------------------------------------------
  * <pre>
  *  offset      отступ, необходимый для получения определенного подмножества.
  *  count       количество записей, которые необходимо вернуть.
  * </pre>
  *
- * RESULT <br>
- * -------------------------------------------- <br>
+ * RESULT
+ * --------------------------------------------
  * Возвращает результат успеха
  *
- * 
+ *
  * @api        {{name}}
  */
 class {{classname}} extends Method
 {
 
     protected $method = '{{name}}';
+
+    protected function configure()
+    {
+    }
 
     protected function execute()
     {
