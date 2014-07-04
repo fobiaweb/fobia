@@ -44,9 +44,10 @@ class ApiSearchCommand extends Command
         $r = shell_exec("grep -Hr '@api' app/classes/");
         $arr = explode("\n", trim($r));
 
+        
 
         preg_match_all('/([^:]+):([^\n]+)\n?/', $r, $m);
-        print_r($m);
+        print_r($m[0]);
     }
 
 }

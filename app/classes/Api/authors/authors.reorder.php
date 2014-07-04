@@ -1,7 +1,7 @@
 <?php
 /**
  * This file is part of API.
- * 
+ *
  * authors.reorder.php file
  *
  * @author     Dmitriy Tyurin <fobia3d@gmail.com>
@@ -26,7 +26,7 @@
  * -------------------------------------------- <br>
  * Возвращает результат успеха
  *
- * 
+ *
  * @api        authors.reorder
  */
 class Api_Authors_Reorder extends Method
@@ -74,5 +74,8 @@ class Api_Authors_Reorder extends Method
                   ORDER BY ord";
                   */
         $this->response = 1;
+
+
+        // CONCAT(lastname, ' ', firstname, ' ', patronymic)
     }
 }

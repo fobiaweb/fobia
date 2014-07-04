@@ -15,6 +15,14 @@ $app = new \Fobia\Base\Application( __DIR__ . '/../app/config/config.php' );
 
 
 
-$l = \Model\Department::getItem(42);
+//$l = \Model\Department::getItem(42);
 
-dump($l->getParents());
+//dump($l->getParents());
+
+
+$file = SYSPATH . '/app/classes/Api/auth/auth.login.php';
+$str = file_get_contents($file);
+preg_match_all('/@api\s+([\w\.]+).*(class Api)/i', $str, $m);
+
+var_dump($m);
+
