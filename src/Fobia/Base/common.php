@@ -179,22 +179,6 @@ function sortByKey(&$array, $sortby, $order = 'asc', $type = SORT_NUMERIC)
 }
 
 
-function parseInt($value)
-{
-    return (int) $value;
-}
-
-function parseFloat($value)
-{
-    return (float) $value;
-}
-
-function parsePositive($value)
-{
-    $value = (int) $value;
-    return ($value >= 0) ? $value : 0;
-}
-
 /**
  * Сортировк масива $array по ключу $sortby в порядке, как перечислено $keys.
  *
@@ -339,6 +323,38 @@ function parseNumbers()
     array_shift($array);
     return array_values($array);
 }
+
+/**
+ * Преобразует в целое
+ * @param int|string $value
+ * @return int
+ */
+function parseInt($value)
+{
+    return (int) $value;
+}
+
+/**
+ * Преобразует в вещественное
+ * @param float|string $value
+ * @return float
+ */
+function parseFloat($value)
+{
+    return (float) $value;
+}
+
+/**
+ * Преобразует в целое, положительное
+ * @param int|string $value
+ * @return int
+ */
+function parsePositive($value)
+{
+    $value = (int) $value;
+    return ($value >= 0) ? $value : 0;
+}
+
 
 /**
  * Являеться ли масив списком
