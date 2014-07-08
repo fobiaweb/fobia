@@ -316,4 +316,10 @@ class Application extends \Slim\App
         $view = new \Slim\Views\Twig($templateDirectory);
         
     }
+
+    public function urlForBase($url = '')
+    {
+        $url = $this->urlFor('base') . $url;
+        return preg_replace('|/+|', '/', $url);
+    }
 }

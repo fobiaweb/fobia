@@ -27,6 +27,17 @@ class Controller
         $this->params   = $params;
     }
 
+    public function section($section = null)
+    {
+        if ($section === null || !method_exists($this, $section) ) {
+            $this->app->notFound();
+        }
+        
+        $args = func_get_args();
+        array_shift($args);
+        call_user_func_array(array($this, $section), $args);
+    }
+
     public function index()
     {
         $this->app->notFound();
