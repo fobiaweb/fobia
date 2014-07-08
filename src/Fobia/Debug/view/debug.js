@@ -5,7 +5,7 @@
         var $ = window.jQuery;
         $(document).ready(function() {
             $(window).keyup(function(e) {
-                if (e.keyCode == 120) { // key: F9
+                if (e.keyCode == 120 || e.keyCode == 113) { // key: F9
                     console.log('key:', e.keyCode);
                     $("#ac-logger").slideToggle(1, function() {
                         logger_session();
