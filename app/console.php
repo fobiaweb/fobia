@@ -13,7 +13,7 @@ require_once __DIR__ . '/bootstrap.php';
 use Console\FobiaApplication;
 use Symfony\Component\Console\Application;
 
-$application = new Fobia\Base\ConsoleApplication();
+$application = new Console\FobiaApplication();
 $application->add(new Console\Command\GetCommand());
 $application->add(new Console\Command\ApiCreateCommand());
 $application->add(new Console\Command\ApiSearchCommand());

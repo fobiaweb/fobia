@@ -26,9 +26,8 @@ class ModelCreateCommand extends Command
     protected $user     = 'root';
     protected $pass     = '';
     protected $database = '';
-    private $property;
-    private $rules;
     private $className;
+    private $tableName;
 
     /**
      *
@@ -41,12 +40,12 @@ class ModelCreateCommand extends Command
         $this
                 ->setName('model:create')
                 ->setDescription('Создать метод API')
-                ->addArgument('table', InputArgument::REQUIRED,
-                              'Название таблицы')
-                ->addOption('input', 'i', InputOption::VALUE_OPTIONAL,
-                            'Входной файл модели')
-                ->addOption('output', 'o', InputOption::VALUE_NONE,
-                            'сохранить результат')
+                ->addArgument('table', InputArgument::REQUIRED, 'Название таблицы')
+                ->addOption('input', 'i', InputOption::VALUE_OPTIONAL, 'Входной файл модели')
+                ->addOption('output', 'o', InputOption::VALUE_NONE, 'сохранить результат')
+                ->addOption('database', 'd', InputOption::VALUE_OPTIONAL, 'база дфнных')
+                ->addOption('user', 'u', InputOption::VALUE_OPTIONAL, 'пользователь')
+                ->addOption('password', 'p', InputOption::VALUE_OPTIONAL, 'пароль')
         ;
     }
 
@@ -55,18 +54,31 @@ class ModelCreateCommand extends Command
         $tableName = $input->getArgument('table');
         $this->app = new \Fobia\Base\Application(CONFIG_DIR . '/config.php');
 
-        $this->parse_property($tableName);
+        if ($db = $input->getOption('database')) {
+            $this->app['settings']['database.databse'] = $db ;
+        }
+        if ($user = $input->getOption('user')) {
+            $this->app['settings']['database.user'] = $user ;
+        }
+        if ($pass = $input->getOption('password')) {
+            $this->app['settings']['database.password'] = $pass ;
+        }
 
-        $this->className = $this->parse_className($tableName);
+        $this->tableName = $tableName;
+        $this->className = $this->parseClassName($tableName);
 
-        $this->parse_columns($tableName);
+        $schema = $this->parseColumns($tableName);
 
-        echo $this->property;
-        echo $this->rules;
-        echo $this->className;
+        if ($input->getOption('input')) {
+            $file = $input->getOption('input');
+        } else {
+            $file = __DIR__ . '/model-default.tpl';
+        }
+        $text = $this->template($file, $schema);
+        echo $text;
     }
 
-    protected function parse_className($tableName)
+    protected function parseClassName($tableName)
     {
         $chs       = explode('_', $tableName);
         $className = '';
@@ -82,9 +94,10 @@ class ModelCreateCommand extends Command
         return $className;
     }
 
-    protected function parse_columns($tableName)
+    protected function parseColumns($tableName)
     {
         $arr = array();
+        $pri = null;
         $result  = $this->app->db->query("SHOW FULL COLUMNS FROM {$tableName}");
         $columns = $result->fetchAll(\PDO::FETCH_ASSOC);
 
@@ -95,9 +108,9 @@ class ModelCreateCommand extends Command
             $columns[$key]['null'] = ($value['null'] == "YES") ? true : false;
 
             $arr[$value['field']] = array(
-                'type' => $this->parse_type($value['type']),
+                'type' => $this->parseType($value['type']),
                 'dbType' => $value['type'],
-                'null' => ($value['null'] == "YES") ? true : false,
+                'null' => ($value['null'] == "YES") ? 1 : 0,
                 'default' => $value['default'],
                 'comment' => $value['comment']
             );
@@ -105,11 +118,11 @@ class ModelCreateCommand extends Command
             unset($columns[$key]['collation'], $columns[$key]['extra'],
                   $columns[$key]['privileges'], $columns[$key]['key']);
         }
-
-        var_dump($arr);
+        return array($pri, $arr);
+        // var_dump($arr);
     }
 
-    protected function parse_type($dbType)
+    protected function parseType($dbType)
     {
         $type = $dbType;
         $t    = strpos($type, "(");
@@ -146,97 +159,40 @@ class ModelCreateCommand extends Command
         return $type;
     }
 
-    protected function parse_property($tableName)
+    protected function template($file, $schema)
     {
-        $columns = array();
-
-        $result  = $this->app->db->query("SHOW FULL COLUMNS FROM {$tableName}");
-        $columns = $result->fetchAll(\PDO::FETCH_NUM);
-
-        $property = '';
-        $rules    = '';
-        foreach ($columns as $row) {
-            $type = $row[1];
-            $t    = strpos($type, "(");
-
-            $type_tmp = $type;
-            if ($t !== false) {
-                $type_tmp = substr($type, 0, $t);
-            }
-
-            switch ($type_tmp) {
-                case 'year':
-                case 'int': $type = 'int';
-                    break;
-                case 'tinyint':
-                    if ($type == 'tinyint(1)') {
-                        $type = 'bool';
-                    } else {
-                        $type = 'int';
-                    }
-                    break;
-                case 'varchar': $type = 'string';
-                    break;
-
-                case 'date': $type = 'Date';
-                    break;
-                case 'time': $type = 'Time';
-                    break;
-                case 'timestamp':
-                case 'datetime': $type = 'DateTime';
-                    break;
-                case 'enum': $type = 'string';
-                    break;
-            }
-            $rtype = $type;
-
-            if ($row[0] == 'data') {
-                $type  = 'array';
-                $rtype = 'json';
-            }
-
-            $property .= sprintf(" * @property %-10s $%-12s - %s\n", $type,
-                                 $row[0], $row[8]);
-            // strpos($row[0], "id")
-            if (substr($row[0], -2) == 'id') {
-                $rtype = 'id';
-            }
-            $rules .= sprintf("        %-15s => %-12s \n", "'{$row[0]}'",
-                              "'" . strtolower($rtype) . "',");
+        if ( ! file_exists($file)) {
+            die("Error. No select table\n");
         }
-        $this->rules    = $rules;
-        $this->property = $property;
-    }
+        $text = file_get_contents($file);
 
-    protected function template()
-    {
-        if ($f = $options['input']->value) {
-            if ( ! file_exists($f)) {
-                die("Error. No select table\n");
+        foreach ($schema[1] as $key => $value) {
+            $property .= sprintf(" * @property %-10s $%-12s - %s\n", $value['type'],
+                                 $key, $value['comment']);
+
+            $rolle = "array('" . strtolower($value['type']) . "', '{$value['dbType']}', {$value['null']}";
+            if ($value['default'] !== null) {
+                $rolle .= ", '" . $value['default'] . "'";
             }
-            $text = file_get_contents($f);
-
-            $pattern = array(
-                '/( \* @property[^\n]+\n)/',
-                '/static protected \$_rules = array\(([^\)])*\);/'
-            );
-
-            $text = preg_replace($pattern,
-                                 array('', 'static protected \$_rules = array(' . PHP_EOL . "    );"),
-                                 $text);
-
-            $text = preg_replace('( \*\n \* @package)', "{$property}" . '$0',
-                                 $text);
-            $text = preg_replace('/(static protected \$_rules = array\()([^\)]*)(\);)/',
-                                 '$1' . PHP_EOL . $rules . '    $3', $text);
-
-            if ($options['output']->value) {
-                file_put_contents($f, $text);
-            } else {
-                echo $text;
-            }
-            // echo "\n <<< ============== >>>\n";
-            exit();
+            $rolle .= "),";
+            $rules .= sprintf("        %-15s => %-12s \n", "'{$key}'", $rolle);
         }
+
+        $pattern = array(
+            '/{{property}}/',
+            '/( \* @property[^\n]+\n)/',
+            '/static protected \$_rules = array\(([^\)])*\);/'
+        );
+        $text = preg_replace($pattern, array('@property id', '', 'static protected \$_rules = array(' . PHP_EOL . "    );"), $text);
+
+        $text = preg_replace('/{{fileName}}/', $this->className, $text);
+        $text = preg_replace('/{{className}}/', $this->className, $text);
+        $text = preg_replace('/{{tableName}}/', $this->tableName, $text);
+        $text = preg_replace('( \*\n \* @package)', "{$property}" . '$0', $text);
+        $text = preg_replace('/(static protected \$_rules = array\()([^\)]*)(\);)/', '$1' . PHP_EOL . $rules . '    $3', $text);
+        $text = preg_replace('/(static protected \$_primaryKey =)([^;]+)(;)/', '$1' . " '{$schema[0]}'" . '$3', $text);
+
+        return $text;
     }
+    
 }

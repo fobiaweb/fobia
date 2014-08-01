@@ -15,11 +15,6 @@ use \Fobia\Model;
  *
  *
  * @property int        $id           -
- * @property string     $login        - Логин пользователя или емаил
- * @property string     $password     - Пароль захешированый методам приложения
- * @property int        $role_mask    - принимаемые роли (битовая маска)
- * @property DateTime   $online       - время online
- * @property string     $sid          - Текущая сесия
  *
  * @package  Congress.Model
  */
@@ -32,11 +27,6 @@ class User extends \Fobia\Base\Model implements \Fobia\Auth\IUserIdentity
     // array(type, null, default)
     static protected $_rules = array(
         'id'            => 'id',
-        'login'         => 'string',
-        'password'      => 'string',
-        'role_mask'     => 'int',
-        'online'        => 'datetime',
-        'sid'           => 'id',
     );
 
     public function getId()
