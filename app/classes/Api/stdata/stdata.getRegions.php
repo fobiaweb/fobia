@@ -1,6 +1,6 @@
 <?php
 
-use Api\Method\SearchMethod;
+use Fobia\Api\Method\Method;
 
 /**
  * Возвращает список регионов.

@@ -1,6 +1,6 @@
 <?php
 
-use Api\Method\Method;
+use Fobia\Api\Method\Method;
 
 /**
  * Возвращает информацию о городах по их идентификаторам.

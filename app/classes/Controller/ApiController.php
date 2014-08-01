@@ -23,13 +23,10 @@ class ApiController extends \Fobia\Base\Controller
         $_json = true;
         $_json = $this->app->request->isAjax();
 
-        $class = $this->generateApiClass($method);
         $params = array_merge($this->app->request->params(), $_FILES);
 
-        $apiMethod = new $class($params);
-
-        $apiMethod->invoke();
-        $result = $apiMethod->getFormatResponse();
+        $apiHandler = new \Fobia\Api\ApiHandler(dirname(__DIR__) . '/Api');
+        $result = $apiHandler->request($method, $params);
 
         if ($_json) {
             Log::getLogger()->enableRender = false;
@@ -38,44 +35,5 @@ class ApiController extends \Fobia\Base\Controller
         } else {
             dump($result);
         }
-
- //        if ( ! class_exists($class) || ! method_exists( $class,  $classMethod)) {
-//            return array(
-//                'error' => array(
-//                    'err_msg'  => 'неизвестный метод',
-//                    'err_code' => 0,
-//                    'method'   =>  $method,
-//                    'params'   =>  $params
-//                )
-//            );
-//        }
-    }
-
-
-        /**
-     * Генерирует название класса и подключает при необходимости
-     *
-     * @param string $method
-     * @return string
-     */
-    protected function generateApiClass($method)
-    {
-        $class = 'Api_' . preg_replace_callback('/^\w|_\w/', function($matches) {
-            return strtoupper($matches[0]);
-        }, str_replace('.', '_', $method));
-
-        if ( ! class_exists($class)) {
-            Log::debug("Class '$class' not autoloaded");
-            $list = explode('.', $method);
-            array_pop($list);
-            array_push($list, $method);
-
-            $file = dirname(__DIR__) . '/Api/' . implode('/', $list) . '.php';
-            if (file_exists($file)) {
-                require_once $file;
-            }
-        }
-
-        return $class;
     }
 }
