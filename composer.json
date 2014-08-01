@@ -8,12 +8,12 @@
             "url": "http://faclib.github.io/packages/p/smarty"
         }
     ],
-
     "require": {
         "php": ">=5.3.0",
+        "fobiaweb/slim": "3.0.0",
+        "fobiaweb/ezc-base": "1.*",
         "fobiaweb/ezc-database": "1.*",
         "pimple/pimple": "2.0.0",
-        "fobiaweb/slim": "3.0.0",
         "monolog/monolog": "~1",
         "symfony/console": "~2.5",
         "symfony/debug": "~2.5",
@@ -21,15 +21,18 @@
         "symfony/yaml": "~2.5"
     },
     "require-dev": {
-        "php": ">=5.3.0",
-        "smarty/smarty": "~3",
+        "fobiaweb/base": "dev-master",
+        "fobiaweb/database": "dev-master",
+        "fobiaweb/debug": "dev-master",
+        "fobiaweb/php-helper-lib": "dev-master",
+        "fobiaweb/auth": "dev-master",
+        "smarty/smarty": "3.1.18",
         "twig/twig": "1.*"
     },
     "autoload": {
         "psr-0": {
             "": [
                 "src/",
-                "src/Fobia/lib",
                 "app/classes/"
             ]
         },
@@ -37,7 +40,6 @@
             "app/classes/Api"
         ],
         "files": [
-            "src/Fobia/Base/common.php",
             "app/bootstrap.php"
         ]
     }
