@@ -40,8 +40,8 @@ class ModelCreateCommand extends Command
         $this
                 ->setName('model:create')
                 ->setDescription('Создать метод API')
-                ->addArgument('table', InputArgument::REQUIRED, 'Название таблицы')
-                ->addOption('input', 'i', InputOption::VALUE_OPTIONAL, 'Входной файл модели')
+                ->addArgument('table', InputArgument::REQUIRED, 'название таблицы')
+                ->addOption('input', 'i', InputOption::VALUE_OPTIONAL, 'входной файл модели')
                 ->addOption('output', 'o', InputOption::VALUE_NONE, 'сохранить результат')
                 ->addOption('database', 'd', InputOption::VALUE_OPTIONAL, 'база дфнных')
                 ->addOption('user', 'u', InputOption::VALUE_OPTIONAL, 'пользователь')
@@ -119,7 +119,6 @@ class ModelCreateCommand extends Command
                   $columns[$key]['privileges'], $columns[$key]['key']);
         }
         return array($pri, $arr);
-        // var_dump($arr);
     }
 
     protected function parseType($dbType)
@@ -194,5 +193,5 @@ class ModelCreateCommand extends Command
 
         return $text;
     }
-    
+
 }

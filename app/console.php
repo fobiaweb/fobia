@@ -9,6 +9,7 @@
 
 require_once __DIR__ . '/bootstrap.php';
 
+$_ENV['no_stderr'] = 1;
 
 use Console\FobiaApplication;
 use Symfony\Component\Console\Application;
