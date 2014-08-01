@@ -21,11 +21,6 @@
         "symfony/yaml": "~2.5"
     },
     "require-dev": {
-        "fobiaweb/api": "dev-develop",
-        "fobiaweb/auth": "dev-master",
-        "fobiaweb/base": "dev-master",
-        "fobiaweb/database": "dev-master",
-        "fobiaweb/debug": "dev-master",
         "fobiaweb/php-helper-lib": "dev-master",
         "smarty/smarty": "3.1.18",
         "twig/twig": "1.*"
