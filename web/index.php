@@ -36,7 +36,7 @@ $app->get('/info', function() use($app) {
     dump($app->request->params());
     dump($_FILES);
     echo <<<HTML
-<form method="post" enctype="multipart/form-data" action="/api/files.add">
+<form method="post" enctype="multipart/form-data" action="/fobia/api/files.add">
 <input type="file" name="file" />
 <input type="submit" name="submit" />
 

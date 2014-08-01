@@ -32,3 +32,18 @@ $arr = array(
     'ACCESS_1', 'ACCESS_2', 'ACCESS_3' => 33,
 );
 var_dump($arr);
+
+echo "\n--------------------\n";
+
+//echo ini_get("upload_max_filesize");
+
+preg_match('/(\d+)(M)/i', ini_get("upload_max_filesize"), $m);
+
+$size = $m[1];
+if ($m[2] == "M") {
+   $size = $size * 1024 * 1024;
+}
+
+
+echo $size;
+//var_dump($m);
