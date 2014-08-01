@@ -17,5 +17,5 @@ config/config.yml   merge=ours
 
 
 LAST_COMMIT   export-subst
-
-
+LAST_COMMIT   ident
+LAST_COMMIT   filter=dater
