@@ -24,7 +24,10 @@ use Api\Method\Method;
 class Api_Utils_GetServerTime extends Method
 {
 
-    protected $method = 'utils.getServerTime';
+    protected function configure()
+    {
+        $this->setName('utils.getServerTime');
+    }
 
     protected function execute()
     {

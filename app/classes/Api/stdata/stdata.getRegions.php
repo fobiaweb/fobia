@@ -1,11 +1,8 @@
 <?php
 
-use Api\Method\Method;
-
+use Api\Method\SearchMethod;
 
 /**
- * stdata.getRegions.php file
- *
  * Возвращает список регионов.
  * --------------------------------------------
  *
@@ -14,7 +11,7 @@ use Api\Method\Method;
  * country_id   (*) идентификатор страны, полученный в методе database.getCountries.
  *              положительное число, обязательный параметр
  * q            строка поискового запроса. Например, Лен.
- * offset       отступ, необходимый для выбора определенного подмножества регионов.
+ * limit        отступ, необходимый для выбора определенного подмножества регионов.
  * count        количество регионов, которое необходимо вернуть.
  *
  * --------------------------------------------
@@ -23,38 +20,47 @@ use Api\Method\Method;
  * @copyright  Copyright (c) 2014 Dmitriy Tyurin
  * @api
  */
-class Api_Stdata_GetRegions extends Method
+class Api_Stdata_GetRegions extends SearchMethod
 {
 
-    protected $method = 'stdata.getCountriesById';
+    protected function configure()
+    {
+        $this->setName('stdata.getRegions');
+        $this->setDefinition(array(
+            'name'  => 'country_id',
+            'mode'  => Method::VALUE_REQUIRED,
+            'parse' => 'parsePositive',
+        ));
+        $this->setDefinition(array(
+            'name' => 'fields',
+            'default' => array('country_id'),
+        ));
+        $this->setDefinition(array(
+            'name'  => 'q',
+            'parse' => 'trim'
+        ));
+    }
 
     protected function execute()
     {
-        $p   = $this->params();
+        $p   = $this->getDefinitionParams();
         $app = \App::instance();
         $db  = $app->db;
 
-        extract($p);
-
-
-        if ( ! $count) {
-            $count = 100;
-        }
-        if ( ! $offset) {
-            $offset = 0;
-        }
-
-
-        $query = $db->createSelectQuery();
-
+        $this->execQuery();
+        $query = $this->query;
         $query->from('st_regions');
-        $query->where($query->expr->eq('country_id', $db->quote($country_id)))
-                ->where($query->expr->like('name_rus', $db->quote("%{$q}%")));
+        $query->where($query->expr->eq('country_id', $db->quote($p["country_id"])));
+        if ($p["q"]) {
+            $query->where($query->expr->like('name_rus', $db->quote("%{$p["q"]}%")));
+        }
+        $this->response = $query->fetchItemsCount();
+        return true;
 
         $qs = clone $query;
         $qs->select('id');
         $qs->select('name_rus AS title');
-        $qs->limit((int) $count, (int) $offset);
+        $qs->limit((int) $p["limit"], (int) $p["offset"]);
 
         $stmt  = $qs->prepare();
         $stmt->execute();
@@ -69,5 +75,7 @@ class Api_Stdata_GetRegions extends Method
             'count' => (int) $row['count'],
             'items' => $items
         );
+
+
     }
 }

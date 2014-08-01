@@ -3,8 +3,6 @@
 use Api\Method\Method;
 
 /**
- * stdata.getCitiesById.php file
- *
  * Возвращает информацию о городах по их идентификаторам.
  * --------------------------------------------
  *
@@ -27,25 +25,29 @@ use Api\Method\Method;
 class Api_Stdata_GetCitiesById extends Method
 {
 
-    protected $method = 'stdata.getCitiesById';
+    protected function configure()
+    {
+        $this->setName('stdata.getCitiesById');
+
+        $this->setDefinition(array(
+            'name'  => 'city_ids',
+            'mode'  => Method::VALUE_REQUIRED,
+            'parse' => 'parseNumbers',
+            'assert' => 'count'
+        ));
+    }
 
     protected function execute()
     {
+        $p   = $this->getDefinitionParams();
         $app = \App::instance();
-        $db = $app->db;
-
-        $p = $this->params();
-
-        $ids = parseNumbers($p['city_ids']);
-        if ( !count($ids) ) {
-            throw new \Api\Exception\BadRequest("city_ids");
-        }
+        $db  = $app->db;
 
         $q = $db->createSelectQuery();
         $q->from('st_cities')
                 ->select('id')
                 ->select('city_name_ru AS title')
-                ->where($q->expr->in('id', $ids));
+                ->where($q->expr->in('id', $p['city_ids']));
 
         $stmt = $q->prepare();
         $stmt->execute();

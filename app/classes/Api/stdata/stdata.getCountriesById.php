@@ -2,9 +2,7 @@
 
 use Api\Method\Method;
 
-
 /**
- * stdata.getCountriesById.php file
  * Возвращает информацию о странах по их идентификаторам
  * --------------------------------------------
  *
@@ -26,23 +24,32 @@ use Api\Method\Method;
  */
 class Api_Stdata_GetCountriesById extends Method
 {
-    protected $method = 'stdata.getCountriesById';
+
+    protected function configure()
+    {
+        $this->setName('stdata.getCountriesById');
+        $this->setDefinition(array(
+            'name'  => 'country_ids',
+            'mode'  => Method::VALUE_REQUIRED,
+            'parse' => 'parseNumbers',
+            'assert' => 'count'
+        ));
+    }
 
     protected function execute()
     {
-        $p = $this->params;
+        $p   = $this->getDefinitionParams();
         $app = \App::instance();
-        $db = $app->db;
+        $db  = $app->db;
 
-        $ids  = parseNumbers($p['country_ids']);
+        $q = $db->createSelectQuery();
 
-        $q    = $db->createSelectQuery();
         $q->from('st_countries')
                 ->select('id')
                 ->select('name_rus AS title')
-                ->where($q->expr->in('id', $ids));
-        $stmt = $q->prepare();
+                ->where($q->expr->in('id', $p["country_ids"]));
+        $stmt           = $q->prepare();
         $stmt->execute();
-        $this->response =  $stmt->fetchAll();
+        $this->response = $stmt->fetchAll();
     }
 }

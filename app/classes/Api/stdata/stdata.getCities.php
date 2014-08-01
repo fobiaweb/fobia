@@ -3,8 +3,6 @@
 use Api\Method\Method;
 
 /**
- * stdata.getCities.php file
- *
  * Возвращает список городов.
  * --------------------------------------------
  *
@@ -19,7 +17,7 @@ use Api\Method\Method;
  *  need_all    1 – возвращать все города. 0 – возвращать только основные города.
  *              флаг, может принимать значения 1 или 0
  *  offset      отступ, необходимый для получения определенного подмножества городов.
- *  count       количество городов, которые необходимо вернуть.
+ *  limit       количество городов, которые необходимо вернуть.
  *
  * --------------------------------------------
  *
@@ -40,11 +38,40 @@ use Api\Method\Method;
 class Api_Stdata_GetCities extends Method
 {
 
-    protected $method = 'stdata.getCities';
+    protected function configure()
+    {
+        $this->setName('stdata.getCities');
+
+        $this->setDefinition(array(
+            'name'  => 'country_id',
+            'mode'  => Method::VALUE_REQUIRED,
+            'parse' => 'parsePositive'
+        ));
+        $this->setDefinition(array(
+            'name'  => 'region_id',
+            'parse' => 'parsePositive'
+        ));
+        $this->setDefinition(array(
+            'name'  => 'q',
+            'parse' => 'trim'
+        ));
+        $this->setDefinition(array(
+            'name'  => 'need_all',
+            'default' => 0,
+        ));
+        $this->setDefinition(array(
+            'name' => 'limit',
+            'default' => 10,
+        ));
+        $this->setDefinition(array(
+            'name' => 'offset',
+            'default' => 0,
+        ));
+    }
 
     protected function execute()
     {
-        $p   = $this->params();
+        $p   = $this->getDefinitionParams();
         $app = \App::instance();
         $db  = $app->db;
 
@@ -66,14 +93,14 @@ class Api_Stdata_GetCities extends Method
         }
 
         if ( ! $p['need_all']) {
-            if ( ! $p['count']) {
-                $p['count'] = 100;
+            if ( ! $p['limit']) {
+                $p['limit'] = 100;
             }
             if ( ! $p['offset']) {
                 $p['offset'] = 0;
             }
 
-            $q->limit((int) $p['count'], (int) $p['offset']);
+            $q->limit((int) $p['limit'], (int) $p['offset']);
         }
 
         $this->response = $q->fetchItemsCount();
