@@ -18,7 +18,7 @@ return array(
     // Логер
     'debug'       => true,
     'log.enabled' => true,
-    'log.level'   => 600,
+    'log.level'   => 0,
 
     // Cookies
     'cookies.encrypt'  => false,
