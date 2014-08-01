@@ -32,7 +32,7 @@
             <arg value="foreach" />
             <arg value="git" />
             <arg value="commit" />
-            <arg value="-am" />
+            <arg value="-zam" />
             <arg value="---" />
         </exec>
         <exec executable="git" dir="${basedir}" >
