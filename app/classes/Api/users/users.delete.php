@@ -8,7 +8,7 @@
  * @author     Dmitriy Tyurin <fobia3d@gmail.com>
  * @copyright  Copyright (c) 2014 Dmitriy Tyurin
  */
-use Api\Method\Method;
+use Fobia\Api\Method\Method;
 
 /**
  * Удаляет пользователя <br>

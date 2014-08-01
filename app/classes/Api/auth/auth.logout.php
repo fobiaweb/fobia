@@ -6,7 +6,7 @@
  * @author     Dmitriy Tyurin <fobia3d@gmail.com>
  * @copyright  Copyright (c) 2014 Dmitriy Tyurin
  */
-use Api\Method\Method;
+use Fobia\Api\Method\Method;
 
 /**
  * Api_Auth_logout class
@@ -16,7 +16,10 @@ use Api\Method\Method;
 class Api_Auth_Logout extends Method
 {
 
-    protected $method = 'auth.logout';
+    protected function configure()
+    {
+        $this->setName('auth.logout');
+    }
 
     protected function execute()
     {

@@ -44,6 +44,8 @@ class Api_Files_Add extends Method
         $this->setDefinition(array(
             'name' => 'file',
             'mode' => Method::VALUE_REQUIRED,
+            'parse' => null,
+            'assert' => null
         ));
         $this->setDefinition(array(
             'name'  => 'type',

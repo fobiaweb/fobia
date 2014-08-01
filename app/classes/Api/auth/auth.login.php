@@ -1,22 +1,23 @@
 <?php
 
-use Api\Method\Method;
+use Fobia\Api\Method\Method;
 
 /**
- * Авторизайия <br>
+ * Авторизайия 
  * --------------------------------------------
  *
- * PARAMS:<br>
- * --------------------------------------------
- * <pre>
- *   login      -(*) логин
- *   password   -(*) пароль
- * </pre>
+ * PARAMS:
+ * -------
+ * 
+ *   login      - (*) логин
+ *   password   - (*) пароль
  *
- * RESULT <br>
- * --------------------------------------------<br>
+ * --------------------------------------------
+ *
+ * RESULT:
+ * -------
  * Возвращает 0 в случии неудачи результат
- *
+ * --------------------------------------------
  *
  * @author     Dmitriy Tyurin <fobia3d@gmail.com>
  *
@@ -24,15 +25,24 @@ use Api\Method\Method;
  */
 class Api_Auth_Login extends Method
 {
+    protected function configure()
+    {
+        $this->setName('auth.login');
 
-    /**
-     * @var string название метода
-     */
-    protected $method = 'auth.login';
+        $this->setDefinition(array(
+            'name' => 'login',
+            'mode' => Method::VALUE_REQUIRED
+        ));
+        $this->setDefinition(array(
+            'name' => 'password',
+            'mode' => Method::VALUE_REQUIRED
+        ));
+    }
+
 
     protected function execute()
     {
-        $p   = $this->params();
+        $p   = $this->getDefinitionParams();
         $app = \App::instance();
 
         if ($app['auth']->hasIdentity()) {
