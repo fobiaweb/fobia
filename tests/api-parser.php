@@ -26,3 +26,9 @@ preg_match_all('/@api\s+([\w\.]+).*(class Api)/i', $str, $m);
 
 var_dump($m);
 
+echo "\n--------------------\n";
+
+$arr = array(
+    'ACCESS_1', 'ACCESS_2', 'ACCESS_3' => 33,
+);
+var_dump($arr);

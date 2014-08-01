@@ -23,7 +23,7 @@ use \Fobia\Model;
  *
  * @package  Congress.Model
  */
-class User extends Fobia\Base\Model
+class User extends \Fobia\Base\Model implements \Fobia\Auth\IUserIdentity
 {
 
     const CLASS_NAME = __CLASS__;
@@ -38,5 +38,20 @@ class User extends Fobia\Base\Model
         'online'        => 'datetime',
         'sid'           => 'id',
     );
+
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    public function getName()
+    {
+        return $this->login;
+    }
+
+    public function getPassword()
+    {
+        return $this->password;
+    }
 
 }

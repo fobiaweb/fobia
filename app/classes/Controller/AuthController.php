@@ -21,8 +21,6 @@ class AuthController extends Controller
     {
         $app = \App::instance();
 
-        $app['auth']->authenticate();
-
         if ($app->request->isGet()) {
             if ( $app['auth']->hasIdentity() ) {
                 $app->redirect($app->urlFor('base') . 'auth?r=' . rand());
@@ -41,8 +39,6 @@ class AuthController extends Controller
     public function logout()
     {
         $app = \App::instance();
-
-        $app['auth']->authenticate();
         $app['auth']->logout();
         $app->redirect($app->urlFor('base') . 'login?r=' . rand());
     }
@@ -50,16 +46,23 @@ class AuthController extends Controller
     public function auth()
     {
         $app = \App::instance();
-        $app['auth']->authenticate();
-
-        if ($app['auth']->hasIdentity()) {
-            $auth = $app['session']['auth'];
-            $auth['page'] += 1;
-            $app['session']['auth'] = $auth;
-            // $app['auth']->setOnline();
-            dump($app['session']);
-        } else {
+        if (!$app['auth']->hasIdentity()) {
             echo 'NO AYTH';
+            return;
         }
+        //$auth = $app['session']['auth'];
+        //$auth['page'] += 1;
+        //$app['session']['auth'] = $auth;
+
+        // $app['auth']->setOnline();
+        // dump($app['session']);
+        \App::Auth()->readAccess();
+        // \App::Auth()->getUser()->access = array(        );
+        dump(\App::Auth()->getUser());
+
+
+        dump( "------------" );
+
+        dump(\App::Auth()->isAccess('ACCESS_11'));
     }
 }
