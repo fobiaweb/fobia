@@ -47,11 +47,11 @@ class Api_Auth_Login extends Method
 
         if ($app['auth']->hasIdentity()) {
             $this->response = 0;
-            throw new \Api\Exception\Halt();
+            throw new \Fobia\Api\Exception\Halt();
         }
 
         if ( ! $p['login'] || ! $p['password']) {
-            throw new \Api\Exception\BadRequest('login', 'password');
+            throw new \Fobia\Api\Exception\BadRequest('login', 'password');
         }
 
         $result = $app['auth']->login($p['login'], $p['password'], true);

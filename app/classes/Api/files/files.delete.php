@@ -2,7 +2,7 @@
 /**
  * This file is part of API.
  *
- * {{name}}.php file
+ * files.delete.php file
  *
  * @author     Dmitriy Tyurin <fobia3d@gmail.com>
  * @copyright  Copyright (c) 2014 Dmitriy Tyurin
@@ -11,7 +11,7 @@
  use Fobia\Api\Method\Method;
 
 /**
- * Метода '{{name}}'
+ * Метода 'files.delete'
  * --------------------------------------------
  *
  * PARAMS:
@@ -27,19 +27,19 @@
  * Возвращает результат успеха
  * --------------------------------------------
  *
- * @api        {{name}}
+ * @api        files.delete
  */
-class {{classname}} extends Method
+class Api_Files_Delete extends Method
 {
 
     protected function configure()
     {
-        $this->setName('{{name}}');
+        $this->setName('files.delete');
 
         $this->setDefinition(array(
             'name' => 'id',
-            //'mode' => Method::VALUE_REQUIRED,
-            //'parse' => null,
+            'mode' => Method::VALUE_REQUIRED,
+            'parse' => 'parseInt',
             //'assert' => null
         ));
     }
@@ -50,8 +50,8 @@ class {{classname}} extends Method
         $app = \App::instance();
         $db  = $app->db;
 
-        // yeur code
-
-        $this->response = 1;
+        if ($stmt = $db->query("DELETE FROM files WHERE id = '{$p['id']}'")) {
+            $this->response = $stmt->rowCount();
+        }
     }
 }

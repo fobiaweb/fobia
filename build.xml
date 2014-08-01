@@ -58,6 +58,24 @@
         </exec>
     </target>
 
+    <target name="git-submodule" description="Собрать и скомитить">
+        <exec executable="git" dir="${basedir}" >
+            <arg value="submodule" />
+            <arg value="init" />
+        </exec>
+        <exec executable="git" dir="${basedir}" >
+            <arg value="submodule" />
+            <arg value="update" />
+        </exec>
+        <exec executable="git" dir="${basedir}" >
+            <arg value="submodule" />
+            <arg value="foreach" />
+            <arg value="git" />
+            <arg value="checkout" />
+            <arg value="master" />
+        </exec>
+    </target>
+
     <target name="pull" description="Собрать ">
         <exec executable="git" dir="${basedir}" >
             <arg value="pull" />
