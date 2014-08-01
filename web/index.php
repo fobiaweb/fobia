@@ -19,6 +19,7 @@
 
 require_once __DIR__ . '/../app/bootstrap.php';
 $app = new \Fobia\Base\Application( __DIR__ . '/../app/config/config.php' );
+
 if (REMOTE_SERVER) {
     $app['settings']['database.dns']     = 'mysql://srv55412_ab@localhost/srv55412_ab';
     $app['settings']['database.password']     = 'abpass';
@@ -44,8 +45,9 @@ $app->get('/info', function() use($app) {
 HTML;
 })->via('GET', 'POST');
 
+
+
 //$app->route('/', '\Fobia\Base\Controller:index' )->via('GET');
-$app->route('/tt', '\Fobia\Base\Controller:indexAction' )->via('GET');
 $app->route('/error', '\Fobia\Base\Controller:errorAction' )->via('GET');
 
 // Auth
@@ -55,9 +57,6 @@ $app->route('/auth',   'AuthController:auth')->via('GET');
 
 // API
 $app->route('/api/:method',   'ApiController:index')->via('ANY');
-
-
-$app->route('/search(/(:section))', 'SearchController:index')->via('GET');
 
 $app->hook('slim.after', function() use($app) {
     Log::info(\Fobia\Base\Utils::resourceUsage());
