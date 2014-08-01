@@ -47,4 +47,4 @@ defined('LOGS_DIR') or define('LOGS_DIR',   SYSPATH . "/app/logs");
 defined('CACHE_DIR') or define('CACHE_DIR',  SYSPATH . "/app/cache");
 defined('CONFIG_DIR') or define('CONFIG_DIR', SYSPATH . "/app/config");
 
-Log::debug('bootstrap init');
+// Log::debug('bootstrap init');

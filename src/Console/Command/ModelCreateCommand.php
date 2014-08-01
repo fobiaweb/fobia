@@ -54,36 +54,104 @@ class ModelCreateCommand extends Command
     {
         $tableName = $input->getArgument('table');
         $this->app = new \Fobia\Base\Application(CONFIG_DIR . '/config.php');
-        
+
         $this->parse_property($tableName);
-        $this->parse_classname($tableName);
-        
+
+        $this->className = $this->parse_className($tableName);
+
+        $this->parse_columns($tableName);
+
         echo $this->property;
         echo $this->rules;
         echo $this->className;
     }
 
-    protected function parse_classname($tableName)
+    protected function parse_className($tableName)
     {
         $chs       = explode('_', $tableName);
         $className = '';
         foreach ($chs as $ch) {
-            $className .= strtoupper(substr($ch, 0, 1)) . strtolower(substr($ch,
-                                                                            1));
+            $className .= strtoupper(substr($ch, 0, 1))
+                    . strtolower(substr($ch, 1));
         }
+
         if (substr($className, -1) == 's') {
             $className = substr($className, 0, -1);
         }
 
-        $this->className = $className;
+        return $className;
+    }
+
+    protected function parse_columns($tableName)
+    {
+        $arr = array();
+        $result  = $this->app->db->query("SHOW FULL COLUMNS FROM {$tableName}");
+        $columns = $result->fetchAll(\PDO::FETCH_ASSOC);
+
+        foreach ($columns as $key => $value) {
+            if ($value['key'] == "PRI") {
+                $pri = $value['field'];
+            }
+            $columns[$key]['null'] = ($value['null'] == "YES") ? true : false;
+
+            $arr[$value['field']] = array(
+                'type' => $this->parse_type($value['type']),
+                'dbType' => $value['type'],
+                'null' => ($value['null'] == "YES") ? true : false,
+                'default' => $value['default'],
+                'comment' => $value['comment']
+            );
+
+            unset($columns[$key]['collation'], $columns[$key]['extra'],
+                  $columns[$key]['privileges'], $columns[$key]['key']);
+        }
+
+        var_dump($arr);
+    }
+
+    protected function parse_type($dbType)
+    {
+        $type = $dbType;
+        $t    = strpos($type, "(");
+
+        $type_tmp = $type;
+        if ($t !== false) {
+            $type_tmp = substr($type, 0, $t);
+        }
+
+        switch ($type_tmp) {
+            case 'year':
+            case 'int': $type = 'int';
+                break;
+            case 'tinyint':
+                if ($type == 'tinyint(1)') {
+                    $type = 'bool';
+                } else {
+                    $type = 'int';
+                }
+                break;
+            case 'varchar': $type = 'string';
+                break;
+
+            case 'date': $type = 'Date';
+                break;
+            case 'time': $type = 'Time';
+                break;
+            case 'timestamp':
+            case 'datetime': $type = 'DateTime';
+                break;
+            case 'enum': $type = 'string';
+                break;
+        }
+        return $type;
     }
 
     protected function parse_property($tableName)
     {
         $columns = array();
 
-        $result = $this->app->db->query("SHOW FULL COLUMNS FROM {$tableName}");
-        $columns    = $result->fetchAll(\PDO::FETCH_NUM);
+        $result  = $this->app->db->query("SHOW FULL COLUMNS FROM {$tableName}");
+        $columns = $result->fetchAll(\PDO::FETCH_NUM);
 
         $property = '';
         $rules    = '';
@@ -139,10 +207,6 @@ class ModelCreateCommand extends Command
         $this->rules    = $rules;
         $this->property = $property;
     }
-
-
-
-
 
     protected function template()
     {
