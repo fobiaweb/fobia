@@ -1,8 +1,8 @@
--- MySQL dump 10.13  Distrib 5.5.37, for debian-linux-gnu (i686)
+-- MySQL dump 10.13  Distrib 5.5.38, for debian-linux-gnu (i686)
 --
 -- Host: localhost    Database: test
 -- ------------------------------------------------------
--- Server version	5.5.37-0+wheezy1
+-- Server version	5.5.38-0+wheezy1
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -14,98 +14,6 @@
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
-
---
--- Table structure for table `authors`
---
-
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE IF NOT EXISTS `authors` (
-  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Автор',
-  `type` varchar(20) NOT NULL COMMENT 'К чему относится авторство(publication, thesis)',
-  `data_id` int(11) NOT NULL COMMENT 'Родительский объект',
-  `employee_id` int(11) NOT NULL DEFAULT '0' COMMENT 'Сотрудник',
-  `name` varchar(50) NOT NULL COMMENT 'Имя автора для отображения (альтернативное)',
-  `ord` int(3) NOT NULL DEFAULT '100' COMMENT 'Порядок сортировки',
-  PRIMARY KEY (`id`),
-  KEY `publication_id` (`employee_id`),
-  KEY `name` (`name`(20)),
-  KEY `data_id` (`type`,`data_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Авторы публикаций';
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `authors`
---
-
-LOCK TABLES `authors` WRITE;
-/*!40000 ALTER TABLE `authors` DISABLE KEYS */;
-/*!40000 ALTER TABLE `authors` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `departments`
---
-
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE IF NOT EXISTS `departments` (
-  `dept_id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'id подразделения',
-  `dept` varchar(255) NOT NULL COMMENT 'Подразделения ',
-  `parent` int(11) NOT NULL COMMENT 'Раздел',
-  PRIMARY KEY (`dept_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='Подразделения Алмазов';
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `departments`
---
-
-LOCK TABLES `departments` WRITE;
-/*!40000 ALTER TABLE `departments` DISABLE KEYS */;
-INSERT INTO `departments` VALUES (1,'Институт сердца и сосудов',0),(2,'Институт молекулярной биологии и генетики',0),(3,'Институт экспериментальной медицины',0),(4,'Институт эндокринологии',0),(5,'Институт перинатологии и педиатрии',0),(6,'Институт гематологии',0),(7,'НИО клинической физиологии кровообращения',1),(8,'НИЛ профилактической кардиологии',1),(9,'НИО сердечной недостаточности',1),(10,'НИО ишемической болезни сердца',1),(11,'НИО артериальной гипертензии',1),(12,'НИО некоронарогенных заболеваний сердца',1),(13,'НИЛ реабилитации',1),(14,'НИО кардиоторакальной хирургии',1),(15,'НИО анестезиологии, реаниматологии и перфузиологии',1),(16,'НИО интервенционной аритмологии',1),(17,'НИО ангионеврологии',1),(18,'НИО кардиоангиологии',1),(19,'НИО спортивной медицины',1),(20,'НИО лучевой диагностики',1),(21,'НИЛ ренгенэндоваскулярной хирургии',1),(22,'НИЛ острого коронарного синдрома',1),(23,'НИЛ электрофизиологии сердца',7),(24,'НИЛ ультразвуковых методов исследования',7),(25,'НИЛ нарушений ритма сердца',7),(26,'НИЛ патогенеза и терапии артериальной гипертензии',11),(27,'НИЛ эпидемиологии артериальной гипертензии',11),(28,'НИЛ кардиомиопатий',12),(29,'НИЛ соединительно-тканных дисплазий',12),(30,'НИЛ хирургии пороков и ишемической болезни сердца',14),(31,'Группа детской кардиохирургии',14),(32,'НИЛ торакальной хирургии',14),(33,'НИЛ анестезиологии и реаниматологии',15),(34,'НИЛ перфузиологии',15),(35,'НИЛ неврологии',17),(36,'Группа нейрохирургии',17),(37,'Группа нейрофизиологии',17),(38,'НИЛ клинической ангиологии',18),(39,'НИЛ сосудистой хирургии',18),(40,'НИЛ магниторезонансной томографии',20),(41,'НИЛ компьютерной томографии',20),(42,'НИЛ ядерной кардиологии',20),(43,'НИЛ молекулярной кардиологии и генетики',2),(44,'НИО клеточной и генной инженерии',2),(45,'НИЛ стволовых клеток',44),(46,'НИЛ клеточных технологий',44),(47,'НИО атеросклероза',2),(48,'НИЛ молекулярно-клеточных механизмов атеросклероза',47),(49,'НИЛ биохимии атеросклероза',47),(50,'НИЛ иммунологии',2),(51,'Группа протеомики',2),(52,'НИЛ микроциркуляции',3),(53,'НИЛ метаболизма миокарда',3),(54,'НИЛ системного кровообращения',3),(55,'НИЛ нанотехнологий',3),(56,'НИО экспериментальной и клинической фармакологии с виварием',3),(57,'НИЛ биопротезирования и кардиопротекции',3),(58,'НИЛ математического моделирования',3),(59,'НИЛ клинической эндокринологии с группой нейроэндокринологии',4),(60,'НИЛ сосудистых осложнений сахарного диабета',4),(61,'НИЛ метаболического синдрома',4),(62,'НИЛ детской эндокринологии',4),(63,'НИЛ «Диабетическая стопа»',4),(64,'НИЛ эндокринных заболеваний у беременных',4),(65,'Сектор эндокринной хирургии',4),(66,'НИЛ репродукции и здоровья женщины',5),(67,'НИЛ антенатальной патологии',5),(68,'НИЛ физиологии и патологии беременности и родов',5),(69,'НИЛ репродуктивных технологий',5),(70,'НИЛ диагностики и лечения патологии детского возраста',5),(71,'НИЛ физиологии и патологии новорожденных',5),(72,'НИЛ хирургии врожденной и наследственной патологии',5),(116,'отдел аспирантуры и докторантуры',114),(74,'НИЛ онкогематологии',6),(75,'НИЛ трансфузиологии и эфферентной терапии',6),(76,'НИЛ внутрибольничных инфекций',6),(77,'Группа инфекционных патологий',6),(78,'НИЛ патоморфологии',6),(79,'НИЛ ревматологии',6),(80,'Группа межклеточных взаимодействий и регенерации',6),(81,'биобанк',2),(82,'группа ангиогенеза',2),(83,'группа генно-клеточной инженерии',2),(84,'группа клеточной биологии',2),(85,'НИЛ молекулярной биологии и генетики',2),(86,'группа функциональных и лучевых методов исследования в перинатологии',5),(113,'Подразделения, не вошедшие в институты',0),(114,'Научно-образовательный отдел',0),(115,'отдел постдипломного медицинского образования',114),(119,'Кафедра  акушерства и  гинекологии',118),(93,'НИЛ хирургии аритмий у детей',16),(118,'Институт послевузовского образования',0),(97,'НИЛ высокотехнологичных методов лечения сердца',9),(98,'НИЛ хронической СН',9),(99,'НИЛ спортивной кардиологии',19),(100,'группа кардиореспараторного тестирования',19),(101,'виварий',3),(117,'библиотека',114),(103,'НИО эксперименальной физиологии и фармакологии',3),(104,'НИЛ фармакоэкономики и экономики здравоохранения',113),(105,'НИО клинических исследований и доказательной медицины',113),(106,'НИО организации и стандартизации медицинской помощи',113),(107,'НИЛ организации медицинской помощи',113),(108,'Музей',114),(109,'сектор истории медицины',114),(110,'Научный отдел',113),(111,'группа поддержки грантовых конкурсов',113),(112,'сектор интеллекуальной собсвенности, планирования и отчетности научно-исследовательской работы',113),(120,'Кафедра  анестезиологии и  реаниматологии',118),(121,'Кафедра внутренних  болезней',118),(122,'Кафедра детских  болезней',118);
-/*!40000 ALTER TABLE `departments` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `employees`
---
-
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE IF NOT EXISTS `employees` (
-  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'id сотрудника',
-  `exist` tinyint(1) NOT NULL DEFAULT '1' COMMENT 'Запись существует',
-  `datecreate` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Дата записи',
-  `firstname` varchar(25) NOT NULL COMMENT 'Имя',
-  `lastname` varchar(25) NOT NULL COMMENT 'Фамилия',
-  `patronymic` varchar(25) DEFAULT NULL COMMENT 'Отчество',
-  `translate` varchar(50) DEFAULT NULL COMMENT 'Транслит на английский',
-  `birthday` date DEFAULT NULL COMMENT 'Дата рождения',
-  `sex` enum('m','w','n') NOT NULL DEFAULT 'n' COMMENT 'Пол',
-  `photo` varchar(16) DEFAULT NULL COMMENT 'Фото профиля',
-  `address` varchar(50) DEFAULT NULL COMMENT 'Адрес',
-  `phones` varchar(50) DEFAULT NULL COMMENT 'Контактные телефоны',
-  `email` varchar(50) DEFAULT NULL COMMENT 'Email',
-  `data` varchar(100) DEFAULT NULL COMMENT 'Дополнительные параметры',
-  `cache_data` varchar(255) NOT NULL COMMENT 'Кешированые свойства сотрудника. JOB/ARC:001:NNS:B; RANK:LECTURER; DEGREE:CANDIDATE:MED;',
-  PRIMARY KEY (`id`),
-  KEY `exist` (`exist`),
-  KEY `fio` (`firstname`,`lastname`,`patronymic`),
-  KEY `birthday` (`birthday`),
-  KEY `cache_data` (`cache_data`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Персонал';
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `employees`
---
-
-LOCK TABLES `employees` WRITE;
-/*!40000 ALTER TABLE `employees` DISABLE KEYS */;
-/*!40000 ALTER TABLE `employees` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `files`
@@ -155,32 +63,6 @@ LOCK TABLES `roles` WRITE;
 /*!40000 ALTER TABLE `roles` DISABLE KEYS */;
 INSERT INTO `roles` VALUES (0,'test','test');
 /*!40000 ALTER TABLE `roles` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `specializations`
---
-
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE IF NOT EXISTS `specializations` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `name_rus` varchar(60) CHARACTER SET cp1251 DEFAULT NULL,
-  `name_eng` varchar(60) CHARACTER SET cp1251 DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `name_rus_UNIQUE` (`name_rus`),
-  UNIQUE KEY `name_eng_UNIQUE` (`name_eng`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Специализация';
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `specializations`
---
-
-LOCK TABLES `specializations` WRITE;
-/*!40000 ALTER TABLE `specializations` DISABLE KEYS */;
-INSERT INTO `specializations` VALUES (1,'акушерство и гинекология',NULL),(2,'аллергология и иммунология',NULL),(3,' анестезиология и реаниматология',NULL),(4,' гастроэнтерология',NULL),(5,'гематология',NULL),(6,'генетика',NULL),(7,'гериатрия',NULL),(8,'дерматовенерология',NULL),(9,'детская онкология',NULL),(10,'детская хирургия',NULL),(11,'детская эндокринология',NULL),(12,'диабетология',NULL),(13,'диетология',NULL),(14,'инфекционные болезни',NULL),(15,'кардиология',NULL),(16,'клиническая лабораторная диагностика',NULL),(17,'клиническая фармакология',NULL),(18,'колопроктология',NULL),(19,'лабораторная генетика',NULL),(20,'лечебная физкультура и спорт',NULL),(21,'социальная гигиена, санитария и эпидемиология',NULL),(22,'мануальная терапия',NULL),(23,'неврология',NULL),(24,'нейрохирургия',NULL),(25,'нефрология',NULL),(26,'общая врачебная практика (семейная медицина)',NULL),(27,'онкология',NULL),(28,'оториноларингология',NULL),(29,'офтальмология',NULL),(30,'педиатрия',NULL),(31,'неонатология',NULL),(32,'профпатология',NULL),(33,'психотерапия',NULL),(34,'психиатрия',NULL),(35,'психиатрия-наркология',NULL),(36,'пульмонология',NULL),(37,' радиология',NULL),(38,'рентгенология',NULL),(39,'ревматология',NULL),(40,'рефлексотерапия',NULL),(41,'сексология',NULL),(42,'сердечно-сосудистая хирургия',NULL),(43,'скорая медицинская помощь',NULL),(44,'судебно-медицинская экспертиза',NULL),(45,'сурдология-оториноларингология',NULL),(46,'терапия',NULL),(47,'токсикология',NULL),(48,'торакальная хирургия',NULL),(49,'травматология и ортопедия',NULL),(50,'трансфузиология',NULL),(51,'ультразвуковая диагностика',NULL),(52,'урология',NULL),(53,'физиотерапия',NULL),(54,'фтизиатрия',NULL),(55,'функциональная диагностика',NULL),(56,'хирургия',NULL),(57,'эндокринология',NULL),(58,'эндоскопия',NULL),(59,'бактериология',NULL),(60,'вирусология',NULL),(61,'эпидемиология',NULL),(62,'ортодонтия',NULL),(63,'стоматология детская',NULL),(64,'стоматология терапевтическая',NULL),(65,'стоматология ортопедическая',NULL),(66,'стоматология хирургическая',NULL),(67,'челюстно-лицевая хирургия',NULL),(68,'прочие',NULL),(69,'гипер(гипо)барическая оскигенация',NULL);
-/*!40000 ALTER TABLE `specializations` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -289,8 +171,31 @@ CREATE TABLE IF NOT EXISTS `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (1,'test@test','76a1bd87b1b49ea21ab9a25da7a2d27587f3e0b6f3f833bfb11ba132434f4abd',0,'2014-07-04 03:57:40','192.168.33.1;ng9ka094kt5feka0qp9bbmmtp6');
+INSERT INTO `users` VALUES (1,'test@test','76a1bd87b1b49ea21ab9a25da7a2d27587f3e0b6f3f833bfb11ba132434f4abd',1,'2014-08-01 20:15:36',NULL);
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `users_access`
+--
+
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE IF NOT EXISTS `users_access` (
+  `user_id` int(11) NOT NULL,
+  `name` varchar(15) NOT NULL,
+  `value` varchar(5) NOT NULL DEFAULT '1',
+  UNIQUE KEY `id` (`user_id`,`name`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Права доступа для пользователя';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `users_access`
+--
+
+LOCK TABLES `users_access` WRITE;
+/*!40000 ALTER TABLE `users_access` DISABLE KEYS */;
+/*!40000 ALTER TABLE `users_access` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -302,4 +207,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2014-07-04 12:21:07
+-- Dump completed on 2014-08-01 20:59:36
