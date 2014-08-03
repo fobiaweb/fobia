@@ -1,0 +1,20 @@
+{
+    "name": "fobiaweb/debug",
+    "type": "library",
+    "description": "Fobia Debug Component",
+    "license": "MIT",
+    "require": {
+        "php": ">=5.3.0"
+    },
+    "require-dev": {
+        "psr/log": "~1.0"
+    },
+    "suggest": {
+        "monolog/monolog": ""
+    },
+    "autoload": {
+        "psr-0": { "Fobia\\Debug\\": "" }
+    },
+    "target-dir": "Fobia/Debug",
+    "minimum-stability": "dev"
+}
