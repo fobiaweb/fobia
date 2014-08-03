@@ -12,6 +12,6 @@ return array(
     'smarty.right_delimiter' => '}',
 
     // DataBase
-    'database.dns'      => 'mysql://srv55412_ab@localhost/srv55412_ab',
-    'database.password' => 'abpass',
+    'database.dns'      => 'mysql://root@localhost/database',
+    'database.password' => '',
 );
