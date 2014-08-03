@@ -117,9 +117,8 @@ class MySQL extends ezcDbHandlerMysql
             $this->logger->error('==> [SQL]:: '. $error[1].': '.$error[2]);
 
             if (defined('LOGS_DIR')) {
-                $str = date("[Y-m-d H:i:s]") . " [SQL]:: $query\n"
-                    . "  # Info [time: $dTime]\n"
-                    . "  # Error " . $error[1] . ': ' . $error[2] . "\n";
+                $str = date("[Y-m-d H:i:s]") . " [SQL]:: Error " . $error[1] . ': ' . $error[2] . "\n"
+                        . "  # $query\n";
                 file_put_contents(LOGS_DIR . "/sql.log", $str, FILE_APPEND);
             }
         }
