@@ -6,9 +6,9 @@
  * @copyright  Copyright (c) 2014 Dmitriy Tyurin
  */
 
-namespace Congress\Model;
+namespace Model;
 
-use \Fobia\Model;
+use Fobia\Base\Model;
 
 /**
  * User class - table users
@@ -18,7 +18,7 @@ use \Fobia\Model;
  *
  * @package  Congress.Model
  */
-class User extends \Fobia\Base\Model implements \Fobia\Auth\IUserIdentity
+class User extends Model implements \Fobia\Auth\IUserIdentity
 {
 
     const CLASS_NAME = __CLASS__;

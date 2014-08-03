@@ -6,14 +6,14 @@
  * @copyright  Copyright (c) 2014 Dmitriy Tyurin
  */
 
-namespace Api\Method;
+namespace Fobia\Api\Method;
 
-use Api\Method\Method;
+use Fobia\Api\Method\Method;
 
 /**
  * SearchMethod class
  *
- * @package   Api.Method
+ * @package   Fobia.Api.Method
  */
 abstract class SearchMethod extends Method
 {
@@ -28,27 +28,24 @@ abstract class SearchMethod extends Method
 
         $this->setDefinition(array(
             'name' => 'limit',
-            'mode' => Method::VALUE_OPTIONAL,
             'default' => 10,
         ));
         $this->setDefinition(array(
             'name' => 'offset',
-            'mode' => Method::VALUE_OPTIONAL,
             'default' => 0,
         ));
         $this->setDefinition(array(
             'name' => 'fields',
-            'mode' => Method::VALUE_OPTIONAL,
-            'default' => array(),
-            'parse' => 'parseFields'
+            'default' => array('id'),
+            'parse' => 'parseFields',
+            'assert' => array()
         ));
         $this->setDefinition(array(
             'name' => 'sort',
-            'mode' => Method::VALUE_OPTIONAL,
+            'default' => 'id',
         ));
         $this->setDefinition(array(
             'name' => 'desc',
-            'mode' => Method::VALUE_OPTIONAL,
         ));
     }
 
@@ -59,12 +56,18 @@ abstract class SearchMethod extends Method
 
         if ($p['sort']) {
             $desc = ($p['desc']) ? 'DESC' : 'ASC';
+            $sort = $this->getDefinition('sort');
+            if ($p['sort'] == $sort['default']) {
+                $desc = 'DESC';
+            }
             $this->query->orderBy($p['sort'], $desc);
         }
     }
 
     protected function parseName($name)
     {
+        $name = strtolower($name);
+
         $eng = array("yo", "ts", "ch", "sh", "shch", "yu", "ya", "h");
         $rus = array("е", "ц", "ч", "ш", "щ", "ю", "я", "х");
         $name = str_replace($eng, $rus, $name);

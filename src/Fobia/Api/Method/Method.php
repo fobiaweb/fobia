@@ -6,14 +6,14 @@
  * @copyright  Copyright (c) 2014 Dmitriy Tyurin
  */
 
-namespace Api\Method;
+namespace Fobia\Api\Method;
 
-use Log;
+use Fobia\Debug\Log;
 
 /**
  * Method class
  *
- * @package   Api.Method
+ * @package   Fobia.Api.Method
  */
 abstract class Method
 {
@@ -26,14 +26,21 @@ abstract class Method
     /**
      * Опционально
      */
-    const VALUE_OPTIONAL = 2;
+    const VALUE_ARRAY    = 2;
 
 
     private $params;
+    private $options;
     private $definition;
     private $definitionMergedWithArgs;
     private $ignoreValidationErrors = false;
     private $name;
+
+    /**
+     *
+     * @var \Fobia\Api\Exception\Error
+     */
+    public $exc;
 
     /**
      * @var mixed результат
@@ -43,10 +50,11 @@ abstract class Method
     /**
      * @internal
      */
-    public function __construct($params = null)
+    public function __construct($params = null, $options = null)
     {
-        $this->params = (array) $params;
+        $this->params     = (array) $params;
         $this->definition = array();
+        $this->options    = (array) $options;
 
         $this->configure();
     }
@@ -74,14 +82,19 @@ abstract class Method
         $r = null;
         try {
             $this->initialize();
-            $this->dispatchMethod('execute', func_get_args());
-        } catch (\Api\Exception\Halt $exc) {
+            $execute = $this->getOptions('execute');
+            if (!$execute) {
+                $execute = 'execute';
+            }
+            $this->dispatchMethod($execute, func_get_args());
+        } catch (\Fobia\Api\Exception\Halt $exc) {
             // Halt
-        } catch (\Api\Exception\Error $exc) {
+        } catch (\Fobia\Api\Exception\Error $exc) {
             $this->exc = $exc;
         } catch (\Exception $exc) {
             Log::error("[API]:: Неизвестная ошибка (" . get_class($exc) . ") " . $exc->getMessage());
-            $this->exc = new \Api\Exception\Error("Неизвестная ошибка. (" . get_class($exc) . ")" );
+            $this->exc = new \Fobia\Api\Exception\Error("Неизвестная ошибка. (" . get_class($exc) . ")" );
+            $this->exc->errorOriginal = $exc->getMessage();
         }
 
         if ($this->exc) {
@@ -132,7 +145,8 @@ abstract class Method
                 'err_msg'  => $this->exc->getMessage(),
                 'err_code' => $this->exc->getCode(),
                 'method'   => $this->getName(),
-                'params'   => $this->params
+                'params'   => $this->params,
+                'err_treace' => $this->exc->getTraceAsString()
             );
         } else {
             return null;
@@ -173,7 +187,7 @@ abstract class Method
                 if ($value['default'] !== null) {
                     $args[$key] = $value['default'];
                 } else if ($value['mode'] == self::VALUE_REQUIRED) {
-                    throw new \Api\Exception\BadRequest($key);
+                    throw new \Fobia\Api\Exception\BadRequest($key);
                 }
                 continue;
             }
@@ -191,16 +205,17 @@ abstract class Method
                 if (is_callable($cb)) {
                     $args[$key] = call_user_func_array($cb, $callback_args);
                 } else {
-                    throw new \Api\Exception\ServerError('Не верный формат callable - ' . $cb);
+                    throw new \Fobia\Api\Exception\ServerError('Не верный формат callable - ' . $cb);
                 }
             }
-            foreach ((array) $value['assert'] as $cb) {
+
+            foreach ( (array) $value['assert'] as $cb) {
                 if (is_callable($cb)) {
-                    if ( ! $cb($args[$key])) {
-                        throw new \Api\Exception\BadRequest($key);
+                    if( !call_user_func_array($cb, array($args[$key])) ) {
+                        throw new \Fobia\Api\Exception\BadRequest($key);
                     }
                 } else {
-                    throw new \Api\Exception\ServerError('Не верный формат callable - ' . $cb);
+                    throw new \Fobia\Api\Exception\ServerError('Не верный формат callable - ' . $cb);
                 }
             }
         }
@@ -221,12 +236,19 @@ abstract class Method
      * @param string $name
      * @param array $options
      */
-    protected function setDefinition($name, array $options = array())
+    protected function setDefinition($name, $options = array())
     {
         if (is_array($name)) {
             $options = $name;
             $name = $options['name'];
             unset($options['name']);
+        } elseif ($options === null) {
+            unset($this->definition[$name]);
+            return;
+        } else {
+            if (!is_array($options)) {
+                $options = array();
+            }
         }
 
         $name = trim($name);
@@ -259,8 +281,21 @@ abstract class Method
         $this->definition[$name] = array_merge($options_default, $options);
     }
 
+    protected function setAddDefinition(array $options)
+    {
+        $options_default = array(
+            'name'    => $options[0],
+            'mode'    => $options[1],
+            'default' => $options[2],
+            'parse'   => $options[3],
+            'assert'  => $options[4],
+        );
+        $this->setDefinition($options_default);
+    }
+    
     /**
      * Список определений параметров метода
+     *
      * @return array
      */
     public function getDefinition($name = null)
@@ -272,7 +307,21 @@ abstract class Method
     }
 
     /**
+     * Опции объекта
+     *
+     * @return mixed
+     */
+    protected function getOptions($name = null)
+    {
+        if ($name === null) {
+            return $this->options;
+        }
+        return $this->options[$name];
+    }
+
+    /**
      * Обработаные параметры
+     *
      * @return array
      */
     protected function getDefinitionParams()
@@ -282,6 +331,7 @@ abstract class Method
 
     /**
      * Переданые параметры
+     *
      * @return array
      */
     protected function getParams()

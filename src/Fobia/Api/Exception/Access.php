@@ -6,14 +6,14 @@
  * @copyright  Copyright (c) 2014 Dmitriy Tyurin
  */
 
-namespace Api\Exception;
+namespace Fobia\Api\Exception;
 
 /**
  * Access class
  *
- * @package   Api\Exception
+ * @package   Fobia.Api.Exception
  */
-class Access extends Error implements ApiException
+class Access extends Error implements IApiException
 {
     public function __construct($access)
     {

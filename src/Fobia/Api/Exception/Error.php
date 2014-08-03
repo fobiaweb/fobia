@@ -6,14 +6,15 @@
  * @copyright  Copyright (c) 2014 Dmitriy Tyurin
  */
 
-namespace Api\Exception;
+namespace Fobia\Api\Exception;
 
 /**
  * Exception_Error class
  *
- * @package   Api.Exception
+ * @package   Fobia.Api.Exception
  */
-class Error extends \Exception
+class Error extends \Exception implements IApiException
 {
+    public $errorOriginal;
 }
 

@@ -1,31 +1,31 @@
 <?php
 /**
  * This file is part of API.
- * 
+ *
  * {{name}}.php file
  *
  * @author     Dmitriy Tyurin <fobia3d@gmail.com>
  * @copyright  Copyright (c) 2014 Dmitriy Tyurin
  */
 
- use Api\Method\Method;
+ use Fobia\Api\Method\Method;
 
 /**
- * Метод '{{name}}' 
+ * Метод '{{name}}'
  * --------------------------------------------
  *
- * PARAMS 
+ * PARAMS
  * --------------------------------------------
  *
  *  offset      отступ, необходимый для получения определенного подмножества.
  *  count       количество записей, которые необходимо вернуть.
  *
  *
- * RESULT 
- * -------------------------------------------- 
+ * RESULT
+ * --------------------------------------------
  * Возвращает результат успеха
  *
- * 
+ *
  * @api        {{name}}
  */
 class {{classname}} extends Method
@@ -35,7 +35,13 @@ class {{classname}} extends Method
     {
         $this->setName('{{name}}');
 
-        // $this->setDefinition(array());
+        $this->setDefinition(array(
+            'name'    => "",
+            // 'mode'    => Method::VALUE_REQUIRED,
+            // 'default' => null,
+            // 'parse'   => 'parseFields',
+            // 'assert'  => null
+        ));
     }
 
     protected function execute()

@@ -14,7 +14,14 @@
 class App
 {
 
-    protected static $_instance = array();
+    public static function create($config = null)
+    {
+        if ($config === null) {
+            $config = CONFIG_DIR . '/config.php';
+        }
+        $app = new \Fobia\Base\Application($config);
+        return $app;
+    }
 
     /**
      * @return Fobia\Base\Application
@@ -37,9 +44,7 @@ class App
      */
     public static function Auth()
     {
-        $app = \Fobia\Base\Application::getInstance();
+        $app = self::instance();
         return $app['auth'];
     }
-
-
 }

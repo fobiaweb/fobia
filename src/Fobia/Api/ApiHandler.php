@@ -6,14 +6,14 @@
  * @copyright  Copyright (c) 2014 Dmitriy Tyurin
  */
 
-namespace Api;
+namespace Fobia\Api;
 
-use Log;
+use Fobia\Debug\Log;
 
 /**
  * ApiHandler class
  *
- * @package   Api
+ * @package   Fobia.Api
  */
 class ApiHandler
 {
@@ -44,30 +44,57 @@ class ApiHandler
     {
         $params = (array) $params;
 
+        // Ищем в определениях
         if (array_key_exists($method, $this->apimap)) {
             $map = $this->apimap[$method];
-            $class = array_shift($map);
-            $classMethod = array_shift($map);
         } else {
-            $class = $this->getClass($method);
-            $classMethod = 'invoke';
-            $map = array();
+            Log::notice("[API]:: Method '{$method}' not in map. Start search method class.");
+            $map = array('object', $this->getClass($method));
         }
 
-        if ( ! class_exists($class) || ! method_exists( $class,  $classMethod)) {
+        $options = @$map[2];
+        if(!is_array($options)) {
+            $options = array();
+        }
+        $options["name"] = $method;
+        
+        $class = null;
+        $invoke = "invoke";
+        try {
+            switch ($map[0]) {
+                case 'file':
+                    $class = "\\Fobia\\Api\\Method\\FileMethod";
+                    $options["file"] = $map[1];
+                    break;
+                case 'callable':
+                    $class = "\\Fobia\\Api\\Method\\CallableMethod";
+                    $options["callable"] = $map[1];
+                    break;
+                case 'object':
+                    list($class, $invoke) = explode(":", $map[1]);
+                    if (!$invoke) {
+                        $invoke = "invoke";
+                    }
+                    break;
+                default :
+                    throw new \Fobia\Api\Exception\Error("none type");
+            }
+        } catch (\Exception $exc) {
             return array(
                 'error' => array(
                     'err_msg'  => 'неизвестный метод',
                     'err_code' => 0,
                     'method'   =>  $method,
-                    'params'   =>  $params
+                    'params'   =>  $params,
+                    'err_treace' => $exc->getMessage()
                 )
             );
         }
 
-        $obj = new $class($params);
+        $obj = new $class($params, $options);
         $obj->ignoreValidationErrors();
-        dispatchMethod($obj, $classMethod, $map);
+        $obj->$invoke();
+
         return $obj->getFormatResponse();
     }
 
@@ -83,8 +110,8 @@ class ApiHandler
             return strtoupper($matches[0]);
         }, str_replace('.', '_', $method));
 
-        if ( ! class_exists($class) && $autoload) {
-            Log::warning("Class '$class' not autoloaded");
+        if ( ! class_exists($class) && $this->classDirectory && $autoload ) {
+            Log::warning("[API]:: Class '$class' not autoloaded");
             $list = explode('.', $method);
             array_pop($list);
             array_push($list, $method);
@@ -95,10 +122,10 @@ class ApiHandler
             }
 
             if ( ! class_exists($class) ) {
-                Log::error("Class '$class' not exists.");
+                Log::error("[API]:: Class '$class' not exists.");
             }
         }
-
+        // Log::debug("[API]:: Class '$class'");
         return $class;
     }
 }

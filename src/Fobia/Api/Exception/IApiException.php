@@ -6,7 +6,7 @@
  * @copyright  Copyright (c) 2014 Dmitriy Tyurin
  */
 
-namespace Api\Exception;
+namespace Fobia\Api\Exception;
 
 /**
  * Api exception
@@ -14,9 +14,9 @@ namespace Api\Exception;
  * Исключение характерезуещее немедленый выход из обработки метода,
  * и формирует результат успешного выполнения
  *
- * @package   Api.Exception
+ * @package   Fobia.Api.Exception
  */
-interface ApiException
+interface IApiException
 {
 
 }
