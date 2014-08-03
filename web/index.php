@@ -18,7 +18,7 @@
 //define('REMOTE_SERVER', true);
 
 require_once __DIR__ . '/../app/bootstrap.php';
-$app = new \Fobia\Base\Application( __DIR__ . '/../app/config/config.php' );
+$app = \App::create();
 
 if (REMOTE_SERVER) {
     $app['settings']['database.dns']     = 'mysql://srv55412_ab@localhost/srv55412_ab';

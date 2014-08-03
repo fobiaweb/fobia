@@ -17,7 +17,12 @@ class App
     public static function create($config = null)
     {
         if ($config === null) {
-            $config = CONFIG_DIR . '/config.php';
+            $config = array(
+                'file' => array(
+                    CONFIG_DIR . '/config.php',
+                    CONFIG_DIR . '/config.local.php'
+                )
+            );
         }
         $app = new \Fobia\Base\Application($config);
         return $app;

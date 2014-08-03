@@ -11,8 +11,10 @@ require_once __DIR__ . '/../vendor/autoload.php';
 
 //$cfg = new \Fobia\Base\AutoCfg(CONFIG_DIR);
 //
-//var_dump($cfg['access']);
 //var_dump($cfg['reles']);
 
-$app = new \Fobia\Base\Application(CONFIG_DIR . '/config.php' );
+$app = App::create();
+
+
 var_dump($app['settings']['autoload']['access']);
+var_dump($app['settings']['database']);
