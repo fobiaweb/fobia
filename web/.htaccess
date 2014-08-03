@@ -1,0 +1,49 @@
+DirectoryIndex index.php
+Options -Indexes
+Options +FollowSymLinks
+AddDefaultCharset utf-8
+
+
+# for current work
+<IfModule mod_php5.c>
+    php_value memory_limit 128M
+    php_value max_execution_time 150
+
+    php_flag magic_quotes_gpc Off
+    php_flag session.auto_start Off
+    php_flag magic_quotes_runtime Off
+    php_flag short_open_tag Off
+    php_flag register_globals Off
+
+    php_value request_order GP
+    php_value date.timezone Europe/Moscow
+</IfModule>
+
+
+# handle all queries within main script
+<IfModule mod_rewrite.c>
+    RewriteEngine on
+    #RewriteBase /dev-0.2/
+
+    # # Protect application and system files from being viewed
+    RewriteRule ^(vendor|protected|app)\b.* index.php/$0 [L]
+
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteRule ^([a-z0-9])+(/.*)*$ index.php  [QSA,L]
+    # RewriteRule .* index.php/$0 [PT]
+</IfModule>
+
+
+# Protect hidden files from being viewed
+<Files .*>
+    Order Allow,Deny
+    Deny From All
+</Files>
+
+
+
+#AuthType Basic
+#AuthName "Private zone. Only for administrator!"
+#AuthUserFile  /srv/fobiaweb/fobia/web/.htpasswd
+#require valid-user
+

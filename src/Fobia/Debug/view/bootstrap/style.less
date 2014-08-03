@@ -1,0 +1,91 @@
+#ac-logger-switch {
+    position: fixed;
+    background: #FF0000;
+    top: 5px;
+    right: 5px;
+    width: 30px;
+    height: 15px;
+    z-index: 1000001;
+    cursor: pointer;
+}
+
+// LOGGER
+#ac-logger {
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    z-index: 1000000;
+    font: 9px Tahoma, Geneva, sans-serif;
+    border-bottom: 3px solid black;
+    height: 60%;
+    width: 100%;
+    display: none;
+
+    div.content {
+        background: #CCC;
+        overflow: auto;
+        width: 100%;
+        height: 100%;
+    }
+    table tr {
+        font-family: monospace;
+        font-size: 11px;
+    }
+    thead {
+        background: #666;
+        tr th {
+            vertical-align: top;
+            white-space: pre;
+            font-weight: bold;
+            text-align: left;
+        }
+        tr td {
+            vertical-align: top;
+            text-align: left;
+        }
+    }
+    tr {
+        .number {
+            color: #888a85;
+        }
+        .time {
+            color: #f57900;
+        }
+        .category {
+            color: #4e9a06;
+        }
+        .level {
+            color: #578ed5;
+            /* color: #3465a4; */
+        }
+        .messag {
+            color: #888a85;
+        }
+    }
+    tr.error {
+        background: #ffb3b3;
+    }
+    tr.warning {
+        background: #e9d5ab;
+    }
+    tr.notice {
+        background: #dff0d8;
+    }
+    tr.info {
+        background: #d9edf7;
+    }
+    tr.debug {
+        // background: #e9d5ab;
+    }
+    tr.dump {
+        /* background-color: rgb(163, 163, 163); */
+    }
+}
+
+// CVarDump
+.debug-cvardumper {}
+.debug-cvardumper .string { color: #C00; }
+.debug-cvardumper .comment { color: #888A85; }
+.debug-cvardumper .keyword { color: #4E9A06; }
+.debug-cvardumper .default { color: #3465A4; }
+.debug-cvardumper .html {}

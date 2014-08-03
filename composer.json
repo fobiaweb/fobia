@@ -1,0 +1,42 @@
+{
+    "name": "fobiaweb/fobia",
+    "type": "library",
+    "license": "MIT",
+    "repositories": [
+        {
+            "type": "composer",
+            "url": "http://faclib.github.io/packages/p/smarty"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.0",
+        "fobiaweb/slim": "3.0.0",
+        "fobiaweb/ezc-base": "1.*",
+        "fobiaweb/ezc-database": "1.*",
+        "pimple/pimple": "2.0.0",
+        "monolog/monolog": "~1",
+        "symfony/console": "~2.5",
+        "symfony/debug": "~2.5",
+        "symfony/filesystem": "~2.5",
+        "symfony/yaml": "~2.5"
+    },
+    "require-dev": {
+        "fobiaweb/php-helper-lib": "dev-master",
+        "smarty/smarty": "3.1.18",
+        "twig/twig": "1.*"
+    },
+    "autoload": {
+        "psr-0": {
+            "": [
+                "src/",
+                "app/classes/"
+            ]
+        },
+        "classmap": [
+            "app/classes/Api"
+        ],
+        "files": [
+            "app/bootstrap.php"
+        ]
+    }
+}

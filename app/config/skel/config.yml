@@ -1,0 +1,74 @@
+#
+# WARNING! Предпологаеться, что все значения установлены в коректном для них типе
+# Этоn файл не проверяеться на коректность. В случии неверной установки конфигурации
+# результат может быть плочевным!
+#
+# Все пути указываються относительно BASE_DIR см. README
+
+webroot: html
+# путь до сайта. Начинаеться со слеша.
+# т.е cke;bn lkz преобразования в http://X.X.X.X/webpath
+webpath:
+#
+# Соединение с базой данных
+database:
+    # driver: mysql
+    dns: 'mysql://root@localhost/test'
+#    hostspec]: localhost
+#    database: test
+#    username: root
+    password:
+    charset: utf8
+
+#
+# Параметры класса БД
+database.params:
+    log:        true
+    debug:      true
+
+# Application mode (production, development, testing)
+mode:  development
+# Encryption
+crypt.key:  'A9s_lWeIn7cML8M]S6Xg4aR^GwovA&UN'
+crypt.method: sha256
+
+# Директория шаблонов
+templates.path: /var/www/templates
+# Логер
+debug: true
+# Директория логов
+# log.path: logs LOGS_DIR
+log.enabled: true
+log.level:   100
+
+# # App config
+# # -------------------------------------------------------
+
+# Требуемые автоматически подгружаемые файлы конфигураций в соответствующую
+# директиву app.{use}
+app.autoload:
+    cdr: cdr.yml
+    monitor: monitor.php
+    supervisor: supervisor.php
+
+
+
+
+# # -------------------------------------------------------
+# # System
+# # -------------------------------------------------------
+
+view:  null
+# Cookies
+cookies.encrypt:  false
+cookies.lifetime:  '20 minutes'
+cookies.path:  '/'
+cookies.domain:  null
+cookies.secure:  false
+cookies.httponly:  false
+# Session
+session.handler:  null
+session.flash_key:  'slimflash'
+session.encrypt:  false
+# HTTP
+http.version:  '1.1'

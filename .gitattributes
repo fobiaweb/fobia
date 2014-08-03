@@ -1,0 +1,21 @@
+# Disable LF normalization for all files
+*           -crlf
+.*          eol=lf
+
+*.sh        eol=lf
+*.md        eol=lf
+*.jpeg      binary
+*.jpeg      binary
+*.gif       binary
+*.png       binary
+
+# Игнорим сливание, оставляем всегда текущий
+config/config.yml   merge=ours
+
+# Игнорим файлы при билде
+.git          export-ignore
+
+
+LAST_COMMIT   export-subst
+LAST_COMMIT   ident
+LAST_COMMIT   filter=dater
