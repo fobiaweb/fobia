@@ -99,7 +99,12 @@ class Application extends \Slim\App
      */
     public function __construct($userSettings = null)
     {
-        $configDir = '.';
+        defined('SYSPATH') or trigger_error("Не определена константа 'SYSPATH'.", E_USER_WARNING);
+        defined('SRC_DIR') or trigger_error("Не определена константа 'SRC_DIR'.", E_USER_WARNING);
+        defined('HTML_DIR') or trigger_error("Не определена константа 'HTML_DIR'.", E_USER_WARNING);
+        defined('LOGS_DIR') or trigger_error("Не определена константа 'LOGS_DIR'.", E_USER_WARNING);
+        defined('CACHE_DIR') or trigger_error("Не определена константа 'CACHE_DIR'.", E_USER_WARNING);
+        defined('CONFIG_DIR') or trigger_error("Не определена константа 'CONFIG_DIR'.", E_USER_WARNING);
 
         // Пользовательские настройки
         // --------------------------
@@ -385,7 +390,7 @@ class Application extends \Slim\App
         echo $e->xdebug_message;
         //parent::defaultError($e);
         //
-        
+
             if ($e instanceof \Exception) {
                 $code = $e->getCode();
                 $message = $e->getMessage();
