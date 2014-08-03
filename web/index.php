@@ -43,6 +43,18 @@ $app->get('/info', function() use($app) {
 
 </form>
 HTML;
+    echo "\n<hr>\n";
+    $req = $app->request;
+    /* @var $req \Slim\Http\Request */
+    echo BR ."getHost: " . $req->getHost();
+    echo BR ."getPath: " . $req->getPath();
+    echo BR ."getPathInfo: " . $req->getPathInfo();
+    echo BR ."getQueryString: " . $req->getQueryString();
+    echo BR ."getReferer: " . $req->getReferer();
+    echo BR ."getReferrer: " . $req->getReferrer();
+    echo BR ."getScheme: " . $req->getScheme();
+    echo BR ."getScriptName: " . $req->getScriptName();
+    echo BR ."getUrl: " . $req->getUrl();
 })->via('GET', 'POST');
 
 

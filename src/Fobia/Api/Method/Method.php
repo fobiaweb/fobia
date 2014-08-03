@@ -97,6 +97,8 @@ abstract class Method
             $this->exc->errorOriginal = $exc->getMessage();
         }
 
+        $this->log();
+
         if ($this->exc) {
             Log::error("[API]:: (" . get_class($this->exc) . ") " . $this->exc->getMessage());
             if (!$this->ignoreValidationErrors) {
@@ -292,7 +294,7 @@ abstract class Method
         );
         $this->setDefinition($options_default);
     }
-    
+
     /**
      * Список определений параметров метода
      *
@@ -342,6 +344,27 @@ abstract class Method
     protected function setName($name)
     {
         $this->name = $name;
+    }
+
+    protected function log()
+    {
+        $app = \Fobia\Base\Application::getInstance();
+        $login = $app->auth->getLogin();
+        if (!$login) {
+            $login = 'guest';
+        }
+        $str = "[".date(\CDateTime::ATOM)."]"
+                . " - " .$app->request->getClientIp()
+                // . " - " . $app->request->getPath() . "?" . $app->request->getQueryString()
+                . " - " . $login
+                . " - " . $this->getName()
+                . " " . json_encode($this->getDefinitionParams())
+                . PHP_EOL
+                ;
+
+        $file = LOGS_DIR . '/api.log';
+
+        file_put_contents($file, $str, FILE_APPEND);
     }
 
     public function getName()
