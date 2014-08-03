@@ -172,6 +172,12 @@ class Application extends \Slim\App
         }
         unset($autoload, $cfg, $file);
 
+        //$this['settings']['autoload'] = function($c) {
+            $config = new AutoloadConfig(CONFIG_DIR);
+            $config->setKeys($this['settings']['app']['autoload']);
+            $this['settings']['autoload'] =  $config;
+        //};
+
         // Session
         //  session.gc_maxlifetime = 1440
         //  ;setting session.gc_maxlifetime to 1440 (1440 seconds = 24 minutes):
