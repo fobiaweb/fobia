@@ -13,7 +13,9 @@
  */
 class App
 {
-
+    /**
+     * @return Fobia\Base\Application
+     */
     public static function create($config = null)
     {
         if ($config === null) {

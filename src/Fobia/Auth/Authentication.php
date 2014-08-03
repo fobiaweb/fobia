@@ -315,10 +315,12 @@ class Authentication
         }
         
         // $rows = array();
-        if ($stmt = $db->query("SELECT name, value FROM users_access_1 WHERE user_id = '{$this->getId()}'")) {
-            $rows = $stmt->fetchAll();
-            foreach ($rows as $value) {
-                $this->user->access[$value['name']] = $value['value'];
+        if ($this->isRole(4 /* override */) || $this->isAccess('override')) {
+            if ($stmt = $db->query("SELECT name, value FROM users_access WHERE user_id = '{$this->getId()}'")) {
+                $rows = $stmt->fetchAll();
+                foreach ($rows as $value) {
+                    $this->user->access[$value['name']] = $value['value'];
+                }
             }
         }
     }

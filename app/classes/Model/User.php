@@ -34,7 +34,7 @@ class User extends Model implements \Fobia\Auth\IUserIdentity
         return $this->id;
     }
 
-    public function getName()
+    public function getUsername()
     {
         return $this->login;
     }

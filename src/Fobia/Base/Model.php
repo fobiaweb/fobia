@@ -55,6 +55,11 @@ abstract class Model // extends \Slim\Collection
         return ($name !== null) ? $class::$_rules[$name] : $class::$_rules;
     }
 
+    /**
+     * Название первичного ключа
+     *
+     * @return string
+     */
     public function getPrimaryKey()
     {
         $class = get_class($this);
