@@ -8,7 +8,7 @@
 
 namespace Controller;
 
-use Log;
+use Fobia\Debug\Log;
 
 /**
  * ApiController class

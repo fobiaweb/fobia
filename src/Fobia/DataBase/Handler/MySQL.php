@@ -98,7 +98,7 @@ class MySQL extends ezcDbHandlerMysql
      *
      * @param \Fobia\DataBase\DbStatement|string $stmt
      * @param mixed $time
-     * @return \Psr\Log\LoggerInterface 
+     * @return \Psr\Log\LoggerInterface
      */
     public function log($stmt, $time)
     {

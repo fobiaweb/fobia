@@ -8,6 +8,8 @@
 
 namespace Fobia\Base;
 
+use Fobia\Debug\Log;
+
 /**
  * AutoloadConfig class
  *
