@@ -1,0 +1,25 @@
+#!/bin/bash
+set -e
+
+DIR=$( cd $( dirname "${BASH_SOURCE[0]}" ) && pwd )
+cd "$DIR/.."
+
+CLASS_FILE="$1"
+
+
+NAMESPACE=$(grep -P '^namespace [^;]+' "${CLASS_FILE}" | sed -e 's/namespace //' -e 's/;//')
+CLASS_NAME=$(grep -P '^class [^ ]+' "${CLASS_FILE}" | sed -e 's/class //' -e 's/ .*//')
+
+echo "$NAMESPACE\\$CLASS_NAME";
+echo "tests\units\\${NAMESPACE}\\${CLASS_NAME}Test.php"
+echo;
+mkdir -p "tests\units\\${NAMESPACE}"
+
+phpunit-skelgen generate-test \
+    "--bootstrap=tests/bootstrap.php" \
+    "$NAMESPACE\\$CLASS_NAME" \
+    "${CLASS_FILE}" \
+    "$NAMESPACE\\${CLASS_NAME}Test" \
+    "tests/units/${NAMESPACE}/${CLASS_NAME}Test.php"
+
+

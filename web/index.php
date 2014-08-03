@@ -71,8 +71,8 @@ $app->route('/auth',   'AuthController:auth')->via('GET');
 $app->route('/api/:method',   'ApiController:index')->via('ANY');
 
 $app->hook('slim.after', function() use($app) {
-    Log::info(\Fobia\Base\Utils::resourceUsage());
-    $l = Log::getLogger();
+    \Fobia\Debug\Log::info(\Fobia\Base\Utils::resourceUsage());
+    $l = \Fobia\Debug\Log::getLogger();
     $logtxt = $l->render();
     $app->response->write($logtxt);
 

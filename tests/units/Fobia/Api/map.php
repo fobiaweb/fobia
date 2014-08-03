@@ -1,14 +1,11 @@
 <?php
 /**
- * Log.php file
+ * map.php file
  *
  * @author     Dmitriy Tyurin <fobia3d@gmail.com>
  * @copyright  Copyright (c) 2014 Dmitriy Tyurin
  */
-/*
-class Log extends \Fobia\Debug\Log
-{
-    
-}
- * 
- */
+
+return array(
+    'test.one' => array('file', __DIR__ . '/apiMethods/test.one.php')
+);

@@ -55,6 +55,10 @@ abstract class Method
         $this->params     = (array) $params;
         $this->definition = array();
         $this->options    = (array) $options;
+        
+        if ($this->options['name']) {
+            $this->name = $this->options['name'];
+        }
 
         $this->configure();
     }
@@ -159,6 +163,8 @@ abstract class Method
      * Ignores validation errors.
      *
      * This is mainly useful for the help command.
+     *
+     * @return void
      */
     public function ignoreValidationErrors()
     {
@@ -167,6 +173,8 @@ abstract class Method
 
     /**
      * Configures the current command.
+     *
+     * @return void
      */
     protected function configure()
     {
@@ -175,13 +183,15 @@ abstract class Method
 
     /**
      * Initializes the command just after the input has been validated.
+     *
+     * @return void
      */
     protected function initialize()
     {
         $params     = $this->params;
         $definition = $this->definition;
-
         $args = array();
+
         foreach ($definition as $key => $value) {
             if (array_key_exists($key, $params)) {
                 $args[$key] = $params[$key];
@@ -283,16 +293,22 @@ abstract class Method
         $this->definition[$name] = array_merge($options_default, $options);
     }
 
+    /**
+     * Устанавить атрибуты параметру
+     * # array (name, mode, default, parse, assert)
+     *
+     * @param array $options
+     */
     protected function setAddDefinition(array $options)
     {
-        $options_default = array(
+        $options_set = array(
             'name'    => $options[0],
-            'mode'    => $options[1],
-            'default' => $options[2],
-            'parse'   => $options[3],
-            'assert'  => $options[4],
+            'mode'    => @$options[1],
+            'default' => @$options[2],
+            'parse'   => @$options[3],
+            'assert'  => @$options[4],
         );
-        $this->setDefinition($options_default);
+        $this->setDefinition($options_set);
     }
 
     /**
@@ -367,6 +383,11 @@ abstract class Method
         file_put_contents($file, $str, FILE_APPEND);
     }
 
+    /**
+     * Название метода
+     *
+     * @return string
+     */
     public function getName()
     {
         if ($this->name) {

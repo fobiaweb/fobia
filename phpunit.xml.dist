@@ -13,7 +13,7 @@
 
     <testsuites>
        <testsuite name="fobia">
-         <directory suffix="Test.php">tests</directory>
+         <directory suffix="Test.php">tests/units</directory>
        </testsuite>
     </testsuites>
 

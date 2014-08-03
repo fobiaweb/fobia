@@ -4,21 +4,21 @@
  *
  * @author     Dmitriy Tyurin <fobia3d@gmail.com>
  * @copyright  Copyright (c) 2014 Dmitriy Tyurin
- * 
+ *
  * The MIT License (MIT)
  *
  * Copyright (c) 2014 Dmitriy Tyurin
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in all
  * copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -34,17 +34,18 @@ if (defined('TEST_BOOTSTRAP_FILE')) {
 define('TEST_BOOTSTRAP_FILE', true);
 
 
-$autoloadFile = __DIR__ . '/../vendor/autoload.php';
+$autoloadFile = dirname(__FILE__ ) . '/../vendor/autoload.php';
 if (!file_exists($autoloadFile)) {
+    echo __FILE__. PHP_EOL;
+    echo $autoloadFile . PHP_EOL;
     throw new RuntimeException('Установите зависимости для запуска PHPUnit.');
 }
-require_once $autoloadFile;
+$loader = require_once $autoloadFile;
 unset($autoloadFile);
 
 
-$loader = new \Composer\Autoload\ClassLoader();
-$loader->add('', 'tests');
-$loader->register();
+/* @var $loader \Composer\Autoload\ClassLoader */
+$loader->add('', __DIR__ . '/units');
 
 // TODO: check include path INCLUDE_PATH%
 // ini_set('include_path', ini_get('include_path'));

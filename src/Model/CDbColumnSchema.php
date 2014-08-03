@@ -9,17 +9,17 @@ class CDbColumnSchema
 {
 
     /**
-     * @var string name of this column (without quotes).
+     * @var string Имя этого столбца (без кавычек).
      */
     public $name;
 
     /**
-     * @var string raw name of this column. This is the quoted name that can be used in SQL queries.
+     * @var string сырье название этой колонки. Это указано название, которое может быть использовано в запросах SQL.
      */
     public $rawName;
 
     /**
-     * @var boolean whether this column can be null.
+     * @var boolean может ли эта колонка быть пустым.
      */
     public $allowNull;
 
@@ -134,7 +134,7 @@ class CDbColumnSchema
      */
     public function typecast($value)
     {
-        if (gettype($value) === $this->type || $value === null || $value instanceof CDbExpression) {
+        if (gettype($value) === $this->type || $value === null || $value instanceof \Expression) {
             return $value;
         }
         if ($value === '' && $this->allowNull) {
