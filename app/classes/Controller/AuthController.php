@@ -54,10 +54,7 @@ class AuthController extends Controller
         //$auth['page'] += 1;
         //$app['session']['auth'] = $auth;
 
-        // $app['auth']->setOnline();
-        // dump($app['session']);
-        \App::Auth()->readAccess();
-        // \App::Auth()->getUser()->access = array(        );
+
         dump(\App::Auth()->getUser());
 
 

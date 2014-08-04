@@ -30,7 +30,7 @@ class Authentication
     const STATUS_AUTH_NONE          = 'AUTH_NONE';
     const STATUS_AUTH_INCORRECT     = 'AUTH_INCORRECT';
     const STATUS_AUTH_OK            = 'AUTH_OK';
-    
+
     /**
      * @var Fobia\Base\Application
      */
@@ -95,7 +95,7 @@ class Authentication
             $this->logger = new \Psr\Log\NullLogger();
         }
     }
-    
+
     /********************************************************************************
      * USER Methods
      * ***************************************************************************** */
@@ -163,9 +163,9 @@ class Authentication
     public function isRole($role)
     {
         if (!is_numeric($role)) {
-            
+
         }
-        return (($this->user) && ($this->getRoles() & (int) $role)) 
+        return (($this->user) && ($this->getRoles() & (int) $role))
             ? true
             : false;
     }
@@ -243,7 +243,7 @@ class Authentication
                 exit('error');
             }
         }
-        
+
         $this->app['session']['auth'] = array();
 
         $this->user = null;
@@ -276,7 +276,7 @@ class Authentication
 
     /**
      * Проверка сессии на принадлежнасть текущей сесии
-     * 
+     *
      * @param string $userSid сесия в формате 'IP;SID'
      * @return boolean
      */
@@ -291,7 +291,7 @@ class Authentication
     }
 
     /**
-     * @return void 
+     * @return void
      */
     public function readAccess()
     {
@@ -302,27 +302,30 @@ class Authentication
             $access = include $file;
         }
 
-        $roles = array_keys($access);
-        foreach ($roles as $role) {
-            if ($this->isRole($role)) {
-                foreach ($access[$role]['list'] as $a) {
+        // $roles = array_keys($access);
+        foreach ($access as $key => $role) {
+            if ($this->isRole($role['mask'])) {
+                foreach ($access[$key]['list'] as $a) {
                     $this->user->access[$a] = 1;
                 }
-                foreach ($access[$role]['value'] as $a => $v) {
+                foreach ($access[$key]['value'] as $a => $v) {
                     $this->user->access[$a] = $v;
                 }
             }
         }
-        
+
         // $rows = array();
         if ($this->isRole(4 /* override */) || $this->isAccess('override')) {
             if ($stmt = $db->query("SELECT name, value FROM users_access WHERE user_id = '{$this->getId()}'")) {
-                $rows = $stmt->fetchAll();
-                foreach ($rows as $value) {
-                    $this->user->access[$value['name']] = $value['value'];
+                if ($rows = $stmt->fetchAll()) {
+                    foreach ($rows as $value) {
+                        $this->user->access[$value['name']] = $value['value'];
+                    }
                 }
             }
         }
+
+        $this->logger->debug('[authenticate]:: read user Access');
     }
 
     /**
@@ -343,7 +346,7 @@ class Authentication
         $q->update($this->tableName)
                 ->set($this->map['online'], 'NOW()')
                 ->where($q->expr->eq($this->map['id'], $db->quote($id)));
-        
+
         if (@$this->map['sid'] && $sid) {
             $sid = $this->app->request->getClientIp() . ';' . session_id();
             $q->set($this->map['sid'], $db->quote($sid));
@@ -353,6 +356,7 @@ class Authentication
         if ($q->prepare()->execute()) {
             $_a = $this->app->session['auth'];
             $_a['online'] = time();
+            $_a['user'] = $this->user;
             $this->app->session['auth'] = $_a;
         }
 
@@ -362,22 +366,24 @@ class Authentication
     /**
      * Механизм индетификации
      *
-     * @return void 
+     * @return void
      */
     public function authenticate()
     {
         if ($this->status !== self::STATUS_AUTH_NONE) {
             return;
         }
-        
+
         if ( ! is_array($this->app->session['auth']) ) {
             $this->app->session['auth'] = array();
         }
         $this->status = self::STATUS_AUTH_INCORRECT;
-        
+
         $login    = $this->app->session['auth']['login'];
         $password = $this->app->session['auth']['password'];
         $online   = $this->app->session['auth']['online'];
+        // $this->user = $this->app->session['auth']['user'];
+
         $this->logger->debug('[authenticate]:: start ', $this->app->session['auth']);
 
         if ($this->cacheAuth) {
@@ -385,6 +391,7 @@ class Authentication
             if ($d_time < $this->dTime) {
                 $this->user = $this->app->session['auth']['user'];
                 $this->status = self::STATUS_AUTH_OK;
+                $this->logger->debug("[authenticate]:: Login from session; online: $online ($this->cacheAuth)");
             } else {
                 $this->user = null;
             }
@@ -395,13 +402,17 @@ class Authentication
                 if ($this->map['sid']) {
                     if ($this->checkSidAuth($user->{$this->map['sid']})) {
                         $this->user = $user;
+                        $this->readAccess();
                         $this->setOnline();
+                        $this->status = self::STATUS_AUTH_OK;
                     } else {
                         $this->status = self::STATUS_SESSION_INCORRECT;
                     }
                 } else {
                     $this->user = $user;
+                    $this->readAccess();
                     $this->setOnline();
+                    $this->status = self::STATUS_AUTH_OK;
                 }
             } else {
                 $this->status = self::STATUS_USERNAME_INCORRECT;
