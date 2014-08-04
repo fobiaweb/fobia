@@ -22,6 +22,7 @@
     },
     "require-dev": {
         "fobiaweb/php-helper-lib": "dev-master",
+        "fobiaweb/slim-views": "dev-master",
         "smarty/smarty": "3.1.18",
         "twig/twig": "1.*"
     },

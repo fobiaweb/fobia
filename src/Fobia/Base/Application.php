@@ -308,9 +308,10 @@ class Application extends \Slim\App
             . $this['settings']['controller.action_suffix'];
 
         // Class name
-        $class =  $this['settings']['controller.prefix']
-            . $class
-            . $this['settings']['controller.suffix'];
+        if (substr($class, 0, 1) != '\\') {
+            $class =  $this['settings']['controller.prefix']. $class;
+        }
+        $class .= $this['settings']['controller.suffix'];
         $class = str_replace('.', '_', $class);
 
         // Class arguments
@@ -414,6 +415,7 @@ class Application extends \Slim\App
             $dispatched = false;
             $matchedRoutes = $this['router']->getMatchedRoutes($request->getMethod(), $request->getPathInfo(), true);
             foreach ($matchedRoutes as $route) {
+                // dump($matchedRoutes);
                 /* @var $route \Slim\Route */
                 try {
                     $this->applyHook('slim.before.dispatch');
@@ -434,6 +436,18 @@ class Application extends \Slim\App
         } catch (\Slim\Exception\Stop $e) {}
         $response->write(ob_get_clean());
         $this->applyHook('slim.after');
+    }
+
+    public function clearRouter()
+    {
+        $routeArr = $app['router']->getNamedRoutes();
+        unset($app['router']);
+        $app['router'] = function ($c) {
+            return new \Slim\Router();
+        };
+        foreach ($routeArr as $route) {
+            $app['router']->map($route);
+        }
     }
 
 }

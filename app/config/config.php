@@ -12,8 +12,8 @@ return array(
     // Вьюшки, Директория шаблонов
     'templates.path' => 'app/view',
     'view' => null,
-    'smarty.left_delimiter'  => '{{',
-    'smarty.right_delimiter' => '}}',
+    'smarty.left_delimiter'  => '{',
+    'smarty.right_delimiter' => '}',
 
     // Логер
     'debug'       => true,
@@ -44,8 +44,6 @@ return array(
 
     // DataBase
     'database.dns'     => 'mysql://root@localhost/test',
-    // 'database.dns'     => 'mysql://srv55412_ab@localhost/srv55412_ab',
-    // 'database.password'     => 'abpass',
     'database.charset' => 'utf8',
 
     // Controller

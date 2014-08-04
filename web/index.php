@@ -55,12 +55,26 @@ HTML;
     echo BR ."getScheme: " . $req->getScheme();
     echo BR ."getScriptName: " . $req->getScriptName();
     echo BR ."getUrl: " . $req->getUrl();
+    echo "<hr>";
+
+    // Router
+    $routeArr = $app['router']->getNamedRoutes();
+    unset($app['router']);
+    $app['router'] = function ($c) {
+        return new \Slim\Router();
+    };
+    foreach ($routeArr as $route) {
+        $app['router']->map($route);
+    }
+
+    // dump( $app['router'] );
 })->via('GET', 'POST');
 
 
 
 //$app->route('/', '\Fobia\Base\Controller:index' )->via('GET');
-$app->route('/error', '\Fobia\Base\Controller:errorAction' )->via('GET');
+$app->route('/error', '\Fobia\Base\Controller:errorAction' )->via('GET')->name('error');
+$app->route('/error', '\Fobia\Base\Controller:index' )->via('GET');
 
 // Auth
 $app->route('/login',  'AuthController:login')->via('GET', 'POST');
