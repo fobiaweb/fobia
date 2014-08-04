@@ -7,7 +7,8 @@
  */
 return array(
     // root
-    1  => array(
+    'root'  => array(
+        'mask'  => 1,
         'list'  => array(
             'ACCESS_1',
             'ACCESS_2'
@@ -22,7 +23,8 @@ return array(
         'value' => array(),
     ),
     // override
-    4  => array(
+    'override'  => array(
+        'mask'  => 4,
         'list'  => array(),
         'value' => array(),
     ),
@@ -32,12 +34,14 @@ return array(
         'value' => array(),
     ),
     // admin
-    16 => array(
+    'admin' => array(
+        'mask' => 16,
         'list'  => array(),
         'value' => array(),
     ),
     // user
-    32 => array(
+    'user' => array(
+        'mask' => 32,
         'list'  => array(),
         'value' => array(),
     ),
