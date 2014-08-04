@@ -23,7 +23,7 @@ class AuthController extends Controller
 
         if ($app->request->isGet()) {
             if ( $app['auth']->hasIdentity() ) {
-                $app->redirect($app->urlFor('base') . 'auth?r=' . rand());
+                $app->redirect($app->urlForBase('/auth?r=' . rand()));
             }
             include SRC_DIR . '/view/login.php';
         }
@@ -32,7 +32,7 @@ class AuthController extends Controller
             $login = $app->request->post('login');
             $password = $app->request->post('pass');
             $app->auth->login($login, $password);
-            $app->redirect($app->urlFor('base') . 'login?r=' . rand());
+            $app->redirect($app->urlForBase('/login?r=' . rand()));
         }
     }
 
@@ -40,7 +40,7 @@ class AuthController extends Controller
     {
         $app = \App::instance();
         $app['auth']->logout();
-        $app->redirect($app->urlFor('base') . 'login?r=' . rand());
+        $app->redirect($app->urlForBase('/login?r=' . rand()));
     }
 
     public function auth()

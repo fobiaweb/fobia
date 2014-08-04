@@ -58,7 +58,7 @@ class ApiHandler
             $map = $this->apimap[$method];
         } else {
             Log::notice("[API]:: Method '{$method}' not in map. Start search method class.");
-            $map = array('object', $this->getClass($method));
+            $map = array('class', $this->getClass($method));
         }
 
         $options = @$map[2];
@@ -77,6 +77,7 @@ class ApiHandler
                 case 'callable':
                     $obj = \Fobia\Api\Method\CallableMethod($map[1], $params, $options);
                     break;
+                case 'class':
                 case 'object':
                     list($class, $invoke) = explode(":", $map[1]);
                     if (!$invoke) {

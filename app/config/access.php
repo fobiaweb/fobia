@@ -17,22 +17,14 @@ return array(
             'ACCESS_3' => 11
         )
     ),
-    // ---
-    2 => array(
-        'list'  => array(),
-        'value' => array(),
-    ),
+    // 2 ---
     // override
     'override'  => array(
         'mask'  => 4,
         'list'  => array(),
         'value' => array(),
     ),
-    // ---
-    8 => array(
-        'list'  => array(),
-        'value' => array(),
-    ),
+    // 8 ---
     // admin
     'admin' => array(
         'mask' => 16,
@@ -46,22 +38,8 @@ return array(
         'value' => array(),
     ),
     // library
-    64 => array(
-        'list'  => array(),
-        'value' => array(),
-    ),
-    // ---
-    128 => array(
-        'list'  => array(),
-        'value' => array(),
-    ),
-    // ---
-    256 => array(
-        'list'  => array(),
-        'value' => array(),
-    ),
-    // ---
-    512 => array(
+    'library' => array(
+        'mask'  => 64,
         'list'  => array(),
         'value' => array(),
     ),

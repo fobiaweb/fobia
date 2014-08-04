@@ -343,6 +343,7 @@ class Authentication
         $q->update($this->tableName)
                 ->set($this->map['online'], 'NOW()')
                 ->where($q->expr->eq($this->map['id'], $db->quote($id)));
+        
         if (@$this->map['sid'] && $sid) {
             $sid = $this->app->request->getClientIp() . ';' . session_id();
             $q->set($this->map['sid'], $db->quote($sid));

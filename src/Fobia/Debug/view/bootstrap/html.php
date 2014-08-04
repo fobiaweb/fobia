@@ -10,7 +10,7 @@
 
 ?>
 <style>
-<?php echo file_get_contents(__DIR__ . '/style.css'); ?>
+<?php echo file_get_contents(dirname(__FILE__) . '/style.css'); ?>
 </style>
 
 
@@ -50,7 +50,7 @@
 </div>
 <script>
 <?php
-echo file_get_contents(__DIR__ . '/debug.js');
+echo file_get_contents(dirname(__FILE__)  . '/debug.js');
 ?>
 
 </script>

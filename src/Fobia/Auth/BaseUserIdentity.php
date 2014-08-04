@@ -1,6 +1,6 @@
 <?php
 /**
- * User class  - User.php file
+ * BaseUserIdentity class  - BaseUserIdentity.php file
  *
  * @author     Dmitriy Tyurin <fobia3d@gmail.com>
  * @copyright  Copyright (c) 2014 Dmitriy Tyurin
@@ -13,7 +13,7 @@ namespace Fobia\Auth;
  *
  * @package   Fobia.Auth
  */
-class User extends \Fobia\Base\Model implements IUserIdentity
+class BaseUserIdentity extends \Fobia\Base\Model implements IUserIdentity
 {
 
     public $access = array();
@@ -116,5 +116,67 @@ class User extends \Fobia\Base\Model implements IUserIdentity
                 }
             }
         }
+    }
+
+    /**
+     * Тупо проверка верного логиа и пароля
+     *
+     * @param string $login
+     * @param string $passhex hex string
+     * @return mixed
+     * @api
+     */
+    public function checkLogin()
+    {
+        $db = \Fobia\Base\Application::getInstance()->db;
+        $q  = $db->createSelectQuery();
+        $e  = $q->expr;
+
+        // SELECT * FROM users WHERE login = 'user' AND password = 'pass' LIMIT 1
+        $q->select('*')->from($this->tableName)
+                ->where($e->eq($this->map['login'],
+                               $db->quote($this->getUsername())))
+                ->where($e->eq($this->map['password'],
+                               $db->quote($this->getPassword())))
+                ->limit(1);
+        $stmt = $q->prepare();
+        if ($stmt->execute()) {
+            if ($result = $stmt->fetch(\PDO::FETCH_ASSOC)) {
+                foreach ($row as $key => $value) {
+                    $this->$key = $value;
+                }
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Устанавливает флаг в online
+     *
+     * @return void
+     */
+    public function setOnline($sid = null)
+    {
+        $id = $this->getId();
+        $db = \Fobia\Base\Application::getInstance()->db;
+        $q  = $db->createUpdateQuery();
+
+        $q->update($this->getTableName())
+                ->set($this->map['online'], 'NOW()')
+                ->where($q->expr->eq($this->map['id'], $db->quote($id)))
+                ->where($q->expr->eq($this->map['login'],
+                                     $db->quote($this->getUsername())))
+                ->where($q->expr->eq($this->map['password'],
+                                     $db->quote($this->getPassword())))
+        ;
+
+        if (@$this->map['sid'] && $sid) {
+            $q->set($this->map['sid'], $db->quote($sid));
+        }
+
+        $r = $q->prepare()->execute();
+        \Fobia\Debug\Log::debug('[authenticate]:: set online');
+        return $r;
     }
 }
