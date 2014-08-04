@@ -66,7 +66,7 @@ class ApiHandler
             $options = array();
         }
         $options["name"] = $method;
-        
+
         $class = null;
         $invoke = "invoke";
         try {
@@ -83,25 +83,29 @@ class ApiHandler
                     if (!$invoke) {
                         $invoke = "invoke";
                     }
+                    if (!class_exists($class)) {
+                        throw new \Fobia\Api\Exception\Error("Неизвестный метод '$method'.");
+                    }
                     $obj = new $class($params, $options);
                     break;
                 default :
-                    throw new \Fobia\Api\Exception\Error("none type");
+                    throw new \RuntimeException("Неверный тип '{$map[0]}' определения метода '$method'.");
+            }
+            if (!method_exists($obj, $invoke)) {
+                throw new \RuntimeException("Неверный [invoke] параметр '{$invoke}' метода '$method'.");
             }
         } catch (\Exception $exc) {
             return array(
                 'error' => array(
-                    'err_msg'  => 'неизвестный метод',
-                    'err_code' => 0,
+                    'err_msg'  => $exc->getMessage(),
+                    'err_code' => $exc->getCode(),
                     'method'   =>  $method,
-                    'params'   =>  $params,
-                    'err_treace' => $exc->getMessage()
+                    'params'   =>  $params
                 )
             );
         }
 
         /* @var $obj \Fobia\Api\Method\Method */
-
         $obj->ignoreValidationErrors();
         $obj->$invoke();
 

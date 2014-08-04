@@ -22,27 +22,15 @@ class ApiHandlerTest extends \PHPUnit_Framework_TestCase
         $this->api->addMap($map);
     }
 
-
-    /**
-     * @covers Fobia\Api\ApiHandler::request
-     * @todo   Implement testRequest().
-     */
     public function testRequest()
     {
         $result = $this->api->request('test.one');
-
-        // var_dump($result);
+        $this->assertArrayHasKey("response", $result);
     }
 
-    /**
-     * @covers Fobia\Api\ApiHandler::getClass
-     * @todo   Implement testGetClass().
-     */
     public function testGetClass()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-          'This test has not been implemented yet.'
-        );
+        $className = $this->api->getClass('package.getName', false);
+        $this->assertEquals("Api_Package_GetName", $className);
     }
 }

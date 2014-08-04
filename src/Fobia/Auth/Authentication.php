@@ -172,7 +172,10 @@ class Authentication
 
     public function isAccess($name, $value = 1)
     {
-        return ($this->user->access[$name] == $value) ? true : false;
+        return ( array_key_exists($name, $this->user->access)
+                 && $this->user->access[$name] == $value )
+            ? true
+            : false;
     }
 
     /**

@@ -393,17 +393,18 @@ class Application extends \Slim\App
         //parent::defaultError($e);
         //
 
-            if ($e instanceof \Exception) {
-                $code = $e->getCode();
-                $message = $e->getMessage();
-                $file = $e->getFile();
-                $line = $e->getLine();
-                $trace = str_replace(array('#', '\n'), array('<div>#', '</div>'), $e->getTraceAsString());
+        $text = date("[Y-m-d H:i:s] ") ;
 
-                $text = $code . "\n" . $message. "\n" . "$file :: $line\n" . $trace;
-                $file = LOGS_DIR . '/error_app.log';
-                file_put_contents($file, $text, FILE_APPEND);
-            }
+        if ($e instanceof \Exception) {
+            $text .= "Error " . $e->getCode() . ". " . $e->getMessage() . "\n"
+                . $e->getFile() . "(" . $e->getLine() . ")\n"
+                . $e->getTraceAsString() . "\n";
+        } else {
+            $text .= sprintf('Error %s', $e);
+        }
+
+        $file = LOGS_DIR . '/error_app.log';
+        file_put_contents($file, $text, FILE_APPEND);
     }
 
     protected function dispatchRequest(\Slim\Http\Request $request, \Slim\Http\Response $response)
