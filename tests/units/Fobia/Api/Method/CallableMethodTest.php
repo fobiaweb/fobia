@@ -32,8 +32,10 @@ class CallableMethodTest extends \PHPUnit_Framework_TestCase
 
     public function testInvoke()
     {
-        $this->markTestIncomplete(
-                'This test has not been implemented yet.'
-        );
+        // $this->markTestIncomplete( 'This test has not been implemented yet.' );
+        $this->assertInstanceOf("\\Fobia\\Base\Application", \AppTest::instance());
+
+        //$app = \AppTest::instance();
+        // echo $app->config('mode');
     }
 }

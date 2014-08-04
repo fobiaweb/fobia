@@ -58,14 +58,9 @@ HTML;
     echo "<hr>";
 
     // Router
-    $routeArr = $app['router']->getNamedRoutes();
-    unset($app['router']);
-    $app['router'] = function ($c) {
-        return new \Slim\Router();
-    };
-    foreach ($routeArr as $route) {
-        $app['router']->map($route);
-    }
+    dump( $app['settings']->callHandlerMethod('getAllNested') );
+    dump( $app['settings']->callHandlerMethod('getAllFlat') );
+    dump( $app['settings']->callHandlerMethod('getKeys') );
 
     // dump( $app['router'] );
 })->via('GET', 'POST');

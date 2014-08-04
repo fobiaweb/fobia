@@ -20,7 +20,7 @@ class Api_Stdata_GetCountriesTest extends PHPUnit_Framework_TestCase
     protected function setUp()
     {
         if (!$this->app) {
-            $this->app = \App::create();
+            $this->app = \AppTest::create();
         }
         // $this->object = new Api_Stdata_GetCountries;
     }

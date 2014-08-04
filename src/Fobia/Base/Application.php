@@ -113,15 +113,16 @@ class Application extends \Slim\App
         }
         if ($fileList = @$userSettings['file']) {
             $fileList = (array) $fileList;
+            $loadSettings = array();
             foreach ($fileList as $file) {
                 if (file_exists($file)) {
                     $settings = Utils::loadConfig($file);
-                    $userSettings = array_merge($userSettings, $settings);
+                    $loadSettings = array_merge($loadSettings, $settings);
                     Log::debug("Configuration load: " . realpath($file) );
                 }
             }
             unset($userSettings['file'], $fileList, $file);
-
+            $userSettings = array_merge($loadSettings, $userSettings);
         }
         $userSettings = array_merge($this->defaultsSettings, $userSettings);
 

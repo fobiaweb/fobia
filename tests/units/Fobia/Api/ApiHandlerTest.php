@@ -30,7 +30,8 @@ class ApiHandlerTest extends \PHPUnit_Framework_TestCase
     public function testRequest()
     {
         $result = $this->api->request('test.one');
-        var_dump($result);
+
+        // var_dump($result);
     }
 
     /**
