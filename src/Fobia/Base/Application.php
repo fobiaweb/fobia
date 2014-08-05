@@ -241,7 +241,7 @@ class Application extends \Slim\App
         // Auth
         // ------------------
         $this['auth'] = function($c) use($app) {
-            $auth = new \Fobia\Auth\Authentication($app);
+            $auth = new \Fobia\Auth\BaseAuthentication($app);
             $auth->authenticate();
             return $auth;
         };

@@ -60,6 +60,6 @@ class AuthController extends Controller
 
         dump( "------------" );
 
-        dump(\App::Auth()->isAccess('ACCESS_2'));
+        // dump(\App::Auth()->isAccess('ACCESS_2'));
     }
 }
