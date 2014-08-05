@@ -77,6 +77,17 @@ class BaseUserIdentity extends \Fobia\Base\Model implements IUserIdentity
         return $this->{$this->map['password']};
     }
 
+    public function setUserData($data)
+    {
+        foreach ($data as $key => $value) {
+            if (array_key_exists($key, $this->map)) {
+                $this->{$this->map[$key]} = $value;
+            } else {
+                $this->$key = $value;
+            }
+        }
+    }
+
     /**
      * Проверить принадлежность роли
      *

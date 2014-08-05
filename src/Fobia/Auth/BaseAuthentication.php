@@ -60,6 +60,7 @@ class BaseAuthentication
     {
         $this->app    = $app;
         $this->setSession('now', time());
+        $this->user   = null;
         $this->status = self::STATUS_AUTH_NONE;
 
         if (class_exists('\Fobia\Debug\Log')) {
@@ -74,6 +75,9 @@ class BaseAuthentication
      */
     public function getUser()
     {
+        if ( ! $this->user) {
+            $this->_clearUser();
+        }
         return $this->user;
     }
 
@@ -92,6 +96,7 @@ class BaseAuthentication
         if ($hash) {
             $password = $this->app->hash($password);
         }
+        $this->_clearUser();
 
         $user           = new User();
         $user->login    = $login;
@@ -123,7 +128,9 @@ class BaseAuthentication
     public function logout()
     {
         $this->app['session']['auth'] = array();
-        $this->user                   = null;
+        $this->setSession('user');
+
+        $this->_clearUser();
     }
 
     /**
@@ -137,51 +144,65 @@ class BaseAuthentication
             return;
         }
         $this->status = self::STATUS_AUTH_INCORRECT;
+        $user         = null;
 
         if ($this->cacheAuth) {
-            $this->user = $this->getSession('user'); // $this->app->session['auth']['user'];
+            $user = $this->getSession('user');   // $this->app->session['auth']['user'];
         } else {
-            $login    = $this->getSession('login'); //$this->app->session['auth']['login'];
+            $login    = $this->getSession('login');    //$this->app->session['auth']['login'];
             $password = $this->getSession('password'); //$this->app->session['auth']['password'];
         }
-        $online = $this->getSession('online'); //$this->app->session['auth']['online'];
+        $online = $this->getSession('online');         //$this->app->session['auth']['online'];
 
-        $this->logger->info('[authenticate-2]:: Start ');
-        $this->logger->debug('[authenticate-2]:: session: ', $this->getSession());
+        $this->logger->info('[authenticate]:: Start ');
+        $this->logger->debug('[authenticate]:: session: ', $this->getSession());
 
-        if ($this->user && $this->dTime) {
+        if ($user && $this->dTime) {
             $d_time = time() - (int) $online;
             if ($d_time > $this->dTime) {
-                $login      = $this->user->getUsername();
-                $password   = $this->user->getPassword();
-                $this->user = null;
-                $this->logger->info('[authenticate-2]:: превышено время сессии');
+                $login    = $user->getUsername();
+                $password = $user->getPassword();
+                $user     = null;
+                $this->logger->info('[authenticate]:: превышено время кеша сессии');
             }
         }
 
-        if ( ! $this->user && $login && $password) {
+        if ( ! $user && $login && $password) {
             $this->status = self::STATUS_USERNAME_INCORRECT;
-            $this->logger->debug("[authenticate-2]:: checkLogin; online: $online ($this->cacheAuth)");
+            $this->logger->debug("[authenticate]:: checkLogin; online: $online ($this->cacheAuth)");
 
             $user           = new \Fobia\Auth\BaseUserIdentity();
             $user->login    = $login;
             $user->password = $password;
             if ($user->readData()) {
-                $this->user = $user;
-                $this->user->setOnline($this->getSidAuth());
+                $user->setOnline($this->getSidAuth());
+            } else {
+                $user = null;
             }
         }
 
-        if ($this->user) {
-            $this->logger->debug("[authenticate-2]:: User: '{$this->user->getUsername()}'");
+        if ($user) {
+            $this->user   = $user;
+            $this->logger->debug("[authenticate]:: User: '{$user->getUsername()}'");
             $this->status = self::STATUS_AUTH_OK;
         } else {
+            $this->_clearUser();
             if ($this->cacheAuth) {
                 $this->setSession('user', null);
             }
         }
 
-        $this->logger->debug("[authenticate-2]:: Status: '{$this->status}'");
+        $this->logger->debug("[authenticate]:: Status: '{$this->status}'");
+    }
+
+    /**
+     * Returns true if and only if an identity is available from storage
+     *
+     * @return bool
+     */
+    public function hasIdentity()
+    {
+        return ($this->getUser()->getId()) ? true : false;
     }
 
     /**
@@ -210,7 +231,7 @@ class BaseAuthentication
 
     private function setSession($data)
     {
-        $session = (array) $this->app->session['auth-2'];
+        $session = (array) $this->app->session['auth'];
         if (is_string($data)) {
             if (func_num_args() > 1) {
                 $session[$data] = func_get_arg(1);
@@ -223,24 +244,26 @@ class BaseAuthentication
             $session = array_merge($session, $data);
         }
 
-        $this->app->session['auth-2'] = $session;
+        $this->app->session['auth'] = $session;
     }
 
     private function getSession($name = null)
     {
         if ($name === null) {
-            return $this->app->session['auth-2'];
+            return $this->app->session['auth'];
         }
-        return $this->app->session['auth-2'][$name];
+        return $this->app->session['auth'][$name];
     }
 
-    /**
-     * Returns true if and only if an identity is available from storage
-     *
-     * @return bool
-     */
-    public function hasIdentity()
+    private function _clearUser()
     {
-        return ($this->user && $this->user->getId()) ? true : false;
+        $this->user = new User();
+        $this->user->setUserData(array(
+            'id'       => 0,
+            'login'    => '',
+            'password' => ''
+        ));
+
+        return $this->user;
     }
 }
