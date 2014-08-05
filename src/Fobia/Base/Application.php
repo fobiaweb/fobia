@@ -204,12 +204,12 @@ class Application extends \Slim\App
             if ($sid === null) {
                 $sid =  session_id();
                 if ($c['settings']['session.cookie']) {
-                    @$c->setCookie('SID', $sid, time() + 1440);
-                    Log::debug('Session save cookie');
+                    $c->setCookie('SID', $sid, time() + 1440);
+                    Log::debug("save the session in a cookie 'SID'");
                 }
             }
 
-            Log::debug('Session start', array($sid));
+            Log::info('Session start', array($sid));
 
             return $session;
         };
