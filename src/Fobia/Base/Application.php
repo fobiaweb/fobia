@@ -126,6 +126,9 @@ class Application extends \Slim\App
         }
         $userSettings = array_merge($this->defaultsSettings, $userSettings);
 
+        Log::getLogger()->level = $userSettings['log.level'] ;
+        Log::getLogger()->enableRender = $userSettings['log.enabled'] ;
+
         if ($p = $userSettings['templates.path']) {
             if (substr($p, 0, 1) !== '/') {
                 $userSettings['templates.path'] = SYSPATH . '/' . $p;
