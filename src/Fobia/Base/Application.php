@@ -376,6 +376,17 @@ class Application extends \Slim\App
     /**
      *
      */
+    protected function mapRoute($args)
+    {
+        $callable = array_pop($args);
+        if (!is_callable($callable)) {
+            $callable = $this->createController($callable);
+        }
+        array_push($args, $callable);
+        return parent::mapRoute($args);
+    }
+    
+    
     protected function defaultNotFound()
     {
         $this->status(404);
@@ -450,5 +461,11 @@ class Application extends \Slim\App
             $app['router']->map($route);
         }
     }
+
+    /////////////////////
+
+
+
+
 
 }
