@@ -9,6 +9,7 @@
 namespace Fobia\Auth;
 
 use Fobia\Base\Application;
+use Fobia\Auth\BaseUserIdentity as User;
 
 /**
  * BaseAuthentication class
@@ -23,7 +24,7 @@ class BaseAuthentication
     const STATUS_AUTH_NONE          = 'AUTH_NONE';
     const STATUS_AUTH_INCORRECT     = 'AUTH_INCORRECT';
     const STATUS_AUTH_OK            = 'AUTH_OK';
-    
+
     /**
      * @var Fobia\Base\Application
      */
@@ -47,20 +48,19 @@ class BaseAuthentication
     /**
      * @var int интервал онлайна сесии
      */
-    protected $dTime = 300;
-
+    protected $dTime  = 300;
     protected $status = null; // 'AUTH_NONE';
-
-
     /**
      *
      * @param \Fobia\Base\Application $app
      * @internal
      */
-    public function __construct(Application $app, IUserIdentity $user)
+
+    public function __construct(Application $app)
     {
         $this->app = $app;
-        $this->user = $user;
+        // $this->user = $user;
+        $this->setSession('now', time());
 
         $this->status = self::STATUS_AUTH_NONE;
 
@@ -71,7 +71,59 @@ class BaseAuthentication
         }
     }
 
+    public function getUser()
+    {
+        return $this->user;
+    }
 
+    /**
+     * Зарегистрироваться в системе
+     *
+     * @param string $login
+     * @param string $password
+     * @param boolean $hash использовать функцию для хеширования пароля
+     * @return boolean
+     * @api
+     */
+    public function login($login, $password, $hash = true)
+    {
+        // хеш пароля
+        if ($hash) {
+            $password = $this->app->hash($password);
+        }
+
+        $user           = new User();
+        $user->login    = $login;
+        $user->password = $password;
+        if ( ! $user->readData()) {
+            return false;
+        }
+
+        // Все хорошо - пользователь найден и он ни где не используеться
+        $this->user = $user;
+
+        if ($this->cacheAuth) {
+            $this->setSession(array('user' => $user));
+        } else {
+            $this->setSession(array(
+                'login' => $login,
+                'password' => $password
+            ));
+        }
+        $this->setSession(array('online' => time()));
+
+        return true;
+    }
+
+    /**
+     * @return void
+     * @api
+     */
+    public function logout()
+    {
+        $this->app['session']['auth'] = array();
+        $this->user                   = null;
+    }
 
     /**
      * Механизм индетификации
@@ -83,53 +135,50 @@ class BaseAuthentication
         if ($this->status !== self::STATUS_AUTH_NONE) {
             return;
         }
-
-        if ( ! is_array($this->app->session['auth']) ) {
-            $this->app->session['auth'] = array();
-        }
         $this->status = self::STATUS_AUTH_INCORRECT;
 
-        $login    = $this->app->session['auth']['login'];
-        $password = $this->app->session['auth']['password'];
-        $online   = $this->app->session['auth']['online'];
-        $this->logger->debug('[authenticate]:: start ', $this->app->session['auth']);
-
         if ($this->cacheAuth) {
-            $d_time = time() - $online;
-            if ($d_time < $this->dTime) {
-                $this->user = $this->app->session['auth']['user'];
-                $this->status = self::STATUS_AUTH_OK;
-            } else {
+            $this->user = $this->getSession('user');// $this->app->session['auth']['user'];
+        } else {
+            $login    =  $this->getSession('login');//$this->app->session['auth']['login'];
+            $password =  $this->getSession('password');//$this->app->session['auth']['password'];
+        }
+        $online = $this->getSession('online');//$this->app->session['auth']['online'];
+
+        $this->logger->info('[authenticate-2]:: Start ');
+        $this->logger->debug('[authenticate-2]:: session: ', $this->getSession());
+        
+        if ($this->user && $this->dTime) {
+            $d_time = time() - (int) $online;
+            if ($d_time > $this->dTime) {
+                $login    = $this->user->getUsername();
+                $password = $this->user->getPassword();
                 $this->user = null;
+                if ($this->cacheAuth) {
+                    $this->setSession('user', null);
+                }
+                $this->logger->info('[authenticate-2]:: превышено время сессии');
             }
         }
 
         if ( ! $this->user && $login && $password) {
-            if ($user = $this->checkLogin($login, $password)) {
-                if ($this->map['sid']) {
-                    if ($this->checkSidAuth($user->{$this->map['sid']})) {
-                        $this->user = $user;
-                        $this->setOnline();
-                    } else {
-                        $this->status = self::STATUS_SESSION_INCORRECT;
-                    }
-                } else {
-                    $this->user = $user;
-                    $this->setOnline();
-                }
-            } else {
-                $this->status = self::STATUS_USERNAME_INCORRECT;
+            $this->status = self::STATUS_USERNAME_INCORRECT;
+            $this->logger->debug("[authenticate-2]:: checkLogin; online: $online ($this->cacheAuth)");
+            $user           = new \Fobia\Auth\BaseUserIdentity();
+            $user->login    = $login;
+            $user->password = $password;
+            if ($user->readData()) {
+                $this->user = $user;
             }
-
-            $this->logger->debug("[authenticate]:: checkLogin; online: $online ($this->cacheAuth)");
         }
 
-        $this->logger->debug("[authenticate]:: Status: '{$this->status}'");
-        // $this->user = $this->app->session['auth']['user'];
-        // SELECT roles, (roles & 4) AS r FROM users WHERE roles & (SELECT SUM(id) FROM `roles` WHERE name IN(  'login', 'admin'))
+        if ($this->user) {
+            $this->logger->debug("[authenticate-2]:: User: '{$this->user->getUsername()}'");
+            $this->status = self::STATUS_AUTH_OK;
+        }
+
+        $this->logger->debug("[authenticate-2]:: Status: '{$this->status}'");
     }
-
-
 
     /**
      * Проверка сессии на принадлежнасть текущей сесии
@@ -147,6 +196,37 @@ class BaseAuthentication
         }
     }
 
+    protected function getSidAuth()
+    {
+        $sid = $this->app->request->getClientIp()
+                . ';'
+                . session_id();
+        return $sid;
+    }
 
-    
+    private function setSession($data)
+    {
+        $session = (array) $this->app->session['auth-2'];
+        if (is_string($data)) {
+            if (func_num_args() > 1) {
+                $session[$data] = func_get_arg(1);
+            } else {
+                unset($session[$data]);
+            }
+        }
+
+        if (is_array($data)) {
+            $session = array_merge($session, $data);
+        }
+
+        $this->app->session['auth-2'] = $session;
+    }
+
+    private function getSession($name = null)
+    {
+        if ($name === null) {
+            return $this->app->session['auth-2'];
+        }
+        return $this->app->session['auth-2'][$name];
+    }
 }

@@ -76,6 +76,8 @@ $app->route('/login',  'AuthController:login')->via('GET', 'POST');
 $app->route('/logout', 'AuthController:logout')->via('GET', 'POST');
 $app->route('/auth',   'AuthController:auth')->via('GET');
 
+$app->get('/info2', '\Controller\AuthController:auth');
+
 // API
 $app->route('/api/:method',   'ApiController:index')->via('ANY');
 

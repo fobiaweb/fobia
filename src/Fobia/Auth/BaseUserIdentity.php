@@ -83,7 +83,8 @@ class BaseUserIdentity extends \Fobia\Base\Model implements IUserIdentity
      */
     public function isRole($role)
     {
-        return (($this->user) && ($this->getRoles() & (int) $role)) ? true : false;
+        // SELECT roles, (roles & 4) AS r FROM users WHERE roles & (SELECT SUM(id) FROM `roles` WHERE name IN(  'login', 'admin'))
+        return ((int) $this->getRoles() & (int) $role) ? true : false;
     }
 
     public function isAccess($access, $value = 1)
@@ -98,13 +99,13 @@ class BaseUserIdentity extends \Fobia\Base\Model implements IUserIdentity
 
     public function readData()
     {
-        $app = \App::instance();
+        $app = \Fobia\Base\Application::getInstance();
         $db  = $app->db;
 
         $q = $db->createSelectQuery();
         $q->select("*")->from("users")
-                ->where($q->expr->eq($value1, $db->quote($this->getPassword())))
-                ->where($q->expr->eq($value1, $db->quote($this->getName())))
+                ->where($q->expr->eq($this->map['login'],    $db->quote($this->getUsername())))
+                ->where($q->expr->eq($this->map['password'], $db->quote($this->getPassword())))
                 ->limit(1);
 
         $stmt = $q->prepare();
@@ -114,8 +115,10 @@ class BaseUserIdentity extends \Fobia\Base\Model implements IUserIdentity
                 foreach ($result as $key => $value) {
                     $this->$key = $value;
                 }
+                return true;
             }
         }
+        return false;
     }
 
     /**
@@ -133,12 +136,10 @@ class BaseUserIdentity extends \Fobia\Base\Model implements IUserIdentity
         $e  = $q->expr;
 
         // SELECT * FROM users WHERE login = 'user' AND password = 'pass' LIMIT 1
-        $q->select('*')->from($this->tableName)
-                ->where($e->eq($this->map['login'],
-                               $db->quote($this->getUsername())))
-                ->where($e->eq($this->map['password'],
-                               $db->quote($this->getPassword())))
-                ->limit(1);
+        $q->select('*')->from($this->getTableName())->limit(1);
+        $q->where($e->eq($this->map['login'], $db->quote($this->getUsername())));
+        $q->where($e->eq($this->map['password'], $db->quote($this->getPassword())));
+
         $stmt = $q->prepare();
         if ($stmt->execute()) {
             if ($result = $stmt->fetch(\PDO::FETCH_ASSOC)) {
@@ -160,15 +161,12 @@ class BaseUserIdentity extends \Fobia\Base\Model implements IUserIdentity
     {
         $id = $this->getId();
         $db = \Fobia\Base\Application::getInstance()->db;
+
         $q  = $db->createUpdateQuery();
 
         $q->update($this->getTableName())
                 ->set($this->map['online'], 'NOW()')
                 ->where($q->expr->eq($this->map['id'], $db->quote($id)))
-                ->where($q->expr->eq($this->map['login'],
-                                     $db->quote($this->getUsername())))
-                ->where($q->expr->eq($this->map['password'],
-                                     $db->quote($this->getPassword())))
         ;
 
         if (@$this->map['sid'] && $sid) {
