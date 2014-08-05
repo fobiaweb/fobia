@@ -81,6 +81,11 @@ class BaseAuthentication
         return $this->user;
     }
 
+    public function getLogin()
+    {
+        return $this->getUser()->getUsername();
+    }
+
     /**
      * Зарегистрироваться в системе
      *

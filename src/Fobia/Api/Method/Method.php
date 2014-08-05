@@ -365,7 +365,7 @@ abstract class Method
     protected function log()
     {
         $app = \Fobia\Base\Application::getInstance();
-        $login = $app->auth->getLogin();
+        $login = $app->auth->getUser()->getUsername();
         if (!$login) {
             $login = 'guest';
         }

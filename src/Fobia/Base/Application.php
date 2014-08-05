@@ -16,7 +16,7 @@ use Fobia\Debug\Log;
  *
  * @property \Fobia\DataBase\Handler\MySQL $db database
  * @property \Slim\Session $session current session
- * @property \Fobia\Auth\Authentication $auth
+ * @property \Fobia\Auth\BaseAuthentication $auth
  *
  */
 class Application extends \Slim\App
