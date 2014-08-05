@@ -14,7 +14,10 @@ if (defined('BOOTSTRAP_FILE')) {
 
 // COMPOSER
 if (!class_exists('\\Composer\\Autoload\\ClassLoader')) {
-    $_ENV['loader']  = require_once __DIR__ . '/../vendor/autoload.php';
+    $loader  = require_once __DIR__ . '/../vendor/autoload.php';
+    $_ENV['loader'] = $loader;
+    /* @var $loader Composer\Autoload\ClassLoader */
+    //$loader->add("", __DIR__ . "/app/classes/");
 }
 
 // Fobia\Base\Utils::isRequire(__FILE__);

@@ -29,7 +29,13 @@
     "autoload": {
         "psr-0": {
             "": [
-                "src/",
+                "src/"
+            ]
+        }
+    },
+    "autoload-dev": {
+        "psr-0": {
+            "": [
                 "app/classes/"
             ]
         },
