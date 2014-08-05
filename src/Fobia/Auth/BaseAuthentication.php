@@ -36,7 +36,7 @@ class BaseAuthentication
     protected $logger;
 
     /**
-     * @var Fobia\Auth\IUserIdentity
+     * @var Fobia\Auth\BaseUserIdentity
      */
     protected $user;
 
@@ -58,10 +58,8 @@ class BaseAuthentication
 
     public function __construct(Application $app)
     {
-        $this->app = $app;
-        // $this->user = $user;
+        $this->app    = $app;
         $this->setSession('now', time());
-
         $this->status = self::STATUS_AUTH_NONE;
 
         if (class_exists('\Fobia\Debug\Log')) {
@@ -71,6 +69,9 @@ class BaseAuthentication
         }
     }
 
+    /**
+     * @return \Fobia\Auth\BaseUserIdentity
+     */
     public function getUser()
     {
         return $this->user;
@@ -106,7 +107,7 @@ class BaseAuthentication
             $this->setSession(array('user' => $user));
         } else {
             $this->setSession(array(
-                'login' => $login,
+                'login'    => $login,
                 'password' => $password
             ));
         }
@@ -138,25 +139,22 @@ class BaseAuthentication
         $this->status = self::STATUS_AUTH_INCORRECT;
 
         if ($this->cacheAuth) {
-            $this->user = $this->getSession('user');// $this->app->session['auth']['user'];
+            $this->user = $this->getSession('user'); // $this->app->session['auth']['user'];
         } else {
-            $login    =  $this->getSession('login');//$this->app->session['auth']['login'];
-            $password =  $this->getSession('password');//$this->app->session['auth']['password'];
+            $login    = $this->getSession('login'); //$this->app->session['auth']['login'];
+            $password = $this->getSession('password'); //$this->app->session['auth']['password'];
         }
-        $online = $this->getSession('online');//$this->app->session['auth']['online'];
+        $online = $this->getSession('online'); //$this->app->session['auth']['online'];
 
         $this->logger->info('[authenticate-2]:: Start ');
         $this->logger->debug('[authenticate-2]:: session: ', $this->getSession());
-        
+
         if ($this->user && $this->dTime) {
             $d_time = time() - (int) $online;
             if ($d_time > $this->dTime) {
-                $login    = $this->user->getUsername();
-                $password = $this->user->getPassword();
+                $login      = $this->user->getUsername();
+                $password   = $this->user->getPassword();
                 $this->user = null;
-                if ($this->cacheAuth) {
-                    $this->setSession('user', null);
-                }
                 $this->logger->info('[authenticate-2]:: превышено время сессии');
             }
         }
@@ -164,17 +162,23 @@ class BaseAuthentication
         if ( ! $this->user && $login && $password) {
             $this->status = self::STATUS_USERNAME_INCORRECT;
             $this->logger->debug("[authenticate-2]:: checkLogin; online: $online ($this->cacheAuth)");
+
             $user           = new \Fobia\Auth\BaseUserIdentity();
             $user->login    = $login;
             $user->password = $password;
             if ($user->readData()) {
                 $this->user = $user;
+                $this->user->setOnline($this->getSidAuth());
             }
         }
 
         if ($this->user) {
             $this->logger->debug("[authenticate-2]:: User: '{$this->user->getUsername()}'");
             $this->status = self::STATUS_AUTH_OK;
+        } else {
+            if ($this->cacheAuth) {
+                $this->setSession('user', null);
+            }
         }
 
         $this->logger->debug("[authenticate-2]:: Status: '{$this->status}'");
@@ -228,5 +232,15 @@ class BaseAuthentication
             return $this->app->session['auth-2'];
         }
         return $this->app->session['auth-2'][$name];
+    }
+
+    /**
+     * Returns true if and only if an identity is available from storage
+     *
+     * @return bool
+     */
+    public function hasIdentity()
+    {
+        return ($this->user && $this->user->getId()) ? true : false;
     }
 }

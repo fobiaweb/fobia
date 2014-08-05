@@ -16,6 +16,8 @@ namespace Fobia\Auth;
 class BaseUserIdentity extends \Fobia\Base\Model implements IUserIdentity
 {
 
+    const TABLE_NAME = 'users';
+
     public $access = array();
 
     /**
@@ -92,11 +94,21 @@ class BaseUserIdentity extends \Fobia\Base\Model implements IUserIdentity
         return ($this->access[$access] == $value) ? true : false;
     }
 
+    /**
+     *
+     * @param string $access
+     * @return string
+     */
     public function getAccess($access)
     {
         return $this->access[$access];
     }
 
+    /**
+     * Прочесть запись из базы
+     * 
+     * @return boolean
+     */
     public function readData()
     {
         $app = \Fobia\Base\Application::getInstance();
@@ -113,37 +125,6 @@ class BaseUserIdentity extends \Fobia\Base\Model implements IUserIdentity
         if ($stmt->execute()) {
             if ($result = $stmt->fetch(\PDO::FETCH_ASSOC)) {
                 foreach ($result as $key => $value) {
-                    $this->$key = $value;
-                }
-                return true;
-            }
-        }
-        return false;
-    }
-
-    /**
-     * Тупо проверка верного логиа и пароля
-     *
-     * @param string $login
-     * @param string $passhex hex string
-     * @return mixed
-     * @api
-     */
-    public function checkLogin()
-    {
-        $db = \Fobia\Base\Application::getInstance()->db;
-        $q  = $db->createSelectQuery();
-        $e  = $q->expr;
-
-        // SELECT * FROM users WHERE login = 'user' AND password = 'pass' LIMIT 1
-        $q->select('*')->from($this->getTableName())->limit(1);
-        $q->where($e->eq($this->map['login'], $db->quote($this->getUsername())));
-        $q->where($e->eq($this->map['password'], $db->quote($this->getPassword())));
-
-        $stmt = $q->prepare();
-        if ($stmt->execute()) {
-            if ($result = $stmt->fetch(\PDO::FETCH_ASSOC)) {
-                foreach ($row as $key => $value) {
                     $this->$key = $value;
                 }
                 return true;
@@ -174,7 +155,7 @@ class BaseUserIdentity extends \Fobia\Base\Model implements IUserIdentity
         }
 
         $r = $q->prepare()->execute();
-        \Fobia\Debug\Log::debug('[authenticate]:: set online');
+        \Fobia\Debug\Log::debug('[authenticate]:: set online', array(time(), $sid));
         return $r;
     }
 }
