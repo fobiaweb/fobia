@@ -316,8 +316,7 @@ class Application extends \Slim\App
         $class = str_replace('.', '_', $class);
 
         // Class arguments
-        $classArgs = func_get_args();
-        array_shift($classArgs);
+        $classArgs = array_slice(func_get_args(), 1);
         $app = & $this;
 
         return function() use ( $app, $classArgs, $class, $method ) {
