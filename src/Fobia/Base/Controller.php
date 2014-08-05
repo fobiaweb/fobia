@@ -29,14 +29,15 @@ class Controller
 
     public function section($section = null)
     {
-        if ($section === null || !method_exists($this, $section) ) {
+        $method = $this->app->config('controller.action_prefix')
+                . $section
+                . $this->app->config('controller.action_suffix');
+        if ($method === null || !method_exists($this, $method) ) {
             $this->app->notFound();
         }
-        
-        $args = func_get_args();
-        array_shift($args);
 
-        dispatchMethod($this, $section, $args);
+        $args = array_slice(func_get_args(), 1);
+        dispatchMethod($this, $method, $args);
     }
 
     public function index()
