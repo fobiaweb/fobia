@@ -43,9 +43,10 @@ class ModelCreateCommand extends Command
                 ->addArgument('table', InputArgument::REQUIRED, 'название таблицы')
                 ->addOption('input', 'i', InputOption::VALUE_OPTIONAL, 'входной файл модели')
                 ->addOption('output', 'o', InputOption::VALUE_NONE, 'сохранить результат')
-                ->addOption('database', 'd', InputOption::VALUE_OPTIONAL, 'база дфнных')
+                ->addOption('database', 'd', InputOption::VALUE_OPTIONAL, 'база данных')
                 ->addOption('user', 'u', InputOption::VALUE_OPTIONAL, 'пользователь')
                 ->addOption('password', 'p', InputOption::VALUE_OPTIONAL, 'пароль')
+                ->addOption('rules-array', 'A', InputOption::VALUE_NONE, 'правила в виде масивов')
         ;
     }
 
@@ -68,6 +69,7 @@ class ModelCreateCommand extends Command
         $this->className = $this->parseClassName($tableName);
 
         $schema = $this->parseColumns($tableName);
+        $schema['rules_array'] = $input->getOption('rules-array');
 
         if ($input->getOption('input')) {
             $file = $input->getOption('input');
@@ -168,12 +170,15 @@ class ModelCreateCommand extends Command
         foreach ($schema[1] as $key => $value) {
             $property .= sprintf(" * @property %-10s $%-12s - %s\n", $value['type'],
                                  $key, $value['comment']);
-
-            $rolle = "array('" . strtolower($value['type']) . "', '{$value['dbType']}', {$value['null']}";
-            if ($value['default'] !== null) {
-                $rolle .= ", '" . $value['default'] . "'";
+            if ($schema['rules_array']) {
+                $rolle = "array('" . strtolower($value['type']) . "', '{$value['dbType']}', {$value['null']}";
+                if ($value['default'] !== null) {
+                    $rolle .= ", '" . $value['default'] . "'";
+                }
+                $rolle .= "),";
+            } else {
+                $rolle = "'" . strtolower($value['type']) . "',";
             }
-            $rolle .= "),";
             $rules .= sprintf("        %-15s => %-12s \n", "'{$key}'", $rolle);
         }
 
