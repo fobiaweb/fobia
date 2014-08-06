@@ -42,17 +42,6 @@ class MethodTest extends \PHPUnit_Framework_TestCase
 
     }
 
-    /**
-     * @covers Fobia\Api\Method\Method::__invoke
-     * @todo   Implement test__invoke().
-     */
-    public function test__invoke()
-    {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-                'This test has not been implemented yet.'
-        );
-    }
 
     /**
      * @covers Fobia\Api\Method\Method::invoke
@@ -60,82 +49,7 @@ class MethodTest extends \PHPUnit_Framework_TestCase
      */
     public function testInvoke()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-                'This test has not been implemented yet.'
-        );
-    }
-
-    /**
-     * @covers Fobia\Api\Method\Method::getResponse
-     * @todo   Implement testGetResponse().
-     */
-    public function testGetResponse()
-    {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-                'This test has not been implemented yet.'
-        );
-    }
-
-    /**
-     * @covers Fobia\Api\Method\Method::getFormatResponse
-     * @todo   Implement testGetFormatResponse().
-     */
-    public function testGetFormatResponse()
-    {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-                'This test has not been implemented yet.'
-        );
-    }
-
-    /**
-     * @covers Fobia\Api\Method\Method::errorInfo
-     * @todo   Implement testErrorInfo().
-     */
-    public function testErrorInfo()
-    {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-                'This test has not been implemented yet.'
-        );
-    }
-
-    /**
-     * @covers Fobia\Api\Method\Method::ignoreValidationErrors
-     * @todo   Implement testIgnoreValidationErrors().
-     */
-    public function testIgnoreValidationErrors()
-    {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-                'This test has not been implemented yet.'
-        );
-    }
-
-    /**
-     * @covers Fobia\Api\Method\Method::getDefinition
-     * @todo   Implement testGetDefinition().
-     */
-    public function testGetDefinition()
-    {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-                'This test has not been implemented yet.'
-        );
-    }
-
-    /**
-     * @covers Fobia\Api\Method\Method::getName
-     * @todo   Implement testGetName().
-     */
-    public function testGetName()
-    {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-                'This test has not been implemented yet.'
-        );
+        $this->assertTrue(true);
     }
 
     

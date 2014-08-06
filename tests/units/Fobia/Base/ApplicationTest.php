@@ -29,8 +29,7 @@ class ApplicationTest extends \PHPUnit_Framework_TestCase
      */
     protected function setUp()
     {
-        $this->app = App::create();
-        Application::setInstance($this->app, 0);
+        $this->app = \AppTest::create();
     }
 
     /**
