@@ -162,6 +162,7 @@ class Application extends \Slim\App
 
         // // Автоматическая загрузка секций конфигурации
         // ----------------------------------------------
+        /*
         $autoload = $this['settings']['app.autoload'];
         if ($autoload) {
             $this['settings']['app']             = new \Pimple();
@@ -180,12 +181,15 @@ class Application extends \Slim\App
             }
         }
         unset($autoload, $cfg, $file);
-
+        /* */
+        /*
         //$this['settings']['autoload'] = function($c) {
             $config = new AutoloadConfig(CONFIG_DIR);
             $config->setKeys($this['settings']['app']['autoload']);
             $this['settings']['autoload'] =  $config;
         //};
+        /* */
+
 
         // Session
         //  session.gc_maxlifetime = 1440
@@ -236,7 +240,11 @@ class Application extends \Slim\App
         // Database
         // ------------------
         $this['db'] = function($c) {
-            $db = \Fobia\DataBase\DbFactory::create($c['settings']['database']);
+            $cfg = $c['settings']['database'];
+            if (!isset($cfg['params']['log_error'])) {
+                $cfg['params']['log_error'] = LOGS_DIR . "/sql.log";
+            }
+            $db = \Fobia\DataBase\DbFactory::create($cfg);
             \ezcDbInstance::set($db);
             return $db;
         };
