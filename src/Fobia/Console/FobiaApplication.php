@@ -6,7 +6,7 @@
  * @copyright  Copyright (c) 2014 Dmitriy Tyurin
  */
 
-namespace Console;
+namespace Fobia\Console;
 
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Input\InputInterface;

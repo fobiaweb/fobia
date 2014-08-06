@@ -11,13 +11,12 @@ require_once __DIR__ . '/bootstrap.php';
 
 $_ENV['no_stderr'] = 1;
 
-use Console\FobiaApplication;
-use Symfony\Component\Console\Application;
+use Fobia\Console\FobiaApplication;
 
-$application = new Console\FobiaApplication();
-$application->add(new Console\Command\GetCommand());
-$application->add(new Console\Command\ApiCreateCommand());
-$application->add(new Console\Command\ApiSearchCommand());
-$application->add(new Console\Command\ModelCreateCommand());
+$application = new FobiaApplication();
+$application->add(new Fobia\Console\Command\GetCommand());
+$application->add(new Fobia\Console\Command\ApiCreateCommand());
+$application->add(new Fobia\Console\Command\ApiSearchCommand());
+$application->add(new Fobia\Console\Command\ModelCreateCommand());
 $application->run();
 
