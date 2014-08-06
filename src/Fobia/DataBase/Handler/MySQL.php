@@ -28,6 +28,8 @@ class MySQL extends ezcDbHandlerMysql
      */
     protected $logger = null;
 
+    protected $log_error = null;
+
     /**
      * Создает объект из параметров $dbParams.
      *
@@ -58,6 +60,10 @@ class MySQL extends ezcDbHandlerMysql
             } else {
                 $this->logger = new \Psr\Log\NullLogger();
             }
+        }
+
+        if (@$dbParams['params']['log_error']) {
+            $this->log_error = $dbParams['params']['log_error'];
         }
 
         // if (@$dbParams['charset']) {
@@ -116,10 +122,11 @@ class MySQL extends ezcDbHandlerMysql
             $error = $stmt->errorInfo();
             $this->logger->error('==> [SQL]:: '. $error[1].': '.$error[2]);
 
-            if (defined('LOGS_DIR')) {
+            if ($this->log_error) {
+                // LOGS_DIR . "/sql.log"
                 $str = date("[Y-m-d H:i:s]") . " [SQL]:: Error " . $error[1] . ': ' . $error[2] . "\n"
                         . "  # $query\n";
-                file_put_contents(LOGS_DIR . "/sql.log", $str, FILE_APPEND);
+                file_put_contents($this->log_error, $str, FILE_APPEND);
             }
         }
         return $this->logger;
