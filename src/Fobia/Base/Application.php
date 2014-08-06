@@ -396,8 +396,8 @@ class Application extends \Slim\App
         array_push($args, $callable);
         return parent::mapRoute($args);
     }
-    
-    
+
+
     protected function defaultNotFound()
     {
         $this->status(404);
@@ -419,10 +419,12 @@ class Application extends \Slim\App
         if ($e instanceof \Exception) {
             $text .= "Error " . $e->getCode() . ". " . $e->getMessage() . "\n"
                 . $e->getFile() . "(" . $e->getLine() . ")\n"
-                . $e->getTraceAsString() . "\n";
+                . $e->getTraceAsString() . "\n"
+                . "---------------------";
         } else {
             $text .= sprintf('Error %s', $e);
         }
+        $text .= "\n";
 
         $file = LOGS_DIR . '/error_app.log';
         file_put_contents($file, $text, FILE_APPEND);

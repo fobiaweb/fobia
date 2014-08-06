@@ -125,7 +125,7 @@ class MySQL extends ezcDbHandlerMysql
             if ($this->log_error) {
                 // LOGS_DIR . "/sql.log"
                 $str = date("[Y-m-d H:i:s]") . " [SQL]:: Error " . $error[1] . ': ' . $error[2] . "\n"
-                        . "  # $query\n";
+                        . preg_replace(array("/\n/", "/\s*\n/"), array("\n    # ", "\n"), "    # $query\n");
                 file_put_contents($this->log_error, $str, FILE_APPEND);
             }
         }
