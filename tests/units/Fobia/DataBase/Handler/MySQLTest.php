@@ -59,6 +59,10 @@ class MySQLTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('\Psr\Log\LoggerInterface', $logger);
     }
 
+    /**
+     * @covers Fobia\DataBase\Handler\MySQL::getLogger
+     * @todo   Implement testGetLogger().
+     */
     public function testGetLogger()
     {
         $this->assertInstanceOf('\Psr\Log\LoggerInterface', $this->db->getLogger());

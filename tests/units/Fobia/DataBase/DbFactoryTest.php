@@ -7,7 +7,9 @@ namespace Fobia\DataBase;
  */
 class DbFactoryTest extends \PHPUnit_Framework_TestCase
 {
-
+    /**
+     * @covers Fobia\DataBase\DbFactory::create
+     */
     public function testCreate()
     {
         $db = \Fobia\DataBase\DbFactory::create('mysql://root@localhost/mysql');

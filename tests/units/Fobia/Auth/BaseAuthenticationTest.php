@@ -78,6 +78,10 @@ class BaseAuthenticationTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($auth->hasIdentity());
     }
 
+    /**
+     * @covers Fobia\Auth\BaseAuthentication::authenticate
+     * @todo   Implement testAuthenticate().
+     */
     public function testAuthenticate()
     {
         $auth_0 = $this->createAuth();

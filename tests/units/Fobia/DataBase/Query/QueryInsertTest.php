@@ -20,6 +20,10 @@ class QueryInsertTest extends \PHPUnit_Framework_TestCase
         }
     }
 
+    /**
+     * @covers Fobia\DataBase\Query\QueryInsert::insertIntoIgnore
+     * @todo   Implement testInsertIntoIgnore().
+     */
     public function testInsertIntoIgnore()
     {
         $q = $this->db->createInsertQuery();
@@ -31,6 +35,10 @@ class QueryInsertTest extends \PHPUnit_Framework_TestCase
         $this->assertStringStartsWith("INSERT IGNORE INTO user", $stmt->queryString);
     }
 
+    /**
+     * @covers Fobia\DataBase\Query\QueryInsert::getQuery
+     * @todo   Implement testGetQuery().
+     */
     public function testGetQuery()
     {
         $q = $this->db->createInsertQuery();
