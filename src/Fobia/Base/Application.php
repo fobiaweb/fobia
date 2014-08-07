@@ -342,7 +342,7 @@ class Application extends \Slim\App
         return function() use ( $app, $classArgs, $class, $method ) {
             $methodArgs = func_get_args();
             $classController = new $class( $app, $classArgs );
-            Log::debug("Call controller: $class -> $method", $methodArgs);
+            Log::debug("Call method controller: $class -> $method", $methodArgs);
             return call_user_func_array(array($classController, $method), $methodArgs);
         };
     }
@@ -472,22 +472,49 @@ class Application extends \Slim\App
         $this->applyHook('slim.after');
     }
 
-    public function clearRouter()
+    public function subRun()
     {
-        $routeArr = $app['router']->getNamedRoutes();
-        unset($app['router']);
-        $app['router'] = function ($c) {
-            return new \Slim\Router();
-        };
-        foreach ($routeArr as $route) {
-            $app['router']->map($route);
+        $request = $this['request'];
+
+        Log::debug('Run sub-dispatch request application');
+        try {
+            $dispatched = false;
+            $matchedRoutes = $this['router']->getMatchedRoutes($request->getMethod(), $request->getPathInfo(), true);
+            foreach ($matchedRoutes as $route) {
+                /* @var $route \Slim\Route */
+                try {
+                    $this->applyHook('slim.before.dispatch');
+                    $dispatched = $route->dispatch();
+                    $this->applyHook('slim.after.dispatch');
+                    if ($dispatched) {
+                        Log::debug('Route sub-dispatched: ' . $route->getPattern());
+                        break;
+                    }
+                } catch (\Slim\Exception\Pass $e) {
+                    continue;
+                }
+            }
+            if (!$dispatched) {
+                $this->notFound();
+            }
+            $this->applyHook('slim.after.router');
+        } catch (\Slim\Exception\Stop $e) {
+            throw $e;
         }
     }
 
-    /////////////////////
+    public function clearRouter()
+    {
+        $routeArr = $this['router']->getNamedRoutes();
+        unset($this['router']);
 
+        $this['router'] = function ($c) {
+            return new \Slim\Router();
+        };
 
-
-
+        foreach ($routeArr as $route) {
+           $this['router']->addNamedRoute($route->getName(), $route);
+        }
+    }
 
 }

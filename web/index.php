@@ -31,6 +31,14 @@ $app->map('/', function() use($app) {
     $app->pass();
 })->name('base');
 
+$app->get('/router(/:page+)', function () use($app) {
+    Fobia\Debug\Log::info("Run route ", array('/router(/:page+)'));
+    /* @var $app \Fobia\Base\Application */
+    $app->pass();
+});
+
+$app->get('/router(/:page+)', 'RouterController');
+
 $app->get('/info', function() use($app) {
     dump(REMOTE_SERVER);
     dump($_SERVER);

@@ -11,13 +11,34 @@ class ObjectCollectionTest extends \PHPUnit_Framework_TestCase
      */
     protected $object;
 
+    public function newItem($key1)
+    {
+        $arr = array(
+            'key1' => $key1
+        );
+        $args = func_get_args();
+        array_shift($args);
+        foreach ($args as $k => $v) {
+            $k = $k +2;
+            $k = 'key'. $k;
+            $arr[$k] = $v;
+        }
+        return $arr;
+    }
+
+
     /**
      * Sets up the fixture, for example, opens a network connection.
      * This method is called before a test is executed.
      */
     protected function setUp()
     {
-        $this->object = new ObjectCollection();
+        $arrs = array(
+            $this->newItem(1),
+            $this->newItem(2),
+            $this->newItem(3),
+        );
+        $this->object = new ObjectCollection($arrs);
     }
 
     /**
@@ -26,10 +47,8 @@ class ObjectCollectionTest extends \PHPUnit_Framework_TestCase
      */
     public function testEq()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-          'This test has not been implemented yet.'
-        );
+        $obj = $this->object->eq();
+        $this->assertEquals(1, $obj->key1);
     }
 
     /**
@@ -146,10 +165,7 @@ class ObjectCollectionTest extends \PHPUnit_Framework_TestCase
      */
     public function testCount()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-          'This test has not been implemented yet.'
-        );
+        $this->assertEquals(3, $this->object->count());
     }
 
     /**
