@@ -264,6 +264,7 @@ class ObjectCollection implements \IteratorAggregate, \Countable
 
     /**
      * Пересобрать список объектов
+     *
      * @return int   количество элементов
      */
     protected function _resor($resor_values = true)
@@ -298,6 +299,7 @@ class ObjectCollection implements \IteratorAggregate, \Countable
 
     /**
      * Количество объектов
+     *
      * @return int
      */
     public function count()
@@ -316,6 +318,7 @@ class ObjectCollection implements \IteratorAggregate, \Countable
 
     /**
      * Масив объектов колекции
+     *
      * @return array
      */
     public function toArray()
