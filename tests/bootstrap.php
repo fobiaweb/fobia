@@ -47,6 +47,8 @@ unset($autoloadFile);
 /* @var $loader \Composer\Autoload\ClassLoader */
 $loader->add('', __DIR__ . '/units');
 
+\Fobia\Debug\Log::setLogger(new \Psr\Log\NullLogger());
+
 // TODO: check include path INCLUDE_PATH%
 // ini_set('include_path', ini_get('include_path'));
 

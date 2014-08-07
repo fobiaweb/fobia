@@ -63,7 +63,7 @@ class MySQL extends ezcDbHandlerMysql
             $this->logger = (class_exists('\Fobia\Debug\Log')) ? \Fobia\Debug\Log::getLogger() :  new \Psr\Log\NullLogger();
         }
 
-        if (@$dbParams['params']['log_error']) {
+        if (isset($dbParams['params']['log_error'])) {
             $this->log_error = $dbParams['params']['log_error'];
         }
 
