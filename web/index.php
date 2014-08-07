@@ -37,7 +37,7 @@ $app->get('/router(/:page+)', function () use($app) {
     $app->pass();
 });
 
-$app->get('/router(/:page+)', 'RouterController');
+$app->any('/router(/:page+)', 'RouterController');
 
 $app->get('/info', function() use($app) {
     dump(REMOTE_SERVER);

@@ -26,7 +26,9 @@ class RouterController extends Controller
 
         $this->app->group('/router', function () use ($self, $app) {
             $class = "\\" . __CLASS__;
+
             $app->get('/test', "$class:test");
+            $app->get('/page(/:num+)', "$class:pageNum");
             $app->get('/test1', function() {
                 echo "OK";
             });
@@ -35,6 +37,11 @@ class RouterController extends Controller
         $app->subRun();
     }
 
+    public function pageNum($num = array())
+    {
+        var_dump($num);
+    }
+    
     public function test()
     {
 //        echo "FUNCTION: " . __FUNCTION__ . BR;
@@ -44,7 +51,7 @@ class RouterController extends Controller
 //
 //        echo "Class:  " . preg_replace("#.*\\\#", "", __CLASS__) . BR;
 //        echo $this->app->urlFor('base');
-
+        var_dump($this->app->router->getCurrentRoute());
         var_dump($this->app['router']);
     }
 }

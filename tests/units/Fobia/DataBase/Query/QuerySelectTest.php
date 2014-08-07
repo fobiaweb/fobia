@@ -13,13 +13,18 @@ class QuerySelectTest extends \PHPUnit_Framework_TestCase
      */
     protected $db;
 
+    /**
+     * @var \Fobia\DataBase\Query\QuerySelect
+     */
+    protected $q;
+
     protected function setUp()
     {
         if ( ! $this->db) {
             $this->db = \Fobia\DataBase\DbFactory::create('mysql://root@localhost/mysql');
         }
+        $this->q = $this->db->createSelectQuery();
     }
-
     /**
      * @covers Fobia\DataBase\Query\QuerySelect::fetchItemsCount
      * @todo   Implement testFetchItemsCount().
@@ -62,13 +67,55 @@ class QuerySelectTest extends \PHPUnit_Framework_TestCase
      */
     public function testReset()
     {
-        $q = $this->db->createSelectQuery();
-        $q->select('*')->from('user');
-        $this->assertEquals('SELECT * FROM user', $q->getQuery());
-        
-        $q->reset();
-        $q->select('Host')->from('user');
+        $q     = $this->q;
+        $q->select('*')->from('user')
+                ->limit(50, 10)
+                ->orderBy('host')
+                ->where("user = 'root'")
+                ->groupBy('select')
+                ->having($q->expr->eq('id', 1));
+        // echo $q->getQuery();
+        $query = "SELECT * FROM user WHERE user = 'root' GROUP BY select HAVING id = 1 ORDER BY host LIMIT 50 OFFSET 10";
+        $this->assertEquals($query, $q->getQuery());
 
-        $this->assertEquals('SELECT Host FROM user', $q->getQuery());
+        $qFull = clone $q;
+
+        return $q;
+    }
+
+    /**
+     * @depends testReset
+     */
+    public function testResetFull($qFull)
+    {
+        $q = clone $qFull;
+
+        $q->reset();
+        $q->select('*')->from('user');
+        $this->assertEquals("SELECT * FROM user", $q->getQuery());
+        
+        // selct
+        $q = clone $qFull;
+        $q->reset('select');
+        $q->select('Host');
+        $this->assertRegExp('/^SELECT * FROM user/', $q->getQuery());
+        
+        // from
+        $q = clone $qFull;
+        $q->reset('from');
+        $q->from("Host");
+        $this->assertRegExp('/^SELECT * FROM Host/', $q->getQuery());
+
+        $q = clone $qFull;
+        $q->reset('limit');
+        $this->assertRegExp('/^SELECT * FROM Host/', $q->getQuery());
+    }
+
+    /**
+     * @expectedException \ezcDbMissingParameterException
+     */
+    public function testResetException()
+    {
+        $this->q->reset('no name');
     }
 }

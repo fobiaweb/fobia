@@ -55,11 +55,12 @@ class MySQL extends ezcDbHandlerMysql
         if (@$dbParams['params']['logger'] instanceof \Psr\Log\LoggerInterface) {
             $this->logger = $dbParams['params']['logger'];
         } else {
-            if (class_exists('\Fobia\Debug\Log')) {
-                $this->logger = \Fobia\Debug\Log::getLogger();
-            } else {
-                $this->logger = new \Psr\Log\NullLogger();
-            }
+            //if (class_exists('\Fobia\Debug\Log')) {
+            //    $this->logger = (class_exists('\Fobia\Debug\Log'));
+            //} else {
+            //    $this->logger = new \Psr\Log\NullLogger();
+            //}
+            $this->logger = (class_exists('\Fobia\Debug\Log')) ? \Fobia\Debug\Log::getLogger() :  new \Psr\Log\NullLogger();
         }
 
         if (@$dbParams['params']['log_error']) {
