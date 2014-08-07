@@ -8,7 +8,7 @@
  * @copyright  Copyright (c) 2014 Dmitriy Tyurin
  */
 
- use Fobia\Api\Method\Method;
+ use Fobia\Api\Method as Method;
 
 /**
  * Метода 'files.delete'
@@ -16,7 +16,7 @@
  *
  * PARAMS:
  * -------
- * 
+ *
  *  offset      отступ, необходимый для получения определенного подмножества.
  *  count       количество записей, которые необходимо вернуть.
  *

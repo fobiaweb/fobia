@@ -7,5 +7,5 @@
  */
 
 return array(
-    'test.one' => array('file', __DIR__ . '/apiMethods/test.one.php')
+    'test.one' => array('file', __DIR__ . '/apiMethods/test.one.php', array('log' => true) )
 );

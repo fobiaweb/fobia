@@ -1,14 +1,14 @@
 <?php
 
-use Fobia\Api\Method\Method;
+use Fobia\Api\Method as Method;
 
 /**
- * Авторизайия 
+ * Авторизайия
  * --------------------------------------------
  *
  * PARAMS:
  * -------
- * 
+ *
  *   login      - (*) логин
  *   password   - (*) пароль
  *

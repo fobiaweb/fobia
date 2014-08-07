@@ -8,7 +8,7 @@
  * @author     Dmitriy Tyurin <fobia3d@gmail.com>
  * @copyright  Copyright (c) 2014 Dmitriy Tyurin
  */
-use Fobia\Api\Method\Method;
+use Fobia\Api\Method as Method;
 
 /**
  * Метода 'files.add'
@@ -16,7 +16,7 @@ use Fobia\Api\Method\Method;
  *
  * PARAMS:
  * -------
- * 
+ *
  *  file     (*) файл из масива $_FILES.
  *  type     (*) тип файла
  *  data_id  (*) id записи по типу type

@@ -10,7 +10,7 @@
 
 namespace Fobia\Api\Method;
 
-use Fobia\Api\Method\Method;
+use Fobia\Api\Method as Method;
 
 /**
  * CallableMethod class

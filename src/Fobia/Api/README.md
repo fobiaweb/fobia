@@ -46,6 +46,7 @@ $method = new Api_Object_Name($params, $options);
 ## map
 
 ```php
+// <methodName:String> => array(<type:String>, <target:Mixed>, [<classOptions:Array>], [<targetArgs:Array>])
 $map = array(
     'users.create' => array('file',     '/path/to/file.php', array(... )),
     'users.search' => array('callable', {closure}, array(... ) ),
@@ -53,13 +54,27 @@ $map = array(
 );
 ```
 
+__class/object__
+
+Создает объект сласса _ClassName_ с передаными в конструктор ``$params`` и ``$classOptions``. 
+Делее вызываеться метод _method_ (по умолчанию _invoke_) с передаными мараметрами ``$targetArgs``.
+
+    $api = new ClassName($params, $classOptions);
+    $api->$method($targetArgs);
+
+
+
 __file__
 
-Подключаеться файл с переменой ``$p`` - переданные параметры
+Подключаеться файл ``target`` в котором доступна переменая ``$p`` - переданные параметры
 
+    $p = $params;
+    include $target;
 
 __callable__
 
-Вызаваеться функция, передавая ``$p`` в качестве параметра
+Вызаваеться функция ``target`` с параметрами ``$params`` и ``$targetArgs``. 
+
+    $target($params, $targetArgs);
 
 

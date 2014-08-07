@@ -6,7 +6,7 @@
  * @copyright  Copyright (c) 2014 Dmitriy Tyurin
  */
 
-namespace Fobia\Api\Method;
+namespace Fobia\Api;
 
 use Fobia\Debug\Log;
 
@@ -54,8 +54,13 @@ abstract class Method
     {
         $this->params     = (array) $params;
         $this->definition = array();
-        $this->options    = (array) $options;
-        
+        $defaultsOptions = array(
+            'initialize' => true,
+            'execute'    => 'execute',
+            'log'        => true
+        );
+        $this->options = array_merge($defaultsOptions, (array) $options);
+
         if ($this->options['name']) {
             $this->name = $this->options['name'];
         }
@@ -83,12 +88,15 @@ abstract class Method
         $this->response = null;
         Log::info("[API]:: Вызов метода '$this->name' - ", $this->params);
 
-        $r = null;
         try {
-            $this->initialize();
+            // Инициализируем
+            if ($this->getOptions('initialize')) {
+                $this->initialize();
+            }
+            // Запускаем выполнения метода
             $execute = $this->getOptions('execute');
-            if (!$execute) {
-                $execute = 'execute';
+            if (!method_exists($this, $execute)) {
+                throw new \RuntimeException('Отсутствует вызываемый метод в ApiMethod');
             }
             $this->dispatchMethod($execute, func_get_args());
         } catch (\Fobia\Api\Exception\Halt $exc) {
@@ -101,7 +109,9 @@ abstract class Method
             $this->exc->errorOriginal = $exc->getMessage();
         }
 
-        $this->log();
+        if ($this->getOptions('log')) {
+            $this->log();
+        }
 
         if ($this->exc) {
             Log::error("[API]:: (" . get_class($this->exc) . ") " . $this->exc->getMessage());
@@ -140,6 +150,37 @@ abstract class Method
     }
 
     /**
+     * Список определений параметров метода
+     *
+     * @return array
+     */
+    public function getDefinition($name = null)
+    {
+        if ($name === null) {
+            return $this->definition[$name];
+        }
+        return $this->definition;
+    }
+
+    /**
+     * Название метода
+     *
+     * @return string
+     */
+    public function getName()
+    {
+        if ($this->name) {
+            return $this->name;
+        }
+        // Если метод не установлен по умолчанию, вычисляем из названия класса
+        $class = preg_replace_callback('/^\w|_\w|\.\w/', function($matches) {
+            return strtolower($matches[0]);
+        }, str_replace('_', '.', get_class($this)));
+
+        return preg_replace('/api\./', '', $class);
+    }
+
+    /**
      * Информация об ошибки
      *
      * @return null|array
@@ -170,6 +211,10 @@ abstract class Method
     {
         $this->ignoreValidationErrors = true;
     }
+
+    /*************************************************************************
+    * Instantiation and Configuration
+    **************************************************************************/
 
     /**
      * Configures the current command.
@@ -312,19 +357,6 @@ abstract class Method
     }
 
     /**
-     * Список определений параметров метода
-     *
-     * @return array
-     */
-    public function getDefinition($name = null)
-    {
-        if ($name === null) {
-            return $this->definition[$name];
-        }
-        return $this->definition;
-    }
-
-    /**
      * Опции объекта
      *
      * @return mixed
@@ -381,24 +413,6 @@ abstract class Method
         $file = LOGS_DIR . '/api.log';
 
         file_put_contents($file, $str, FILE_APPEND);
-    }
-
-    /**
-     * Название метода
-     *
-     * @return string
-     */
-    public function getName()
-    {
-        if ($this->name) {
-            return $this->name;
-        }
-        // Если метод не установлен по умолчанию, вычисляем из названия класса
-        $class = preg_replace_callback('/^\w|_\w|\.\w/', function($matches) {
-            return strtolower($matches[0]);
-        }, str_replace('_', '.', get_class($this)));
-
-        return preg_replace('/api\./', '', $class);
     }
 
     abstract protected function execute();

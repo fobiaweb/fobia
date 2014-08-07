@@ -2,32 +2,32 @@
 
 /**
  * This file is part of API.
- * 
+ *
  * users.add.php file
  *
  * @author     Dmitriy Tyurin <fobia3d@gmail.com>
  * @copyright  Copyright (c) 2014 Dmitriy Tyurin
  */
-use Fobia\Api\Method\Method;
+use Fobia\Api\Method as Method;
 
 /**
- * Создает пользователя 
+ * Создает пользователя
  * --------------------------------------------
  *
  * PARAMS:
  * -------
- * 
+ *
  *  login      - (*)
  *  passwod    - (*)
  *  roles      -
- * 
+ *
  * --------------------------------------------
  *
  * RESULT:
  * -------
  * Возвращает ID только что созданого пользователя
  * --------------------------------------------
- * 
+ *
  * @api        users.add
  */
 class Api_Users_Add extends Method

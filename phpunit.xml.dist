@@ -12,17 +12,16 @@
          >
 
     <testsuites>
-       <testsuite name="fobia">
-         <directory suffix="Test.php">tests/units</directory>
+       <testsuite name="Fobia Test Suite">
+         <directory suffix="Test.php">./tests/units/</directory>
        </testsuite>
     </testsuites>
 
     <filter>
       <whitelist>
-        <directory suffix=".php">src</directory>
+        <directory>./src/</directory>
       </whitelist>
     </filter>
-
 
     <logging>
       <log type="coverage-html"  charset="UTF-8" highlight="false"

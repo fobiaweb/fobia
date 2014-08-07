@@ -1,6 +1,6 @@
 <?php
 
-use Fobia\Api\Method\Method;
+use Fobia\Api\Method as Method;
 
 /**
  * Возвращает информацию о странах по их идентификаторам

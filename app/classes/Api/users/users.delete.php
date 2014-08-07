@@ -2,13 +2,13 @@
 
 /**
  * This file is part of API.
- * 
+ *
  * users.delete.php file
  *
  * @author     Dmitriy Tyurin <fobia3d@gmail.com>
  * @copyright  Copyright (c) 2014 Dmitriy Tyurin
  */
-use Fobia\Api\Method\Method;
+use Fobia\Api\Method as Method;
 
 /**
  * Удаляет пользователя
@@ -16,17 +16,17 @@ use Fobia\Api\Method\Method;
  *
  * PARAMS:
  * -------
- * 
+ *
  *  id      (*)
  *  login
- * 
+ *
  * --------------------------------------------
  *
  * RESULT:
  * -------
  * Возвращает результат успеха
  * --------------------------------------------
- * 
+ *
  * @api        users.delete
  */
 class Api_Users_Delete extends Method

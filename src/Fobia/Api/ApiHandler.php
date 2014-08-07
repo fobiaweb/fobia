@@ -26,20 +26,30 @@ class ApiHandler
      * 'apiMethodName' => array('className', 'classMethod')
      * @var array
      */
-    protected $apimap = array();
+    protected $apiMap = array();
 
     public function __construct($classDirectory = null)
     {
         $this->classDirectory = ($classDirectory) ? $classDirectory : SYSPATH . '/app/Api';
         $mapFile = $this->classDirectory . "/map.php";
         if (file_exists($mapFile)) {
-            $this->apimap = include $mapFile;
+            $this->apiMap = include $mapFile;
         }
     }
 
+    /**
+     * Добавляет список методов
+     *
+     * @param array|string $map масив методо или файл с их определениями
+     */
     public function addMap($map)
     {
-        $this->apimap = array_merge($this->apimap, (array) $map);
+        if (!is_array($map)) {
+            $file = $map;
+            $map = \Fobia\Base\Utils::loadConfig($file);
+        }
+        
+        $this->apiMap = array_merge($this->apiMap, (array) $map);
     }
 
     /**
@@ -54,14 +64,14 @@ class ApiHandler
         $params = (array) $params;
 
         // Ищем в определениях
-        if (array_key_exists($method, $this->apimap)) {
-            $map = $this->apimap[$method];
+        if (array_key_exists($method, $this->apiMap)) {
+            $map = $this->apiMap[$method];
         } else {
             Log::notice("[API]:: Method '{$method}' not in map. Start search method class.");
             $map = array('class', $this->getClass($method));
         }
 
-        $options = @$map[2];
+        list($type, $target, $options, $targetArgs) = $map;
         if ( !is_array($options) ) {
             $options = array();
         }
@@ -70,16 +80,16 @@ class ApiHandler
         $class = null;
         $invoke = "invoke";
         try {
-            switch ($map[0]) {
+            switch ($type) {
                 case 'file':
-                    $obj = new \Fobia\Api\Method\FileMethod($map[1], $params, $options);
+                    $obj = new \Fobia\Api\Method\FileMethod($target, $params, $options);
                     break;
                 case 'callable':
-                    $obj = \Fobia\Api\Method\CallableMethod($map[1], $params, $options);
+                    $obj = \Fobia\Api\Method\CallableMethod($target, $params, $options);
                     break;
                 case 'class':
                 case 'object':
-                    list($class, $invoke) = explode(":", $map[1]);
+                    list($class, $invoke) = explode(":", $target);
                     if (!$invoke) {
                         $invoke = "invoke";
                     }
@@ -89,7 +99,7 @@ class ApiHandler
                     $obj = new $class($params, $options);
                     break;
                 default :
-                    throw new \RuntimeException("Неверный тип '{$map[0]}' определения метода '$method'.");
+                    throw new \RuntimeException("Неверный тип '{$type}' определения метода '$method'.");
             }
             if (!method_exists($obj, $invoke)) {
                 throw new \RuntimeException("Неверный [invoke] параметр '{$invoke}' метода '$method'.");

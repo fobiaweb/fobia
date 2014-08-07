@@ -8,10 +8,10 @@
  * @copyright  Copyright (c) 2014 Dmitriy Tyurin
  */
 
-use Fobia\Api\Method\Method;
+use Fobia\Api\Method as Method;
 
 /**
- * Возвращаемый время на сервере 
+ * Возвращаемый время на сервере
  * --------------------------------------------
  *
  * RESULT:
