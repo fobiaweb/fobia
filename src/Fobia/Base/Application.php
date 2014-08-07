@@ -299,16 +299,25 @@ class Application extends \Slim\App
     /**
      * Возвращает функцию автозоздания контролера
      *
+     * Конфиги:
+     *   controller.prefix          - префикс к классу контролера
+     *   controller.suffix          - суффикс к классу контролера
+     *   controller.action_prefix   - префикс к методу действия
+     *   controller.action_suffix   - суффикс к методу действия
+     *
+     * Если имя контролера начинаеться с '\' - расматриваеться как абсолютный путь
+     * и конфиг 'controller.prefix' не применеються
+     *
+     * Example:
+     * При controller.prefix = '\Controller' значение 'AuthController:login'
+     * приобразуеться в \Controller\AuthController->login().
+     * А '\AuthController:login' будет \AuthController->login()
+     *
      * @param string $controller
      * @return callable
      */
     public function createController($controller)
     {
-        // controller.prefix
-        // controller.suffix
-        // controller.action_prefix
-        // controller.action_suffix
-
         list( $class, $method ) = explode(':', $controller);
 
         // Method name
