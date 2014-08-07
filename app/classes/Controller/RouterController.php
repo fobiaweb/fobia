@@ -19,22 +19,25 @@ class RouterController extends Controller
 {
     public function index($pages = array())
     {
-        $this->app->clearRouter();
-
         $self = & $this;
         $app  = & $this->app;
 
-        $this->app->group('/router', function () use ($self, $app) {
+        $router = new \Slim\Router();
+        $subRoute = new \Fobia\Base\MapRouter($router, $app['settings']['routes.case_sensitive']);
+
+
+        $subRoute->group('/router', function () use ($self, $app, $subRoute) {
             $class = "\\" . __CLASS__;
 
-            $app->get('/test', "$class:test");
-            $app->get('/page(/:num+)', "$class:pageNum");
-            $app->get('/test1', function() {
-                echo "OK";
+            $subRoute->get('/test', "$class:test");
+            $subRoute->get('/page(/:num+)', "$class:pageNum");
+            $subRoute->get('/test1', function() {
+                echo "OK" . BR;
+                echo "\\" . __CLASS__;
             });
         });
 
-        $app->subRun();
+        $app->subRun($router);
     }
 
     public function pageNum($num = array())
