@@ -120,6 +120,7 @@ abstract class Model // extends \Slim\Collection
      */
     public function select($data = null)
     {
+        $result = false;
         $db = Application::getInstance()->db;
 
         $q = $db->createSelectQuery();

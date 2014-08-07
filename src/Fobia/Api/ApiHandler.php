@@ -85,7 +85,7 @@ class ApiHandler
                     $obj = new \Fobia\Api\Method\FileMethod($target, $params, $options);
                     break;
                 case 'callable':
-                    $obj = \Fobia\Api\Method\CallableMethod($target, $params, $options);
+                    $obj = new \Fobia\Api\Method\CallableMethod($target, $params, $options);
                     break;
                 case 'class':
                 case 'object':

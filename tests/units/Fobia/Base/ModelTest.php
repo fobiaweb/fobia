@@ -1,19 +1,21 @@
 <?php
+
 namespace Fobia\Base;
 
 class MyModel extends Model
 {
+
     const CLASS_NAME = __CLASS__;
     const TABLE_NAME = 'users';
 
     static protected $_primaryKey = 'id';
-    static protected $_rules = array(
-        'id'            => 'int',
-        'login'         => 'string',
-        'password'      => 'string',
-        'role_mask'     => 'int',
-        'online'        => 'datetime',
-        'sid'           => 'string',
+    static protected $_rules      = array(
+        'id'        => 'int',
+        'login'     => 'string',
+        'password'  => 'string',
+        'role_mask' => 'int',
+        'online'    => 'datetime',
+        'sid'       => 'string',
     );
 }
 
@@ -22,6 +24,7 @@ class MyModel extends Model
  */
 class ModelTest extends \PHPUnit_Framework_TestCase
 {
+
     /**
      * @var MyModel
      */
@@ -36,7 +39,6 @@ class ModelTest extends \PHPUnit_Framework_TestCase
         $this->model = new MyModel();
     }
 
-
     /**
      * @covers Fobia\Base\Model::rules
      * @todo   Implement testRules().
@@ -44,7 +46,6 @@ class ModelTest extends \PHPUnit_Framework_TestCase
     public function testRules()
     {
         $rules = $this->model->rules();
-        // var_dump($rules);
         $this->assertArrayHasKey('id', $rules);
         $this->assertArrayHasKey('login', $rules);
 
@@ -81,7 +82,7 @@ class ModelTest extends \PHPUnit_Framework_TestCase
     public function testCreate1()
     {
         $db = \AppTest::instance()->db;
-        $r = $db->query("DELETE FROM users WHERE login = 'login5'");
+        $r  = $db->query("DELETE FROM users WHERE login = 'login5'");
         $this->assertTrue(($r) ? true : false);
     }
 
@@ -90,13 +91,51 @@ class ModelTest extends \PHPUnit_Framework_TestCase
      */
     public function testCreate2()
     {
-        $model = $this->model;
-        $model->login = 'login5';
+        $model           = $this->model;
+        $model->login    = 'login5';
         $model->password = 'password';
 
         $id = $model->create();
         $this->assertTrue(is_numeric($id));
+        $this->assertFalse($model->create());
         return $id;
+    }
+
+    public function testNewModelNull()
+    {
+        $model = new MyModel();
+        $this->assertEquals(null, $model->id);
+        $this->assertFalse($model->select());
+    }
+
+    /**
+     * @depends testCreate2
+     */
+    public function testNewModelInt($id)
+    {
+        $model = new MyModel((int) $id);
+        $this->assertEquals($id, $model->id);
+        $this->assertTrue($model->select());
+    }
+
+    /**
+     * @depends testCreate2
+     */
+    public function testNewModelString($id)
+    {
+        $model = new MyModel((string) $id);
+        $this->assertEquals(null, $model->id);
+        $this->assertFalse($model->select());
+    }
+
+    /**
+     * @depends testCreate2
+     */
+    public function testNewModelArray($id)
+    {
+        $model = new MyModel(array('id' => $id));
+        $this->assertEquals($id, $model->id);
+        $this->assertTrue($model->select());
     }
 
     /**
@@ -104,9 +143,15 @@ class ModelTest extends \PHPUnit_Framework_TestCase
      */
     public function testSelect($id)
     {
-        $model = $this->model;
+        $model     = $this->model;
         $model->id = $id;
         $model->select();
+        $this->assertEquals('login5', $model->login);
+
+        $model->select($id);
+        $this->assertEquals('login5', $model->login);
+
+        $model->select(array('id' => $id));
 
         $this->assertEquals('login5', $model->login);
         $this->assertEquals('password', $model->password);
@@ -119,7 +164,7 @@ class ModelTest extends \PHPUnit_Framework_TestCase
      */
     public function testUpdate($model)
     {
-        $id = $model->id;
+        $id              = $model->id;
         $model->password = 'password_update';
         $this->assertTrue($model->update());
 
@@ -137,9 +182,16 @@ class ModelTest extends \PHPUnit_Framework_TestCase
         $id = $model->id;
         $this->assertTrue($model->delete());
 
-        $model = new MyModel();
+        $model     = new MyModel();
         $model->id = $id;
         $this->assertFalse($model->select());
     }
 
+    public function testToArray()
+    {
+        $arr = $this->model->toArray();
+        $this->assertArrayHasKey('id', $arr);
+        $this->assertArrayHasKey('login', $arr);
+        $this->assertArrayHasKey('password', $arr);
+    }
 }
