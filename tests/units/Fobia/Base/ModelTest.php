@@ -66,7 +66,7 @@ class ModelTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetClass()
     {
-        $this->assertEquals('Fobia\\Base\\MyModel', $this->model->getClass());
+        $this->assertEquals(MyModel::CLASS_NAME, $this->model->getClass());
     }
 
     /**
@@ -107,7 +107,7 @@ class ModelTest extends \PHPUnit_Framework_TestCase
         $model = $this->model;
         $model->id = $id;
         $model->select();
-        
+
         $this->assertEquals('login5', $model->login);
         $this->assertEquals('password', $model->password);
 
