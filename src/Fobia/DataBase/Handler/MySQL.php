@@ -14,6 +14,7 @@ use PDOStatement;
 use Fobia\DataBase\Query\QueryInsert;
 use Fobia\DataBase\Query\QueryReplace;
 use Fobia\DataBase\Query\QuerySelect;
+use Fobia\DataBase\Query\QueryUpdate;
 
 /**
  * MySQL class, extends PDO
@@ -170,4 +171,15 @@ class MySQL extends ezcDbHandlerMysql
     {
         return new QuerySelect( $this );
     }
+
+    /**
+     * Returns a new QuerySelect derived object for the correct database type.
+     *
+     * @return \Fobia\DataBase\Query\QueryUpdate
+     */
+    public function createUpdateQuery()
+    {
+        return new QueryUpdate( $this );
+    }
+
 }
