@@ -91,7 +91,7 @@ class MySQL extends ezcDbHandlerMysql
 
     public function beginTransaction()
     {
-        $this->logger->info("[SQL]:: Begin transaction");
+        $this->logger->info("[SQL]:: ==> Begin transaction");
         return parent::beginTransaction();
     }
 
@@ -99,9 +99,9 @@ class MySQL extends ezcDbHandlerMysql
     {
         $r = parent::commit();
         if (!$r) {
-            $this->logger->error("[SQL]:: Error commit transaction");
+            $this->logger->error("[SQL]:: ==> Error commit transaction");
         } else {
-            $this->logger->info("[SQL]:: Commit transaction");
+            $this->logger->info("[SQL]:: ==> Commit transaction");
         }
         return $r;
     }
