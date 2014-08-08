@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<project name="callcentre" default="compile" basedir=".">
+<project name="fobiaweb/fobia" default="compile" basedir=".">
     <!-- Переменые базы -->
     <property name="database.name" value="test" />
     <property name="database.encoding" value="utf8" />
