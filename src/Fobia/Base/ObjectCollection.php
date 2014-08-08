@@ -174,8 +174,7 @@ class ObjectCollection implements \IteratorAggregate, \Countable
         }
 
         if (is_array($data)) {
-            array_walk($data,
-                       function(&$value) {
+            array_walk($data, function(&$value) {
                 $value = (object) $value;
             });
             $this->data  = array_merge($this->data, $data);

@@ -225,6 +225,13 @@ class Application extends \Slim\App
         // ------------------
         $this['view'] = function($c) {
             $view = $c['settings']['view'];
+            if (is_string($view)) {
+                if (class_exists($view)) {
+                    $view = new $view($c['settings']['templates.path']);
+                } else {
+                    throw new \RuntimeException("Класс для 'View': {$view} - не найден");
+                }
+            }
             if ($view instanceof \Slim\Interfaces\ViewInterface !== false) {
                 return $view;
             }

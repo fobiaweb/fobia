@@ -174,10 +174,16 @@ class ObjectCollectionTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetIterator()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-          'This test has not been implemented yet.'
-        );
+        $arr = $this->object->getIterator();
+        $this->assertInternalType('object', $arr[0]);
+        $this->assertInstanceOf('\\ArrayIterator', $arr);
+
+        $i = 0;
+        foreach ($this->object as $key => $value) {
+            $this->assertEquals($i, $key);
+            $i++;
+            $this->assertEquals($i, $value->key1 );
+        }
     }
 
     /**
@@ -186,6 +192,8 @@ class ObjectCollectionTest extends \PHPUnit_Framework_TestCase
      */
     public function testToArray()
     {
-        $this->assertInternalType('array', $this->object->toArray());
+        $arr = $this->object->toArray();
+        $this->assertInternalType('array', $arr);
+        $this->assertInternalType('object', $arr[0]);
     }
 }
