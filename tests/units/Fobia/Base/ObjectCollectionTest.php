@@ -55,118 +55,118 @@ class ObjectCollectionTest extends \PHPUnit_Framework_TestCase
      * @covers Fobia\Base\ObjectCollection::find
      * @todo   Implement testFind().
      */
-    public function testFind()
-    {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-          'This test has not been implemented yet.'
-        );
-    }
+//    public function testFind()
+//    {
+//        // Remove the following lines when you implement this test.
+//        $this->markTestIncomplete(
+//          'This test has not been implemented yet.'
+//        );
+//    }
 
     /**
      * @covers Fobia\Base\ObjectCollection::set
      * @todo   Implement testSet().
      */
-    public function testSet()
-    {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-          'This test has not been implemented yet.'
-        );
-    }
+//    public function testSet()
+//    {
+//        // Remove the following lines when you implement this test.
+//        $this->markTestIncomplete(
+//          'This test has not been implemented yet.'
+//        );
+//    }
 
     /**
      * @covers Fobia\Base\ObjectCollection::get
      * @todo   Implement testGet().
      */
-    public function testGet()
-    {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-          'This test has not been implemented yet.'
-        );
-    }
+//    public function testGet()
+//    {
+//        // Remove the following lines when you implement this test.
+//        $this->markTestIncomplete(
+//          'This test has not been implemented yet.'
+//        );
+//    }
 
     /**
      * @covers Fobia\Base\ObjectCollection::addAt
      * @todo   Implement testAddAt().
      */
-    public function testAddAt()
-    {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-          'This test has not been implemented yet.'
-        );
-    }
+//    public function testAddAt()
+//    {
+//        // Remove the following lines when you implement this test.
+//        $this->markTestIncomplete(
+//          'This test has not been implemented yet.'
+//        );
+//    }
 
     /**
      * @covers Fobia\Base\ObjectCollection::merge
      * @todo   Implement testMerge().
      */
-    public function testMerge()
-    {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-          'This test has not been implemented yet.'
-        );
-    }
+//    public function testMerge()
+//    {
+//        // Remove the following lines when you implement this test.
+//        $this->markTestIncomplete(
+//          'This test has not been implemented yet.'
+//        );
+//    }
 
     /**
      * @covers Fobia\Base\ObjectCollection::removeAt
      * @todo   Implement testRemoveAt().
      */
-    public function testRemoveAt()
-    {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-          'This test has not been implemented yet.'
-        );
-    }
+//    public function testRemoveAt()
+//    {
+//        // Remove the following lines when you implement this test.
+//        $this->markTestIncomplete(
+//          'This test has not been implemented yet.'
+//        );
+//    }
 
     /**
      * @covers Fobia\Base\ObjectCollection::remove
      * @todo   Implement testRemove().
      */
-    public function testRemove()
-    {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-          'This test has not been implemented yet.'
-        );
-    }
+//    public function testRemove()
+//    {
+//        // Remove the following lines when you implement this test.
+//        $this->markTestIncomplete(
+//          'This test has not been implemented yet.'
+//        );
+//    }
 
     /**
      * @covers Fobia\Base\ObjectCollection::each
      * @todo   Implement testEach().
      */
-    public function testEach()
-    {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-          'This test has not been implemented yet.'
-        );
-    }
+//    public function testEach()
+//    {
+//        // Remove the following lines when you implement this test.
+//        $this->markTestIncomplete(
+//          'This test has not been implemented yet.'
+//        );
+//    }
 
     /**
      * @covers Fobia\Base\ObjectCollection::sort
      * @todo   Implement testSort().
      */
-    public function testSort()
-    {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-          'This test has not been implemented yet.'
-        );
-    }
+//    public function testSort()
+//    {
+//        // Remove the following lines when you implement this test.
+//        $this->markTestIncomplete(
+//          'This test has not been implemented yet.'
+//        );
+//    }
 
     /**
      * @covers Fobia\Base\ObjectCollection::count
      * @todo   Implement testCount().
      */
-    public function testCount()
-    {
-        $this->assertEquals(3, $this->object->count());
-    }
+//    public function testCount()
+//    {
+//        $this->assertEquals(3, $this->object->count());
+//    }
 
     /**
      * @covers Fobia\Base\ObjectCollection::getIterator

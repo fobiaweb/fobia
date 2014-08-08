@@ -42,6 +42,15 @@ class ApplicationTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * @covers Fobia\Base\Application::getInstance
+     * @expectedException \RuntimeException
+     */
+    public function testGetInstanceException()
+    {
+        Application::getInstance('none');
+    }
+
+    /**
      * @covers Fobia\Base\Application::setInstance
      * @todo   Implement testSetInstance().
      */

@@ -9,7 +9,7 @@ class BaseUserIdentityTest extends \PHPUnit_Framework_TestCase
     /**
      * @var BaseUserIdentity
      */
-    protected $object;
+    protected $user;
 
     /**
      * Sets up the fixture, for example, opens a network connection.
@@ -17,15 +17,9 @@ class BaseUserIdentityTest extends \PHPUnit_Framework_TestCase
      */
     protected function setUp()
     {
-        $this->object = new BaseUserIdentity;
-    }
-
-    /**
-     * Tears down the fixture, for example, closes a network connection.
-     * This method is called after a test is executed.
-     */
-    protected function tearDown()
-    {
+        $db = \AppTest::instance()->db;
+        $result = $db->query("SELECT * FROM users");
+        $this->user = $result->fetchObject('\Fobia\Auth\BaseUserIdentity');
     }
 
     /**
@@ -34,10 +28,7 @@ class BaseUserIdentityTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetId()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-          'This test has not been implemented yet.'
-        );
+        $this->assertEquals(1, $this->user->getId());
     }
 
     /**
@@ -46,10 +37,7 @@ class BaseUserIdentityTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetRoles()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-          'This test has not been implemented yet.'
-        );
+        $this->assertEquals(1, $this->user->getRoles() & 1);
     }
 
     /**
@@ -58,10 +46,7 @@ class BaseUserIdentityTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetUsername()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-          'This test has not been implemented yet.'
-        );
+        $this->assertEquals('test@test', $this->user->getUsername());
     }
 
     /**
@@ -70,10 +55,8 @@ class BaseUserIdentityTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetPassword()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-          'This test has not been implemented yet.'
-        );
+        $this->user->setUserData(array('password' => 'password'));
+        $this->assertEquals('password', $this->user->getPassword());
     }
 
     /**
@@ -82,10 +65,8 @@ class BaseUserIdentityTest extends \PHPUnit_Framework_TestCase
      */
     public function testSetUserData()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-          'This test has not been implemented yet.'
-        );
+        $this->user->setUserData(array('login' => 'new login'));
+        $this->assertEquals('new login', $this->user->getUsername());
     }
 
     /**
@@ -94,10 +75,7 @@ class BaseUserIdentityTest extends \PHPUnit_Framework_TestCase
      */
     public function testIsRole()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-          'This test has not been implemented yet.'
-        );
+        $this->assertTrue($this->user->isRole(1));
     }
 
     /**
@@ -106,10 +84,7 @@ class BaseUserIdentityTest extends \PHPUnit_Framework_TestCase
      */
     public function testIsAccess()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-          'This test has not been implemented yet.'
-        );
+        $this->assertFalse($this->user->isAccess('none'));
     }
 
     /**
@@ -118,33 +93,27 @@ class BaseUserIdentityTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetAccess()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-          'This test has not been implemented yet.'
-        );
+        $this->assertNull($this->user->getAccess('none'));
     }
 
     /**
      * @covers Fobia\Auth\BaseUserIdentity::readData
      * @todo   Implement testReadData().
      */
-    public function testReadData()
-    {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-          'This test has not been implemented yet.'
-        );
-    }
+//    public function testReadData()
+//    {
+//        // Remove the following lines when you implement this test.
+//        $this->markTestIncomplete(
+//          'This test has not been implemented yet.'
+//        );
+//    }
 
     /**
      * @covers Fobia\Auth\BaseUserIdentity::setOnline
      * @todo   Implement testSetOnline().
      */
-    public function testSetOnline()
-    {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-          'This test has not been implemented yet.'
-        );
-    }
+//    public function testSetOnline()
+//    {
+//
+//    }
 }

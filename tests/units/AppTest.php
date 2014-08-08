@@ -18,6 +18,10 @@ class AppTest extends PHPUnit_Framework_TestCase
 
     protected static $_instance = null;
 
+    /**
+     *
+     * @return \Fobia\Base\Application
+     */
     public static function instance()
     {
         if (self::$_instance == null) {
@@ -26,6 +30,10 @@ class AppTest extends PHPUnit_Framework_TestCase
         return self::$_instance;
     }
 
+    /**
+     *
+     * @return \Fobia\Base\Application
+     */
     public static function create()
     {
         $config = array(
