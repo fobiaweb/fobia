@@ -1,4 +1,14 @@
 <?php
+/**
+ * CDbTableSchema class  - CDbTableSchema.php file
+ *
+ * @author     Dmitriy Tyurin <fobia3d@gmail.com>
+ * @copyright  Copyright (c) 2014 Dmitriy Tyurin
+ */
+
+namespace Fobia\Database\Schema;
+
+
 
 /**
  * CDbTableSchema is the base class for representing the metadata of a database table.
@@ -17,8 +27,7 @@
  *
  * @property array $columnNames List of column names.
  *
- * @package system.db.schema
- * @since 1.0
+ * @package Fobia.DataBase.Schema
  */
 class CDbTableSchema
 {

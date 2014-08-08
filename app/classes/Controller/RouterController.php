@@ -9,6 +9,7 @@
 namespace Controller;
 
 use Fobia\Base\Controller;
+use Fobia\Debug\Log;
 
 /**
  * RouterController class
@@ -22,39 +23,42 @@ class RouterController extends Controller
         $self = & $this;
         $app  = & $this->app;
 
-        $router = new \Slim\Router();
-        $subRoute = new \Fobia\Base\MapRouter($router, $app['settings']['routes.case_sensitive']);
+        $app->hook('slim.before.dispatch', function() use($app) {
+            echo 'slim.before.dispatch' . BR;
+        });
 
+        $subRoute = new \Fobia\Base\MapRouter($app);
 
         $subRoute->group('/router', function () use ($self, $app, $subRoute) {
             $class = "\\" . __CLASS__;
 
             $subRoute->get('/test', "$class:test");
             $subRoute->get('/page(/:num+)', "$class:pageNum");
+
+
+            $subRoute->get('/test1', function() use ($app) {
+                Log::debug("/test1 :: function-1 :: pass()");
+                $app->pass();
+            });
+
+            $subRoute->get('/test1', function() use ($app) {
+                Log::debug("/test1 :: function-2 :: pass()");
+                $app->pass();
+            });
+
             $subRoute->get('/test1', function() {
                 echo "OK" . BR;
                 echo "\\" . __CLASS__;
             });
         });
 
-        $app->subRun($router);
+        $subRoute->run();
     }
 
     public function pageNum($num = array())
     {
         var_dump($num);
     }
-    
-    public function test()
-    {
-//        echo "FUNCTION: " . __FUNCTION__ . BR;
-//        echo "CLASS: " .__CLASS__ . BR;
-//        echo "METHOD: " . __METHOD__ . BR;
-//        echo "NAMESPACE: " . __NAMESPACE__ . BR;
-//
-//        echo "Class:  " . preg_replace("#.*\\\#", "", __CLASS__) . BR;
-//        echo $this->app->urlFor('base');
-        var_dump($this->app->router->getCurrentRoute());
-        var_dump($this->app['router']);
-    }
+
+
 }

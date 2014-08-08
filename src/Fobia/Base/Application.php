@@ -479,6 +479,7 @@ class Application extends \Slim\App
         $this->applyHook('slim.after');
     }
 
+    /*
     public function subRun(\Slim\Router $router = null)
     {
         $request = $this['request'];
@@ -491,7 +492,6 @@ class Application extends \Slim\App
             $dispatched = false;
             $matchedRoutes = $router->getMatchedRoutes($request->getMethod(), $request->getPathInfo(), true);
             foreach ($matchedRoutes as $route) {
-                /* @var $route \Slim\Route */
                 try {
                     $this->applyHook('slim.before.dispatch');
                     $dispatched = $route->dispatch();
@@ -525,5 +525,6 @@ class Application extends \Slim\App
            $this['router']->addNamedRoute($route->getName(), $route);
         }
     }
+    /*  */
 
 }

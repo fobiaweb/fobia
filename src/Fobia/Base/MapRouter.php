@@ -8,6 +8,8 @@
 
 namespace Fobia\Base;
 
+use Fobia\Debug\Log;
+
 /**
  * MapRouter class
  *
@@ -15,21 +17,34 @@ namespace Fobia\Base;
  */
 class MapRouter
 {
+
     /**
      * @var \Slim\Router
      */
-    protected $router;
-    protected $case_sensitive;
+    private $router;
 
-    function __construct(\Slim\Router $router, $case_sensitive = false)
+    /**
+     * @var \Fobia\Base\Application
+     */
+    protected $app;
+
+    public function __construct(\Fobia\Base\Application $app)
     {
-        $this->router         = $router;
-        $this->case_sensitive = $case_sensitive;
+        $this->app    = $app;
+        $this->router = new \Slim\Router();
+    }
+
+    /**
+     * @return  \Slim\Router
+     */
+    public function getRouter()
+    {
+        return $this->router;
     }
 
     /********************************************************************************
-    * Routing
-    *******************************************************************************/
+     * Routing
+     * ***************************************************************************** */
 
     /**
      * Add GET|POST|PUT|PATCH|DELETE route
@@ -63,12 +78,13 @@ class MapRouter
      */
     protected function mapRoute($args)
     {
-        $pattern = array_shift($args);
+        $pattern  = array_shift($args);
         $callable = array_pop($args);
-        if (!is_callable($callable)) {
-            $callable = \App::instance()->createController($callable);
+        if ( ! is_callable($callable)) {
+            $callable = $this->app->createController($callable);
         }
-        $route = new \Slim\Route($pattern, $callable, $this->case_sensitive);
+        $route = new \Slim\Route($pattern, $callable,
+                                 $this->app['settings']['case_sensitive']);
         $this->router->map($route);
         if (count($args) > 0) {
             $route->setMiddleware($args);
@@ -97,7 +113,8 @@ class MapRouter
     {
         $args = func_get_args();
 
-        return $this->mapRoute($args)->via(\Slim\Http\Request::METHOD_GET, \Slim\Http\Request::METHOD_HEAD);
+        return $this->mapRoute($args)->via(\Slim\Http\Request::METHOD_GET,
+                                           \Slim\Http\Request::METHOD_HEAD);
     }
 
     /**
@@ -174,8 +191,8 @@ class MapRouter
      */
     public function group()
     {
-        $args = func_get_args();
-        $pattern = array_shift($args);
+        $args     = func_get_args();
+        $pattern  = array_shift($args);
         $callable = array_pop($args);
         $this->router->pushGroup($pattern, $args);
         if (is_callable($callable)) {
@@ -196,4 +213,38 @@ class MapRouter
         return $this->mapRoute($args)->via("ANY");
     }
 
+    public function run()
+    {
+        $this->dispatchRequest($this->app['request']);
+    }
+
+    protected function dispatchRequest(\Slim\Http\Request $request)
+    {
+        Log::debug('App run Sub-Dispatch request');
+        try {
+            $dispatched    = false;
+            $matchedRoutes = $this->router->getMatchedRoutes($request->getMethod(),
+                                                       $request->getPathInfo(),
+                                                       true);
+            foreach ($matchedRoutes as $route) {
+                /* @var $route \Slim\Route */
+                try {
+                    $this->app->applyHook('slim.before.dispatch');
+                    $dispatched = $route->dispatch();
+                    $this->app->applyHook('slim.after.dispatch');
+                    if ($dispatched) {
+                        Log::debug('Route Sub-Dispatched: ' . $route->getPattern());
+                        break;
+                    }
+                } catch (\Slim\Exception\Pass $e) {
+                    continue;
+                }
+            }
+            if ( ! $dispatched) {
+                $this->app->notFound();
+            }
+        } catch (\Slim\Exception\Stop $e) {
+            throw $e;
+        }
+    }
 }

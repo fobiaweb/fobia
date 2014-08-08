@@ -8,13 +8,13 @@ class MyStderrProcessor extends StderrProcessor
 
     public function __construct()
     {
-        // $this->handle = fopen('php://temp', 'r+');
-       //  $this->handle = fopen('php://stdout', 'a+');
+        parent::__construct();
         $this->handle = fopen('php://output', 'w');
 
-        //feof($this->stream);
-        //fseek($this->handle, 0, $SEEK_SET);
-        //$body = stream_get_contents($this->handle, -1, 0);
+        $color = $this->hasColorSupport();
+        $stdout = $this->hasStdoutSupport();
+
+        /// var_dump($color, $stdout);
     }
 }
 
@@ -44,6 +44,8 @@ class StderrProcessorTest extends \PHPUnit_Framework_TestCase
      */
     public function test__invoke()
     {
+        $r = new StderrProcessor();
+        unset($r);
         $this->expectOutputString('[info]  message context' . PHP_EOL);
 
         $record = array(

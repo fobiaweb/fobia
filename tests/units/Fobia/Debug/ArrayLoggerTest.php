@@ -9,7 +9,7 @@ class ArrayLoggerTest extends \PHPUnit_Framework_TestCase
     /**
      * @var ArrayLogger
      */
-    protected $object;
+    protected $logger;
 
     /**
      * Sets up the fixture, for example, opens a network connection.
@@ -17,15 +17,7 @@ class ArrayLoggerTest extends \PHPUnit_Framework_TestCase
      */
     protected function setUp()
     {
-        $this->object = new ArrayLogger;
-    }
-
-    /**
-     * Tears down the fixture, for example, closes a network connection.
-     * This method is called after a test is executed.
-     */
-    protected function tearDown()
-    {
+        $this->logger = new ArrayLogger();
     }
 
     /**
@@ -34,10 +26,10 @@ class ArrayLoggerTest extends \PHPUnit_Framework_TestCase
      */
     public function testLog()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-          'This test has not been implemented yet.'
-        );
+        $this->expectOutputRegex("/message/");
+        $row = $this->logger->log(\Psr\Log\LogLevel::INFO, "message");
+        print_r($row);
+        return $this->logger;
     }
 
     /**
@@ -46,10 +38,12 @@ class ArrayLoggerTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetRows()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-          'This test has not been implemented yet.'
-        );
+        $this->logger->log(\Psr\Log\LogLevel::INFO, "message get rows");
+
+        $rows = $this->logger->getRows();
+        $r = array_pop($rows);
+
+        $this->assertEquals("message get rows", $r['message']);
     }
 
     /**
@@ -58,10 +52,7 @@ class ArrayLoggerTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetLevelCode()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-          'This test has not been implemented yet.'
-        );
+        $this->assertEquals(200, ArrayLogger::getLevelCode(\Psr\Log\LogLevel::INFO));
     }
 
     /**
@@ -70,10 +61,7 @@ class ArrayLoggerTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetLevelName()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-          'This test has not been implemented yet.'
-        );
+        $this->assertEquals(\Psr\Log\LogLevel::INFO, ArrayLogger::getLevelName(200));
     }
 
     /**
@@ -82,21 +70,8 @@ class ArrayLoggerTest extends \PHPUnit_Framework_TestCase
      */
     public function testRender()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-          'This test has not been implemented yet.'
-        );
-    }
+        $str = $this->logger->render();
+        $this->assertRegExp("/ac-logger-switch/", $str);
 
-    /**
-     * @covers Fobia\Debug\ArrayLogger::registry
-     * @todo   Implement testRegistry().
-     */
-    public function testRegistry()
-    {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-          'This test has not been implemented yet.'
-        );
     }
 }

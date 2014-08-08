@@ -192,3 +192,15 @@ class Log
     }
 
 }
+
+/**
+ *
+ * @param int $name
+ * @return Psr\Log\LoggerInterface 
+ */
+//function Log($name = null)
+//{
+//    $name = 0;
+//
+//    Log::
+//}

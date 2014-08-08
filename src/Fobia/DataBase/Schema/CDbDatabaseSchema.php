@@ -6,10 +6,12 @@
  * @copyright  Copyright (c) 2014 Dmitriy Tyurin
  */
 
+namespace Fobia\Database\Schema;
+
 /**
  * CDbDatabaseSchema class
  *
- * @package   
+ * @package Fobia.DataBase.Schema
  */
 class CDbDatabaseSchema
 {
@@ -25,7 +27,7 @@ class CDbDatabaseSchema
     public $rawName;
 
     /**
-     * @var array 
+     * @var array
      */
     public $tables = array();
 

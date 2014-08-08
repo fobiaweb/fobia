@@ -1,9 +1,17 @@
 <?php
+/**
+ * CDbColumnSchema class  - CDbColumnSchema.php file
+ *
+ * @author     Dmitriy Tyurin <fobia3d@gmail.com>
+ * @copyright  Copyright (c) 2014 Dmitriy Tyurin
+ */
+
+namespace Fobia\Database\Schema;
 
 /**
  * CDbColumnSchema class describes the column meta data of a database table.
  *
- * @package system.db.schema
+ * @package Fobia.DataBase.Schema
  */
 class CDbColumnSchema
 {

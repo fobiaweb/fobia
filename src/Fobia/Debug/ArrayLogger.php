@@ -155,7 +155,7 @@ class ArrayLogger extends AbstractLogger
         return ob_get_clean();
     }
 
-
+    /*
     public function registry()
     {
         register_shutdown_function(function(){
@@ -164,4 +164,5 @@ class ArrayLogger extends AbstractLogger
             });
         });
     }
+    /* */
 }
