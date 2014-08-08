@@ -1,0 +1,14 @@
+#
+# WARNING! Предпологаеться, что все значения установлены в коректном для них типе
+# Этоn файл не проверяеться на коректность. В случии неверной установки конфигурации
+# результат может быть плочевным!
+#
+# Все пути указываються относительно BASE_DIR см. README
+
+
+cookies.encrypt:  false
+cookies.lifetime:  '20 minutes'
+cookies.path:  '/'
+cookies.domain:  null
+cookies.secure:  false
+cookies.httponly:  false

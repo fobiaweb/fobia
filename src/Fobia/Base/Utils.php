@@ -93,6 +93,22 @@ class Utils
     }
 
     /**
+     * Преобразует в абсолютный путь в зависимости имееться ли в начале слеш
+     * @param string $file
+     * @param string $dir
+     * @return string
+     */
+    public static function absolutePath($file, $dir = '.')
+    {
+        if (substr($file, 0, 1) === '/') {
+            return $file;
+        } else {
+            $file = rtrim($dir, '/') . '/' . $file;
+        }
+        return $file;
+    }
+
+    /**
      * Трасировка в латинские символы.
      *
      * @param string $str

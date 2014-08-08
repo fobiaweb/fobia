@@ -17,7 +17,11 @@ class BaseUserIdentityTest extends \PHPUnit_Framework_TestCase
      */
     protected function setUp()
     {
-        $db = \AppTest::instance()->db;
+        if (!\Fobia\Base\Application::getInstance()) {
+            $app = \AppTest::create();
+            $app->setName('default');
+        }
+        $db = \Fobia\Base\Application::getInstance()->db;
         $result = $db->query("SELECT * FROM users");
         $this->user = $result->fetchObject('\Fobia\Auth\BaseUserIdentity');
     }

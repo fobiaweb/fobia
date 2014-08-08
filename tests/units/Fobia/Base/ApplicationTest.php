@@ -43,20 +43,20 @@ class ApplicationTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @covers Fobia\Base\Application::getInstance
-     * @expectedException \RuntimeException
      */
-    public function testGetInstanceException()
+    public function testGetInstanceNone()
     {
-        Application::getInstance('none');
+        $this->assertNull(Application::getInstance('none'));
     }
 
     /**
-     * @covers Fobia\Base\Application::setInstance
-     * @todo   Implement testSetInstance().
+     * @covers Fobia\Base\Application::setName
+     * @todo   Implement testSetName().
      */
-    public function testSetInstance()
+    public function testSetName()
     {
         $app0 = Application::getInstance();
+
         $app1 = new Application();
         $app1['foo'] = 'bar';
 
@@ -65,15 +65,15 @@ class ApplicationTest extends \PHPUnit_Framework_TestCase
         $this->assertNotEquals($app1, $this->app);
         $this->assertNotEquals($app1, Application::getInstance());
 
-        Application::setInstance($app1, 1);
-        $this->assertEquals($app0, Application::getInstance(0));
-        $this->assertNotEquals($app0, Application::getInstance(1));
-        $this->assertEquals($app1, Application::getInstance(1));
+        $app1->setName('app_1');
+        $this->assertEquals($app0, Application::getInstance());
+        $this->assertNotEquals($app0, Application::getInstance('app_1'));
+        $this->assertEquals($app1, Application::getInstance('app_1'));
 
-        $app = Application::getInstance(1);
+        $app = Application::getInstance('app_1');
         $this->assertEquals('bar', $app['foo']);
     }
-
+/**/
     public function testCreateController()
     {
         $this->expectOutputString('myAction');

@@ -124,7 +124,6 @@ class BaseUserIdentity extends \Fobia\Base\Model implements IUserIdentity
     {
         $app = \Fobia\Base\Application::getInstance();
         $db  = $app->db;
-
         $q = $db->createSelectQuery();
         $q->select("*")->from("users")
                 ->where($q->expr->eq($this->map['login'],    $db->quote($this->getUsername())))

@@ -29,36 +29,7 @@ class Application extends \Slim\App
 
     protected static $instance = array();
 
-    /**
-     * @return \Fobia\Base\Application
-     */
-    public static function getInstance($name = null)
-    {
-        if ($name === null) {
-            $name = 0;
-        }
-
-        $app = self::$instance[$name];
-        if ( ! ($app instanceof Application)) {
-            throw new \RuntimeException("Error Processing Request", 1);
-        }
-        return $app;
-    }
-
-    /**
-     * Set Instance Application
-     *
-     * @param \Fobia\Base\Application $app
-     * @param string $name
-     */
-    public static function setInstance(Application $app, $name = null)
-    {
-        if ($name === null) {
-            $name = 0;
-        }
-        self::$instance[$name] = $app;
-    }
-
+    protected $name;
 
     protected $defaultsSettings = array(
         // Application
@@ -130,6 +101,7 @@ class Application extends \Slim\App
         Log::getLogger()->enableRender = $userSettings['log.enabled'] ;
 
         if ($p = $userSettings['templates.path']) {
+            $userSettings['templates.path'] = Utils::absolutePath($p, SYSPATH);
             if (substr($p, 0, 1) !== '/') {
                 $userSettings['templates.path'] = SYSPATH . '/' . $p;
             }
@@ -275,9 +247,41 @@ class Application extends \Slim\App
         // });
 
         // ------------------
-        if ( ! self::$instance[0]) {
-            self::setInstance($this);
+        if ( is_null(self::getInstance())) {
+            $this->setName('default');
         }
+    }
+
+    /**
+     * Get application instance by name
+     *
+     * @param  string    $name The name of the Slim application
+     * @return \Fobia\Base\Application|null
+     */
+    public static function getInstance($name = 'default')
+    {
+        return isset(static::$instance[$name]) ? static::$instance[$name] : null;
+    }
+
+    /**
+     * Set Slim application name
+     *
+     * @param  string $name The name of this Slim application
+     */
+    public function setName($name)
+    {
+        $this->name = $name;
+        static::$instance[$name] = $this;
+    }
+
+    /**
+     * Get Slim application name
+     *
+     * @return string|null
+     */
+    public function getName()
+    {
+        return $this->name;
     }
 
     /**

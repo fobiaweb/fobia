@@ -41,8 +41,7 @@ class AppTest extends PHPUnit_Framework_TestCase
             'mode' => Application::MODE_TESTING
         );
         $app = new Application($config);
-        Application::setInstance($app, 0);
-        // $app->con
+        $app->setName('default');
         return $app;
     }
 }
