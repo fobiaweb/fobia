@@ -30,7 +30,7 @@ class MethodTest extends \PHPUnit_Framework_TestCase
      */
     protected function setUp()
     {
-        // $this->object = new Method;
+        \\AppTest::instance();
     }
 
 

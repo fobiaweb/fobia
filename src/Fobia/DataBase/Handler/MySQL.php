@@ -57,7 +57,7 @@ class MySQL extends ezcDbHandlerMysql
         if (@$dbParams['params']['logger'] instanceof \Psr\Log\LoggerInterface) {
             $this->logger = $dbParams['params']['logger'];
         } else {
-            $this->logger = (class_exists('\Fobia\Debug\Log')) 
+            $this->logger = (class_exists('\Fobia\Debug\Log'))
                     ? \Fobia\Debug\Log::getLogger()
                     :  new \Psr\Log\NullLogger();
         }
@@ -151,7 +151,7 @@ class MySQL extends ezcDbHandlerMysql
                 // LOGS_DIR . "/sql.log"
                 $str = date("[Y-m-d H:i:s]") . " [SQL]:: Error " . $error[1] . ': '
                         . $error[2] . "\n"
-                        . preg_replace(array("/\n/", "/\s*\n/"), array("\n    # ", "\n"), "    # $query\n");
+                        . preg_replace(array("/\n/", "/\s*\n\s*#\s*/"), array("\n    # ", "\n"), "    # $query\n");
                 file_put_contents($this->log_error, $str, FILE_APPEND);
             }
         }

@@ -5,6 +5,7 @@
  * @author     Dmitriy Tyurin <fobia3d@gmail.com>
  * @copyright  Copyright (c) 2014 Dmitriy Tyurin
  */
+// @codeCoverageIgnoreStart
 
 namespace Fobia\Database\Schema;
 
@@ -44,3 +45,4 @@ class CDbDatabaseSchema
         return array_keys($this->tables);
     }
 }
+// @codeCoverageIgnoreEnd

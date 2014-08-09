@@ -66,7 +66,7 @@ class ApiHandlerTest extends \PHPUnit_Framework_TestCase
     {
         $file = __DIR__ . '/apimap.php';
         $this->api->addMap($file);
-        
+
         $apiMap = $this->api->getMap();
         $this->assertArrayHasKey('test.one', $apiMap);
     }

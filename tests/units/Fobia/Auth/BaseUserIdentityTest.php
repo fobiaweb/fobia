@@ -69,7 +69,7 @@ class BaseUserIdentityTest extends \PHPUnit_Framework_TestCase
      */
     public function testSetUserData()
     {
-        $this->user->setUserData(array('login' => 'new login'));
+        $this->user->setUserData(array('login' => 'new login', 'none' => 1));
         $this->assertEquals('new login', $this->user->getUsername());
     }
 

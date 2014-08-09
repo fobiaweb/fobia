@@ -29,7 +29,7 @@ class ApplicationTest extends \PHPUnit_Framework_TestCase
      */
     protected function setUp()
     {
-        $this->app = \AppTest::create();
+        $this->app = \AppTest::instance();
     }
 
     /**
@@ -55,20 +55,20 @@ class ApplicationTest extends \PHPUnit_Framework_TestCase
      */
     public function testSetName()
     {
-        $app0 = Application::getInstance();
+        $app = Application::getInstance();
 
-        $app1 = new Application();
-        $app1['foo'] = 'bar';
+        $app_2 = new Application();
+        $app_2['foo'] = 'bar';
 
-        $this->assertEquals($app0, $this->app);
-        $this->assertEquals($app0, Application::getInstance());
-        $this->assertNotEquals($app1, $this->app);
-        $this->assertNotEquals($app1, Application::getInstance());
+        $this->assertEquals($app, $this->app);
+        $this->assertEquals($app, Application::getInstance());
+        $this->assertNotEquals($app_2, $this->app);
+        $this->assertNotEquals($app_2, Application::getInstance());
 
-        $app1->setName('app_1');
-        $this->assertEquals($app0, Application::getInstance());
-        $this->assertNotEquals($app0, Application::getInstance('app_1'));
-        $this->assertEquals($app1, Application::getInstance('app_1'));
+        $app_2->setName('app_1');
+        $this->assertEquals($app, Application::getInstance());
+        $this->assertNotEquals($app, Application::getInstance('app_1'));
+        $this->assertEquals($app_2, Application::getInstance('app_1'));
 
         $app = Application::getInstance('app_1');
         $this->assertEquals('bar', $app['foo']);

@@ -16,18 +16,17 @@ class AppTest extends PHPUnit_Framework_TestCase
         $this->assertInstanceOf("\\Fobia\\Base\Application", \App::create());
     }
 
-    protected static $_instance = null;
-
     /**
      *
      * @return \Fobia\Base\Application
      */
     public static function instance()
     {
-        if (self::$_instance == null) {
-            self::$_instance = self::create();
+        $app = Application::getInstance();
+        if (!$app) {
+            $app = self::create();
         }
-        return self::$_instance;
+        return $app;
     }
 
     /**
@@ -41,7 +40,7 @@ class AppTest extends PHPUnit_Framework_TestCase
             'mode' => Application::MODE_TESTING
         );
         $app = new Application($config);
-        $app->setName('default');
+        // $app->setName('default');
         return $app;
     }
 }
