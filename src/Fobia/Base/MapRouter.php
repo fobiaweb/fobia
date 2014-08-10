@@ -27,11 +27,14 @@ class MapRouter
      * @var \Fobia\Base\Application
      */
     protected $app;
+    private $request;
 
-    public function __construct(\Fobia\Base\Application $app)
+    public function __construct(\Fobia\Base\Application $app,
+                                \Slim\Interfaces\Http\RequestInterface $request = null)
     {
-        $this->app    = $app;
-        $this->router = new \Slim\Router();
+        $this->app     = $app;
+        $this->router  = new \Slim\Router();
+        $this->request = $request;
     }
 
     /**
@@ -41,8 +44,7 @@ class MapRouter
     {
         return $this->router;
     }
-
-    /********************************************************************************
+    /*     * ******************************************************************************
      * Routing
      * ***************************************************************************** */
 
@@ -215,7 +217,12 @@ class MapRouter
 
     public function run()
     {
-        $this->dispatchRequest($this->app['request']);
+        $request = $this->request;
+        if ( ! $request) {
+            $request = $this->app['request'];
+        }
+
+        $this->dispatchRequest($request);
     }
 
     protected function dispatchRequest(\Slim\Http\Request $request)
@@ -223,9 +230,9 @@ class MapRouter
         Log::debug('App run Sub-Dispatch request');
         try {
             $dispatched    = false;
-            $matchedRoutes = $this->router->getMatchedRoutes($request->getMethod(),
-                                                       $request->getPathInfo(),
-                                                       true);
+            $matchedRoutes = $this->router
+                    ->getMatchedRoutes($request->getMethod(),
+                                       $request->getPathInfo());
             foreach ($matchedRoutes as $route) {
                 /* @var $route \Slim\Route */
                 try {
